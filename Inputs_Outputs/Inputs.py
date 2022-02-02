@@ -1,5 +1,5 @@
 import glob
 
-# devra retourner le contenu des fichiers texte, "filtré"
+# devra retourner le contenu des fichiers texte
 def Input():    
-    print('Inputs.py à compléter')
+    print("Inputs.py a completer")
