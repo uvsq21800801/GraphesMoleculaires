@@ -1,9 +1,13 @@
 # sera une interface de commande si besoin
 import sys
-sys.path.append('GraphesMoleculaires/Input_Outputs')
+sys.path.append('GraphesMoleculaires/Inputs_Outputs')
 from Inputs_Outputs import Inputs
 
 def interface():
-    Inputs.Input_bonds()
-    Inputs.Input_trad()
+    listindex = []
+    Inputs.Input_trad(listindex)
+    print(listindex)
+    matriceadja = []
+    Inputs.Input_bonds(listindex, matriceadja)
+    
     
