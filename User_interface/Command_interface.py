@@ -9,5 +9,6 @@ def interface():
     print(listindex)
     matriceadja = []
     Inputs.Input_bonds(listindex, matriceadja)
+    print(matriceadja)
     
     
