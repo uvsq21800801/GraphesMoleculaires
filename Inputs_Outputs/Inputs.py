@@ -41,7 +41,7 @@ def Input_bonds(li,ma):
 
     print("Inputs.py->Inputs_bonds a completer")
     
-def Input_trad(li):
+def Input_trad(li, atom_caract):
     # recuperation du fichier trad
     fpath = "Inputs_Outputs/Place_Trad_file_here/" 
     filenames = [f for f in listdir(fpath) if isfile(join(fpath, f))]
@@ -54,6 +54,11 @@ def Input_trad(li):
         if len(splitted) == 3:
             if splitted[1] != 'H':
                 li.append(splitted[0])
+                
+                # Liste de traduction suivant le modele '[type atome] [numero]'
+                temp = splitted[2]
+                caracteristiques = splitted[1]+' '+temp[len(splitted[1]):]
+                atom_caract.append(caracteristiques)
             #print(splitted[0]+' '+splitted[1]+' '+splitted[2])
 
             # ajouter les informations des atomes dans une structure

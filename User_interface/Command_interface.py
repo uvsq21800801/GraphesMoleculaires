@@ -5,10 +5,13 @@ from Inputs_Outputs import Inputs
 
 def interface():
     listindex = []
-    Inputs.Input_trad(listindex)
+    atom_caract = []
+    Inputs.Input_trad(listindex, atom_caract)
+    print(atom_caract)
     print(listindex)
     matriceadja = []
     Inputs.Input_bonds(listindex, matriceadja)
     print(matriceadja)
+    print(listindex)
     
     
