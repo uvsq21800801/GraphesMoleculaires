@@ -24,7 +24,7 @@ def BruteF(listindex, matriceadja, atom_caract, resultat):
         conx = verif_conx(combi, matriceadja)
         if (conx):
             print(comb_trad(combi,atom_caract)+" connexe!")
-            affiche_combi(combi)
+        affiche_combi(combi)
         
         # si connexe -> deja connue oui/non
 
@@ -40,10 +40,11 @@ def BruteF(listindex, matriceadja, atom_caract, resultat):
 # de sommets
 def verif_conx(combi, matriceadja):
     # compte le nb de sommets de la combi
-    compt = 0 
+    compt = 0
     for i in range(len(combi)):
         if combi[i] == 1:
             compt+=1
+    
     #print(compt)
 
     # test de connexité
@@ -56,12 +57,14 @@ def verif_conx(combi, matriceadja):
                 for l in listconx:
                     if matriceadja[l][i] != 0 or matriceadja[i][l] !=0:
                         listconx.append(i)
+                        break
 
                     #for j in range(int(len(matriceadja))):
                         #if matriceadja[l][j] != 0 or matriceadja[j][l] != 0:
                             #if combi[j] == 1 and (i not in listconx): 
                                 #listconx.append(i)
     
+    print(str(len(listconx))+' '+str(compt))
     if len(listconx) != compt:
         return False
     return True   
