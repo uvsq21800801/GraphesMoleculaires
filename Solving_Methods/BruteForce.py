@@ -53,11 +53,14 @@ def verif_conx(combi, matriceadja):
             if len(listconx) == 0 and combi[i]==1: 
                 listconx.append(i)
             if combi[i] == 1 and (i not in listconx):
-                for l in range(len(listconx)):
-                    for j in range(int(len(matriceadja))):
-                        if matriceadja[listconx[l]][j] != 0 or matriceadja[j][listconx[l]] != 0:
-                            if combi[j] == 1: 
-                                listconx.append(i)
+                for l in listconx:
+                    if matriceadja[l][i] != 0 or matriceadja[i][l] !=0:
+                        listconx.append(i)
+
+                    #for j in range(int(len(matriceadja))):
+                        #if matriceadja[l][j] != 0 or matriceadja[j][l] != 0:
+                            #if combi[j] == 1 and (i not in listconx): 
+                                #listconx.append(i)
     
     if len(listconx) != compt:
         return False
