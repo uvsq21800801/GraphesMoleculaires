@@ -20,5 +20,25 @@ def interface():
 
     #methode de resolution -> bruteforce
     resultat = []
-    BruteForce.BruteF(listindex, matriceadja, resultat)
-    
+    BruteForce.BruteF(listindex, matriceadja, atom_caract, resultat)
+
+
+    ### fonction tests
+    affiche_adja(matriceadja)
+    print(' ')
+    affiche_adja2(matriceadja)
+
+### fonctions de débuggage
+def affiche_adja(matriceadja):
+    r = int(len(matriceadja))
+    for i in range(r):
+        print(matriceadja[i])
+
+def affiche_adja2(matriceadja):
+    r = int(len(matriceadja))
+    for i in range(r):
+        s = ''
+        for j in range(r):
+            s += str(matriceadja[i][j])+' '
+        print(s)
+
