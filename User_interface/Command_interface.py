@@ -24,9 +24,13 @@ def interface():
 
 
     ### fonction tests
-    affiche_adja(matriceadja)
-    print(' ')
-    affiche_adja2(matriceadja)
+    # affiche par ordre (minimum à 3) le nombre de sous-graphes stockés
+    for i in range(int(len(resultat))):
+        print(str(i+3)+' '+str(len(resultat[i])))
+
+    #affiche_adja(matriceadja)
+    #print(' ')
+    #affiche_adja2(matriceadja)
 
 ### fonctions de débuggage
 def affiche_adja(matriceadja):

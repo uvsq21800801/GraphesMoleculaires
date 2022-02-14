@@ -21,23 +21,35 @@ def BruteF(listindex, matriceadja, atom_caract, resultat):
         combi.append(0)
     
     # initialisation des parametres liés à l'ordre du graphe et des sous-graphes
-    
-    # on définir un ordre max des sous-graphes de la moitié des sommets du graphe
-    # en supposant qu'il n'y aura pas de répétitions disjointes au dela de cet ordre
-    max_ordre = (len(matriceadja) - (len(matriceadja)%2))/2
-    ordre = 0
+    # on limite la recherche à une fenetre d'ordre (entre 3 et 8 sommets)
+    max_ordre = 8
+    min_ordre = 3
+    ordre = min_ordre
+    # on initie le premier sous graphe d'ordre 3
+    for k in range(ordre):
+        combi[k] = 1 
+
+    # on initie la structure de stockage des graphes 
+    # chaque liste correspond à un ordre entre celui min et max
+    for k in range(max_ordre - min_ordre +1):
+        resultat.append([]) 
 
     # bruteforcage
     for i in range(int(math.pow(2,int(matrx_len)))):
         # verification que la combinaison est connexe
         conx = verif_conx(combi, matriceadja, ordre)
         if (conx):
-            print(comb_trad(combi,atom_caract)+" connexe!")
-        affiche_combi(combi, ordre)
+            #print(comb_trad(combi,atom_caract)+" connexe!")
+            affiche_combi(combi, ordre)
+            
+            # --> test isomorphisme
+            # --> calcul couverture et nb occurrance
+            # --> stockage couverture en tableau de nombre d'apparition par sommet
+            # --> stockage nombre d'occurance du sous-graphe (isomorphe) par un compteur
+
+            # stockage
+            resultat[ordre - min_ordre].append(combi)
         
-        # si connexe -> isomorphe oui/non -> stockage
-
-
         # ++ il y à plusieurs façons d'obtenir toutes les combinaisons
         #add_b2(combi)
         ordre = add_magique(combi, ordre)
