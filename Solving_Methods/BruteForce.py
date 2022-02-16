@@ -132,17 +132,20 @@ def combi_to_certif(combi, matriceadja, atom_caract, dict_c):
             sommet_n += 1
             g.connect_vertex(nv_nom[i], listconnex)
 
-    ################################## pas de coloriage pour l'instant
     # coloriage des sommets
-    #for i in range(len(dict_c)):
-        #g.set_vertex_coloring([set(list_by_colors[i])])
+    list_sets = []
+    for i in range(len(dict_c)):
+        list_sets.append(set(list_by_colors[i]))
+        
+    g.set_vertex_coloring(list_sets)
         
         #test #g.set_vertex_coloring([set([1])])
         #g.set_vertex_coloring([set([2])])        
         
     print(g)
     print(autgrp(g))
-    #print(certificate(g))
+    print(certificate(g).decode('cp437'))
+    print(certificate(g).decode("utf-16"))
     
     return certificate(g) 
 
