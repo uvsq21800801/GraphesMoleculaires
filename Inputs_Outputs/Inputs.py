@@ -27,7 +27,7 @@ def Input_bonds(li,ma):
         if splitted[0] == '1' and len(splitted) == 3:
             if splitted[1] in li and splitted[2] in li:
                 #ajoute un 1 dans la matrice ma de façon symétrique
-                print(str(li.index(splitted[1]))+' '+str(li.index(splitted[2])))
+                #print(str(li.index(splitted[1]))+' '+str(li.index(splitted[2])))
                 ma[li.index(splitted[1])][li.index(splitted[2])] = 1
                 ma[li.index(splitted[2])][li.index(splitted[1])] = 1
             #print(splitted[0]+' '+splitted[1]+' '+splitted[2])
@@ -35,11 +35,9 @@ def Input_bonds(li,ma):
         if splitted[0] == '4' and len(splitted) == 4:
             if splitted[1] in li and splitted[2] in li:
                 #ajoute un 2 dans la matrice ma de façon asymétrique
-                print(str(li.index(splitted[1]))+' '+str(li.index(splitted[2])))
+                #print(str(li.index(splitted[1]))+' '+str(li.index(splitted[2])))
                 ma[li.index(splitted[1])][li.index(splitted[2])] = 2
             #print(splitted[0]+' '+splitted[1]+' '+splitted[2])
-
-    print("Inputs.py->Inputs_bonds a completer")
     
 def Input_trad(li, atom_caract):
     # recuperation du fichier trad
@@ -61,7 +59,3 @@ def Input_trad(li, atom_caract):
                 atom_caract.append(caracteristiques)
             #print(splitted[0]+' '+splitted[1]+' '+splitted[2])
 
-            # ajouter les informations des atomes dans une structure
-
-
-    print("Inputs.py->Inputs_trad a completer")
