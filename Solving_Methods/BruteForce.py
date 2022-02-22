@@ -40,11 +40,8 @@ def BruteF(listindex, matriceadja, atom_caract, resultat):
     # Structure de stockage pour vérifier l'isomorphisme
     # avec le certificat
     # Dictionnaire: isomorph_List(certificat, liste_combi)
-    #liste_combi = {'0000','0001','0010'}
-    #certificat = '1'
     isomorph_dict = {} #= {certificat: liste_combi}
-    #print(isomorph_dic)
-    #print(isomorph_dic['1'])
+
 
     # initialisation des couleurs
     couleur_nb = 0
@@ -75,20 +72,32 @@ def BruteF(listindex, matriceadja, atom_caract, resultat):
                 isomorph_dict[certif].append(combi)
             #isomorph_list[certif] = combi
             
-            # --> calcul couverture et nb occurrance
-            # --> stockage couverture en tableau de nombre d'apparition par sommet
-            # --> stockage nombre d'occurance du sous-graphe (isomorphe) par un compteur
-
-            # stockage
-            resultat[ordre - min_ordre].append(combi)
+            # stockage des certificats par ordre
+            if certif not in resultat[ordre - min_ordre]:
+                resultat[ordre - min_ordre].append(certif)
+            # --> calcul couverture et nb occurrance à l'extérieur
         
-        # ++ il y à plusieurs façons d'obtenir toutes les combinaisons
-        #add_b2(combi)
+        # Combinaisons de sommets suivantes
         ordre = add_magique(combi, ordre)
         if ordre > max_ordre:
             break
     
     print (isomorph_dict)
+
+# Calcul les recouvrements (À TESTER)
+# (sommets par sommets pour chaque isomorphe)
+def recouvrement(isomorph_dict):
+    recouvre_dict = {}
+    for certif, list in isomorph_dict:
+        recouvre_dict[certif] = [len(list),[]]
+        for i in range(len(list)):
+            for j in len(list[i]):
+                if i==0 :
+                    recouvre_dict[certif][1].append(0)
+                recouvre_dict[certif][1][j]+=list[i][j]
+    return recouvre_dict
+# renvoie un disctionnaire avec pour chaque certificat le nombre d'occurance
+# et le nombre d'apparition de chaque sommet dans ses occurances
 
 
 # Fait et retourne un certificat de graphe à partir d'une 
@@ -152,12 +161,6 @@ def combi_to_certif(combi, matriceadja, atom_caract, dict_c):
 # methode de verification de la connexite d'une combinaison 
 # de sommets
 def verif_conx(combi, matriceadja, ordre):
-    # compte le nb de sommets de la combi
-    #compt = 0
-    #for i in range(len(combi)):
-    #    if combi[i] == 1:
-    #        compt+=1
-
     # test de connexité
     listconx = []
     for k in range(ordre):
