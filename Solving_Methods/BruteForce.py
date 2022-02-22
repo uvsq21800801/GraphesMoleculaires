@@ -37,10 +37,11 @@ def BruteF(listindex, matriceadja, atom_caract, resultat):
     for k in range(max_ordre - min_ordre +1):
         resultat.append([]) 
 
-    # Structure de stockage pour vérifier l'isomorphisme
+    # Structure de stockage pour l'isomorphisme et le recouvrement
     # avec le certificat
-    # Dictionnaire: isomorph_List(certificat, liste_combi)
+    # Dictionnaire:
     isomorph_dict = {} #= {certificat: liste_combi}
+    recouvre_dict = {} #= {certificat: [nb_occurence,  occurence_sommet]}
 
 
     # initialisation des couleurs
@@ -62,42 +63,68 @@ def BruteF(listindex, matriceadja, atom_caract, resultat):
         conx = verif_conx(combi, matriceadja, ordre)
         if (conx):
             #print(comb_trad(combi,atom_caract)+" connexe!")
-            affiche_combi(combi, ordre)
+            #affiche_combi(combi, ordre)
             
             # --> test isomorphisme
             certif = combi_to_certif(combi, matriceadja, atom_caract, dict_couleur)
+            #print(certif.hex())
             if certif not in isomorph_dict:
-                isomorph_dict[certif] = [combi]
+                isomorph_dict[certif] = [combi.copy()]
             else:
-                isomorph_dict[certif].append(combi)
-            #isomorph_list[certif] = combi
+                isomorph_dict[certif].append(combi.copy())
+            
+            # --> recouvrement des sommet
+            if certif not in recouvre_dict:
+                recouvre_dict[certif] = [1,combi.copy()]
+            else:
+                tmp = recouvre_dict.get(certif)
+                for i in range(len(combi)):
+                    tmp[1][i] += combi[i]
+                recouvre_dict[certif] = [tmp[0]+1,tmp[1].copy()]
+                #affiche_combi(tmp[1], ordre)             
             
             # stockage des certificats par ordre
             if certif not in resultat[ordre - min_ordre]:
                 resultat[ordre - min_ordre].append(certif)
-            # --> calcul couverture et nb occurrance à l'extérieur
         
         # Combinaisons de sommets suivantes
         ordre = add_magique(combi, ordre)
         if ordre > max_ordre:
             break
     
-    print (isomorph_dict)
+    #print (isomorph_dict)
+    return isomorph_dict, recouvrement(isomorph_dict)
 
 # Calcul les recouvrements (À TESTER)
 # (sommets par sommets pour chaque isomorphe)
 def recouvrement(isomorph_dict):
     recouvre_dict = {}
-    for certif, list in isomorph_dict:
-        recouvre_dict[certif] = [len(list),[]]
-        for i in range(len(list)):
-            for j in len(list[i]):
+    for certif in isomorph_dict.keys():
+        l_iso = isomorph_dict.get(certif)
+        recouvre_dict[certif] = [len(l_iso),[]]
+        for i in range(len(l_iso)):
+            for j in range(len(l_iso[i])):
                 if i==0 :
                     recouvre_dict[certif][1].append(0)
-                recouvre_dict[certif][1][j]+=list[i][j]
+                recouvre_dict[certif][1][j]+=l_iso[i][j]
     return recouvre_dict
-# renvoie un disctionnaire avec pour chaque certificat le nombre d'occurance
+# renvoie un dictionnaire avec pour chaque certificat le nombre d'occurance
 # et le nombre d'apparition de chaque sommet dans ses occurances
+
+
+# Calcul le taux de recouvrement pour un groupe d'isomorphes
+def Taux_recouvert(recouvre_dict):
+    for certif in recouvre_dict.keys():
+        stat = recouvre_dict.get(certif)
+        tot = 0 # cumule des occurences de sommets
+        cmpt = 0 # nombre de sommets apparus
+        for i in range(len(stat[1])):
+            tot += stat[1][i]
+            if stat[1][i]>0 :
+                cmpt += 1 
+        # taux de recouvrement
+        recouvre_dict[certif].append(tot/cmpt)
+
 
 
 # Fait et retourne un certificat de graphe à partir d'une 
@@ -151,10 +178,10 @@ def combi_to_certif(combi, matriceadja, atom_caract, dict_c):
         #test #g.set_vertex_coloring([set([1])])
         #g.set_vertex_coloring([set([2])])        
         
-    print(g)
-    print(autgrp(g))
-    print(certificate(g).decode('cp437'))
-    print(certificate(g).decode("utf-16"))
+    #print(g)
+    #print(autgrp(g))
+    #print(certificate(g).decode('cp437'))
+    #print(certificate(g).decode("utf-16"))
     
     return certificate(g) 
 
