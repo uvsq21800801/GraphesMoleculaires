@@ -1,4 +1,4 @@
-from os import listdir
+from os import listdir, remove
 from os.path import isfile, join
 import re
 
@@ -15,13 +15,15 @@ def Input_bonds(li,ma):
     fpath = "Inputs_Outputs/Place_Bonds_file_here/"
     filenames = [f for f in listdir(fpath) if isfile(join(fpath, f))]
     filename = filenames[0]
+    
+    ##print(filename)
 
     #initie la matrice d'adjacence
     Init(ma,len(li))
 
     # lecture du fichier bonds et transcription dans la matrice d'adjacence
-    file = open(fpath+filename, 'r').readlines()
-    for line in file:
+    f1 = open(fpath+filename, 'r').readlines()
+    for line in f1:
         splitted = line.split()
         # liaison covalente
         if splitted[0] == '1' and len(splitted) == 3:
@@ -38,6 +40,11 @@ def Input_bonds(li,ma):
                 #print(str(li.index(splitted[1]))+' '+str(li.index(splitted[2])))
                 ma[li.index(splitted[1])][li.index(splitted[2])] = 2
             #print(splitted[0]+' '+splitted[1]+' '+splitted[2])
+        
+    name1 = filename.split('_')
+    name2 = name1[1].split('.')
+    
+    return name2[0]
     
 def Input_trad(li, atom_caract):
     # recuperation du fichier trad
@@ -46,8 +53,8 @@ def Input_trad(li, atom_caract):
     filename = filenames[0]
     
     # lecture du fichier bonds et transcription dans la matrice de traduction
-    file = open(fpath+filename, 'r').readlines()
-    for line in file:
+    f1 = open(fpath+filename, 'r').readlines()
+    for line in f1:
         splitted = line.split()
         if len(splitted) == 3:
             if splitted[1] != 'H':
@@ -58,4 +65,36 @@ def Input_trad(li, atom_caract):
                 caracteristiques = splitted[1]+' '+temp[len(splitted[1]):]
                 atom_caract.append(caracteristiques)
             #print(splitted[0]+' '+splitted[1]+' '+splitted[2])
+        
+    name1 = filename.split('_')
+    name2 = name1[1].split('.')
+    
+    return name2[0]
 
+def Output_diagramme(name, ordre, min_ordre, lst_ordre, data):
+    # création du fichier de sortie
+    fpath = "Inputs_Outputs/Place_Output_here/"
+    filename = name+'_'+str(ordre+min_ordre)+".txt"
+    if isfile(join(fpath, filename)):
+        remove(join(fpath, filename))
+    f = open(fpath+filename, 'w')
+    
+    # liste des couples de donnée { occurance : [taux] }
+    d = {}
+    for i in lst_ordre[ordre]:
+        tmp = data.get(i)
+        if tmp[0] != 1:
+            if tmp[0] not in d.keys():
+                d[tmp[0]] = [tmp[2]]
+            else :
+                d[tmp[0]].append(tmp[2])
+    
+    j = 1
+    f.write("ordonne nbOccur taux\n")
+    for k in sorted(d.keys()) :
+        tmp = d.get(k)
+        for l in sorted(tmp):
+            f.write(str(j)+' '+str(k)+' '+str(l)+'\n')
+            j += 1
+    
+    f.close()

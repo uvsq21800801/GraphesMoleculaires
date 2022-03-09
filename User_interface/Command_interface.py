@@ -10,29 +10,45 @@ def interface():
     #recuperation des donnees des fichiers
     listindex = []
     atom_caract = []
-    Inputs.Input_trad(listindex, atom_caract)
+    filename1 = Inputs.Input_trad(listindex, atom_caract)
     #print(listindex)
     #print(atom_caract)
     matriceadja = []
-    Inputs.Input_bonds(listindex, matriceadja)
+    filename2 = Inputs.Input_bonds(listindex, matriceadja)
     #affiche_adja(matriceadja)
+    
+    # test que les fichiers sont bien associés
+    if filename1 != filename2 :
+        print("Erreur de lecture de fichiers "+filename1+" "+filename2)
+        return 1
+    
+    # définition des ordres des sous-graphes
+    max_ordre = 8
+    min_ordre = 3
 
-    #methode de resolution -> bruteforce
-    resultat = []
-    (isomorph_dict, recouvre_dict) = BruteForce.BruteF(listindex, matriceadja, atom_caract, resultat)
+    # methode de resolution -> bruteforce
+    (isomorph_dict, recouvre_dict, lst_ordre, lst_c) = BruteForce.BruteF(listindex, matriceadja, atom_caract, max_ordre, min_ordre)
+    # calcul et ajoute le taux de recouvrement
     BruteForce.Taux_recouvert(recouvre_dict)
 
     ### fonctions résultats
     '''
-    # affiche par ordre (minimum à 3) le nombre de certif
-    print("Ordre - Nb certif")
-    for i in range(int(len(resultat))):
-        print('  '+str(i+3)+'   - '+str(len(resultat[i])))*
+    # affiche par ordre le nombre de certif
+    print("Ordre - Nb forme canonique")
+    for i in range(int(len(lst_ordre))):
+        print('  '+str(i+min_ordre)+'   - '+str(len(lst_ordre[i])))*
     '''
-    print("Isomorphes")
-    print("certificat   nombre_occurence   taux_recouvrement")
-    print("premier isomorphe [> apparition par sommets]")
-    affiche_iso(resultat, isomorph_dict, recouvre_dict)
+    # Affiche les Isomorphes
+    #print("ordre certificat nombre_occurence taux_recouvrement exemple recouvrement")
+    #affiche_iso(lst_ordre, isomorph_dict, recouvre_dict, lst_c)
+    
+    # Diagramme taux par nombre d'occurance croissant
+    # --> il serait mieux de rassembler les nombre d'occurance et taux de recouvrement par ordre des sous-graphe pour ça
+    ## imprime dans un fichier les données trié
+    for i in range(int(len(lst_ordre))):
+        Inputs.Output_diagramme(filename1, i, min_ordre, lst_ordre, recouvre_dict)
+    
+    return 0
 
 
 ### fonctions de débuggage
@@ -50,23 +66,22 @@ def affiche_adja2(matriceadja):
         print(s)
 
 def affiche_liste(l):
-    s = ''
+    s = '"'
     for i in range(len(l)):
         s += str(l[i])
-    return s
+    return s+'"'
 
-def affiche_iso(resultat, isomorph_dict, recouvre_dict):
-    for i in range(len(resultat)):
-        print('Ordre '+str(i+3)+' : '+str(len(resultat[i]))+' certificats')
-        for certif in resultat[i]:
-            tmp1 = isomorph_dict.get(certif)
-            tmp2 = recouvre_dict.get(certif)
+def affiche_iso(lst_ordre, isomorph_dict, recouvre_dict, lst_c):
+    for i in range(len(lst_ordre)):
+        iso_uniq = 0
+        #print('Ordre '+str(i+3)+' : '+str(len(lst_ordre[i]))+' certificats')
+        for indice in lst_ordre[i]:
+            tmp1 = isomorph_dict.get(indice)
+            tmp2 = recouvre_dict.get(indice)
             if tmp2[0] > 1:
-                print(certif.hex()+'   '+str(tmp2[0])+'   '+str(tmp2[2]))
-                print(affiche_liste(tmp1[0])+' > '+affiche_liste(tmp2[1]))
-            ''' n'affiche pas les certificat de sous-graphe connexe unique
+                #     ordre         certificat              nombre_occurence taux_recouvrement exemple recouvrement
+                print(str(i+3)+' "'+lst_c[indice].hex()+'" '+str(tmp2[0])+' '+str(tmp2[2])+' '+affiche_liste(tmp1[0])+' '+affiche_liste(tmp2[1]))
             else :
-                print(certif.hex()+'   '+str(tmp2[0])+'   '+str(tmp2[2]))
-                print(affiche_liste(tmp1[0]))
-            '''
-
+                #iso_uniq += 1
+                print(str(i+3)+' "'+lst_c[indice].hex()+'" '+str(tmp2[0])+' '+str(tmp2[2])+' '+affiche_liste(tmp1[0])+' '+affiche_liste(tmp2[1]))
+    #print(iso_uniq)
