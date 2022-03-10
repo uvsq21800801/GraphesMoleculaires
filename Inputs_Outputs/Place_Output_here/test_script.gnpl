@@ -1,12 +1,14 @@
-set title "Sous-graphes répétés d'ordre 7 - img58"
+set title "Motifs répétés de 7 sommets - img58"
 set xlab "Groupes de sous-graphes à isomorphisme près"
-set ylab "Nombre d'occurance"
-set yrange [1:]
+set ylab "Nombre d'occurrence"
+set yrange [0:30]
+set ytics 5
 set y2lab "Taux de recouvrement"
-set y2range [1:]
-set y2tics
-set grid noxtics ytics y2tics lw 1
+set y2range [0:6]
+set y2tics 1
+set style line 12 lt1 lw 1
+set grid noxtics ytics y2tics ls 12
 set key left top
 set terminal pdf
 set output "img58_7_plot.pdf"
-plot "img58_7.txt" using 1:2 axe x1y1 title "Nombre d'occurance" with dots, "" using 1:3 axe x1y2 title "Taux de recouvrement" with dots
+plot "img58_7.txt" using 1:2 axe x1y1 title "Nombre d'occurrence" pt 6 ps 3, "" using 1:3 axe x1y2 title "Taux de recouvrement par sommet" pt 9 ps 3
