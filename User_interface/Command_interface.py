@@ -6,63 +6,169 @@ sys.path.append('GraphesMoleculaires/Solving_Methods')
 from Inputs_Outputs import Inputs
 from Solving_Methods import BruteForce
 
+from datetime import datetime
+
 def interface():
-    #recuperation des donnees des fichiers
-    listindex = []
-    atom_caract = []
-    filename1 = Inputs.Input_trad(listindex, atom_caract)
-    #print(listindex)
-    #print(atom_caract)
-    matriceadja = []
-    filename2 = Inputs.Input_bonds(listindex, matriceadja)
-    #affiche_adja(matriceadja)
-    
-    # test que les fichiers sont bien associés
-    if filename1 != filename2 :
-        print("Erreur de lecture de fichiers "+filename1+" "+filename2)
-        return 1
-    
     # définition des ordres des sous-graphes
     max_ordre = 8
     min_ordre = 3
-
-    # methode de resolution -> bruteforce
-    (isomorph_dict, recouvre_dict, lst_ordre, lst_c) = BruteForce.BruteF(listindex, matriceadja, atom_caract, max_ordre, min_ordre)
-    # calcul et ajoute le taux de recouvrement
-    BruteForce.Taux_recouvert(recouvre_dict)
-
-    ### fonctions résultats
-    '''
-    # affiche par ordre le nombre de certif
-    print("Ordre - Nb forme canonique")
-    for i in range(int(len(lst_ordre))):
-        print('  '+str(i+min_ordre)+'   - '+str(len(lst_ordre[i])))*
-    '''
-    # Affiche les Isomorphes
-    #print("ordre certificat nombre_occurence taux_recouvrement exemple recouvrement")
-    #affiche_iso(lst_ordre, isomorph_dict, recouvre_dict, lst_c)
     
-    # Diagramme taux par nombre d'occurance croissant
-    # --> il serait mieux de rassembler les nombre d'occurance et taux de recouvrement par ordre des sous-graphe pour ça
-    ## imprime dans un fichier les données trié
-    for i in range(int(len(lst_ordre))):
-        Inputs.Output_diagramme(filename1, i, min_ordre, lst_ordre, recouvre_dict)
+    return BF_for_one_name("img58",min_ordre, max_ordre)
+
+###
+# 1. Type d'execution bruteforce avec plusieurs fichiers
+###
+
+def BF_for_any_new_name(min_ordre, max_ordre):
+    # recuperation des donnees de tous les fichiers
+    (filenames1, filenames2, list_index, atom_caract, matrice_adja) = data_inputs()
     
+    # test que les fichiers sont bien associés 2 à 2
+    filenames1.sort()
+    filenames2.sort()
+    if filenames1 != filenames2 :
+        print("Erreur de lecture de fichiers "+filenames1+" "+filenames2+'\n')
+        print("Fichier(s) manquant(s) ou intrus?\n")
+        return 1
+    
+    BF_do_any_new_name(filenames1, list_index, atom_caract, matrice_adja, min_ordre, max_ordre)
     return 0
 
+def BF_for_any_name(min_ordre, max_ordre):
+    # recuperation des donnees de tous les fichiers
+    (filenames1, filenames2, list_index, atom_caract, matrice_adja) = data_inputs()
+    
+    # test que les fichiers sont bien associés 2 à 2
+    filenames1.sort()
+    filenames2.sort()
+    if filenames1 != filenames2 :
+        print("Erreur de lecture de fichiers "+filenames1+" "+filenames2+'\n')
+        print("Fichier(s) manquant(s) ou intrus?\n")
+        return 1
+    
+    BF_do_any_name(filenames1, list_index, atom_caract, matrice_adja, min_ordre, max_ordre)
+    return 0
 
-### fonctions de débuggage
-def affiche_adja(matriceadja):
-    r = int(len(matriceadja))
+# imprime et étudie tous les nouveaux noms de fichiers
+def BF_do_any_new_name(filenames, list_index, atom_caract, matrice_adja, min_ordre, max_ordre):
+    for name in filenames :
+        if Inputs.done(name):
+            print(name+" déjà fait"+str(datetime.now().time)+"\n")
+        else:
+            # imprime les données de ce graphes
+            Inputs.Output_data(name, lst_index[name], atom_caract[name], matrice_adja[name])
+    
+    for name in filenames1 :
+        if not Inputs.done(name):
+            print(name+" commence"+str(datetime.now().time)+"\n")
+            
+            # sous_graphes isomorphes connexe par methode bruteforce
+            (dict_isomorph, dict_stat, lst_ordre, lst_certif) = BruteForce.BruteF(matrice_adja[name], atom_caract[name], min_ordre, max_ordre)
+            # calcul le taux de recouvrement
+            BruteForce.Taux_recouvert(dict_stat)
+            
+            # imprime les résultats
+            res_output(name, min_ordre, lst_ordre, lst_combi, lst_certif, lst_unique, dict_data, dict_isomorph, dict_stat)
+            
+            print(name+" fini"+str(datetime.now().time)+"\n")
+
+# imprime et étudie tous les nouveaux noms de fichiers
+def BF_do_any_name(filenames, list_index, atom_caract, matrice_adja, min_ordre, max_ordre):
+    for name in filenames :
+        # imprime les données de ce graphes
+        Inputs.Output_data(name, lst_index[name], atom_caract[name], matrice_adja[name])
+    for name in filenames :
+        print(name+" commence"+str(datetime.now().time)+"\n")
+        
+        # sous_graphes isomorphes connexe par methode bruteforce
+        (dict_isomorph, dict_stat, lst_ordre, lst_certif) = BruteForce.BruteF(matrice_adja[name], atom_caract[name], min_ordre, max_ordre)
+        # calcul le taux de recouvrement
+        BruteForce.Taux_recouvert(dict_stat)
+        
+        # imprime les résultats
+        res_output(name, min_ordre, lst_ordre, lst_combi, lst_certif, lst_unique, dict_data, dict_isomorph, dict_stat)
+        
+        print(name+" fini"+str(datetime.now().time)+"\n")
+###
+# 1. Type d'execution bruteforce avec un fichier
+###
+
+def BF_for_one_name(name, min_ordre, max_ordre):
+    # recuperation des donnees de tous les fichiers
+    (filename1, filename2, list_index, atom_caract, matrice_adja) = data_input(name)
+    
+    if name != filename1 or name != filename2 :
+        print("Erreur de lecture de fichiers "+filenames1+" "+filenames2+'\n')
+        print("Fichier manquant?\n")
+        return 1
+    
+    BF_do_one_name(name, list_index, atom_caract, matrice_adja, min_ordre, max_ordre)
+    return 0
+
+# imprime et étudie un nom de fichier donné
+def BF_do_one_name(name, list_index, atom_caract, matrice_adja, min_ordre, max_ordre):
+    # imprime les données de ce graphes
+    Inputs.Output_data(name, lst_index, atom_caract, matrice_adja)
+
+    print(name+" commence"+str(datetime.now().time)+"\n")
+    
+    # sous_graphes isomorphes connexe par methode bruteforce
+    (dict_isomorph, dict_stat, lst_ordre, lst_certif) = BruteForce.BruteF(matrice_adja, atom_caract, min_ordre, max_ordre)
+    # calcul le taux de recouvrement
+    BruteForce.Taux_recouvert(dict_stat)
+    unique = BruteForce.Nombre_unique(lst_ordre, dict_stat)
+    
+    # imprime les résultats
+    res_output(name, min_ordre, lst_ordre, lst_combi, lst_certif, lst_unique, dict_data, dict_isomorph, dict_stat)
+    
+    print(name+" fini"+str(datetime.now().time)+"\n")
+
+###
+# 3. Fonctions de lecture et écriture sur fichiers
+###
+
+# recuperation des donnees des fichiers
+def data_inputs():
+    list_index = {}
+    atom_caract = {}
+    filenames1 = Inputs.Inputs_trad_all(list_index, atom_caract)
+    matrice_adja = {}
+    filenames2 = Inputs.Inputs_bonds_all(list_index, matrice_adja)
+    return filenames1, filenames2, list_index, atom_caract, matrice_adja
+
+# recuperation des donnees d'un type de fichier
+def data_input(name):
+    list_index = []
+    atom_caract = []
+    filename1 = Inputs.Input_trad(name, list_index, atom_caract)
+    matrice_adja = []
+    filename2 = Inputs.Input_bonds(name, list_index, matrice_adja)
+    
+    return filename1, filename2, list_index, atom_caract, matrice_adja
+
+# impression des resultats pour un graphe
+def res_output(name, min_ordre, lst_ordre, lst_combi, lst_certif, lst_unique, dict_data, dict_isomorph, dict_stat):
+    for i in range(int(len(lst_ordre))):
+        Inputs.Output_diagramme(name, i, min_ordre, lst_ordre, dict_stat)
+    Inputs.Output_result(name, min_ordre, lst_certif, lst_ordre, dict_isomorph, dict_stat)
+    Inputs.Output_stat(name, min_ordre, lst_combi, lst_certif, lst_unique)
+
+###
+# 4. Fonctions d'affichage de structures
+###
+
+### fonctions d'affichage matrice et liste
+def affiche_matrice(m):
+    r = int(len(m))
     for i in range(r):
-        print(matriceadja[i])
+        print(m[i])
 
-def affiche_adja2(matriceadja):
-    r = int(len(matriceadja))
+def affiche_matrice2(m):
+    r = int(len(m))
     for i in range(r):
         s = ''
         for j in range(r):
-            s += str(matriceadja[i][j])+' '
+            s += str(m[i][j])+' '
         print(s)
 
 def affiche_liste(l):
@@ -71,17 +177,18 @@ def affiche_liste(l):
         s += str(l[i])
     return s+'"'
 
-def affiche_iso(lst_ordre, isomorph_dict, recouvre_dict, lst_c):
+# affiche les infos sur les motifs (groupes à isomorphismes près)
+def affiche_data(min_ordre, lst_ordre, dict_isomorph, dict_stat, lst_certif):
+    print("ordre identifiant nombre_occurrence taux_recouvrement recouvrement certificat liste_combi")
     for i in range(len(lst_ordre)):
         iso_uniq = 0
-        #print('Ordre '+str(i+3)+' : '+str(len(lst_ordre[i]))+' certificats')
         for indice in lst_ordre[i]:
-            tmp1 = isomorph_dict.get(indice)
-            tmp2 = recouvre_dict.get(indice)
+            tmp1 = dict_isomorph.get(indice)
+            tmp2 = dict_stat.get(indice)
             if tmp2[0] > 1:
-                #     ordre         certificat              nombre_occurence taux_recouvrement exemple recouvrement
-                print(str(i+3)+' "'+lst_c[indice].hex()+'" '+str(tmp2[0])+' '+str(tmp2[2])+' '+affiche_liste(tmp1[0])+' '+affiche_liste(tmp2[1]))
+                #     ordre               identifiant nombre_occurrence taux_recouvrement  recouvrement                 certificat                liste combinaison
+                print(str(i+min_ordre)+' '+str(indice)+str(tmp2[0])+' '+str(tmp2[2])+' \''+affiche_liste(tmp2[1])+' \''+lst_certif[indice].hex()+' \''+str(tmp1))
             else :
-                #iso_uniq += 1
-                print(str(i+3)+' "'+lst_c[indice].hex()+'" '+str(tmp2[0])+' '+str(tmp2[2])+' '+affiche_liste(tmp1[0])+' '+affiche_liste(tmp2[1]))
-    #print(iso_uniq)
+                iso_uniq += 1
+                #print(str(i+min_ordre)+' '+str(indice)+str(tmp2[0])+' '+str(tmp2[2])+' \''+affiche_liste(tmp2[1])+' \''+lst_certif[indice].hex()+' \''+str(tmp1))
+    print(iso_uniq)

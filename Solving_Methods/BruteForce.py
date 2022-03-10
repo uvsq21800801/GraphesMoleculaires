@@ -2,29 +2,43 @@ import math
 from pynauty import *
 
 
-# Explication de l'algorithme
-# On initialise la matrice de combinaison à la 1ere combinaison (aucun sommet)
-# On vérifie la connexité
-# On vérifié l'isomorphisme
-# On ajoute dans la matrice résultat
-# On incrémente la valeur de la combinaison avec l'addition binaire
-# On recommence tout jusqu'à la dernière combinaison
-# On retourne les dictionnaires de résultat
+# Explication de l'algorithme générale
+#   Génération d'une liste de combinaison de sommets = sous-graphe 
+#       combi[i] = 1 si sommet i appartient au sous-graphe
+#                = 0 sinon
+#   Si le sous-graphe est connexe, alors il est sauvegarder dans dict_combi
+#       la clé du dictionnaire est l'ordre du sous-graphe
+#   On génère le certificat (canonique) des sous-graphes
+#   Si il est inconnu :
+#       On ajoute le certificat à la liste de certificat lst_certif
+#       On ajoute l'indice du certificat dans 
+#           le dictionnaire des indices par ordre lst_ordre
+#   S'il est connu ou non :
+#       Pour l'identifiant du certificat
+#       Dans le dictionnaire des isomorphes dict_isomorph,
+#           On ajoute la combinaison de sommets à la liste 
+#       Dans le dictionnaire des données statistiques dict_stat,
+#           En [0], On incrémente le nombre d'occurence du sous-graphe
+#           En [1], On incrémente le nombre d'apparition des sommets
 
-# note: On a pas besoin de vérifier qu'un sous-graphe existe déjà car
-# ils sont générés de manière à être unique
+# Le calcul du taux de recouvrement est calculer comme :
+#   Le nombre moyen d'apparition dans les sous-graphes 
+#       si le sommets apparait au moins 1 fois
+
+# La génération de combinaison bruteforce se fait par une forme d'addition binaire
+# On note qu'il n'est pas nécessaire de vérifier si le sous-graphes 
+#   a déjà été vu par l'algorithme de génération bruteforce
 
 ###
 # 1. Principale - Sous-graphes connexe avec certificat canonique
 ###
 
-
-# méthode à appeler pour bruteforcer
-def BruteF(listindex, matriceadja, atom_caract, max_ordre, min_ordre):
+# méthode générale (génération et test combiné)
+def BruteF(matrice_adja, atom_caract, min_ordre, max_ordre):
     ###### Initialisations ######
     # initialisation de la matrice des combinaisons
     combi = []
-    matrx_len = int(len(matriceadja))
+    matrx_len = int(len(matrice_adja))
     for i in range(matrx_len):
         combi.append(0)
     
@@ -34,37 +48,29 @@ def BruteF(listindex, matriceadja, atom_caract, max_ordre, min_ordre):
     for k in range(ordre):
         combi[k] = 1 
 
-    # on initie la structure de stockage des graphes 
-    # chaque liste correspond à un ordre entre celui min et max
-    lst_ordre = [] #= ordre : [identifiant]
+    # Structures de stockage :
+    # Listes:
+    lst_certif = [] #= identifiant : certificat
+    lst_ordre = []  #= ordre-min_ordre : [identifiant*]
+    lst_combi = []  #= ordre-min_ordre : [combi*]
+    # Dictionnaires: 
+    # --> on peut revenir à des listes commes les identifiants sont consécutifs
+    dict_isomorph = {} #= {identifiant: [combi*]}
+    dict_stat = {}     #= {identifiant: [nb_occurrence,  occurrence_sommet, taux]}
+    
+    # Initialisation des listes par ordre 
     for k in range(max_ordre - min_ordre +1):
         lst_ordre.append([]) 
-
-    # Structure de stockage pour l'isomorphisme et le recouvrement
-    # avec les certificats de lst_c
-    # Dictionnaire:
-    isomorph_dict = {} #= {identifiant: liste_combi}
-    recouvre_dict = {} #= {identifiant: [nb_occurence,  occurence_sommet, taux]}
-    lst_c = []     #= identifiant : [certificat]
-
-
-    # initialisation des couleurs
-    couleur_nb = 0
-    dict_couleur = {}    
-    for i in atom_caract:
-        splitted = i.split()
-        if splitted[0] not in dict_couleur:
-            dict_couleur[splitted[0]] = couleur_nb 
-            couleur_nb += 1
-        #print(dict_couleur)
-    #print(couleur_nb)
-
-    #return 0;
+        lst_combi.append([]) 
+    # chaque liste correspond à un ordre entre celui min et max
+    
+    # initialisation du dictionnaire des couleurs
+    (couleur_nb, dict_couleur) = init_col(atom_caract)
 
     ###### Algorithme Bruteforce ######
     for i in range(int(math.pow(2,int(matrx_len)))):
         # verification que la combinaison est connexe
-        conx = verif_conx(combi, matriceadja, ordre)
+        conx = verif_conx(combi, matrice_adja, ordre)
         if (conx):
             #print(comb_trad(combi,atom_caract)+" connexe!")
             #affiche_combi(combi, ordre)
@@ -72,41 +78,122 @@ def BruteF(listindex, matriceadja, atom_caract, max_ordre, min_ordre):
             # --> test isomorphisme
             # --> recouvrement des sommets
             # --> lst_ordre stocke les indices par ordre
-            certif = combi_to_certif(combi, matriceadja, atom_caract, dict_couleur)
+            certif = combi_to_certif(combi, matrice_adja, atom_caract, dict_couleur)
             #print(certif.hex())
-            if certif not in lst_c:
-                lst_c.append(certif)
-                isomorph_dict[lst_c.index(certif)] = [combi.copy()]
-                recouvre_dict[lst_c.index(certif)] = [1,combi.copy()]
-                lst_ordre[ordre - min_ordre].append(lst_c.index(certif))
+            if certif not in lst_certif:
+                lst_certif.append(certif)
+                dict_isomorph[lst_certif.index(certif)] = [combi.copy()]
+                dict_stat[lst_certif.index(certif)] = [1,combi.copy()]
+                lst_ordre[ordre - min_ordre].append(lst_certif.index(certif))
             else:
-                isomorph_dict[lst_c.index(certif)].append(combi.copy())
-                tmp = recouvre_dict.get(lst_c.index(certif))
+                dict_isomorph[lst_certif.index(certif)].append(combi.copy())
+                tmp = dict_stat.get(lst_certif.index(certif))
                 for i in range(len(combi)):
                     tmp[1][i] += combi[i]
-                recouvre_dict[lst_c.index(certif)] = [tmp[0]+1,tmp[1].copy()]
+                dict_stat[lst_certif.index(certif)] = [tmp[0]+1,tmp[1].copy()]
                 #affiche_combi(tmp[1], ordre)             
             
         # Combinaisons de sommets suivantes
-        ordre = add_magique(combi, ordre)
+        ordre = add_ordonnee(combi, ordre)
         if ordre > max_ordre:
             break
     
-    #print (isomorph_dict)
-    return isomorph_dict, recouvre_dict, lst_ordre, lst_c
+    #print (dict_isomorph)
+    return dict_isomorph, dict_stat, lst_ordre, lst_certif
+
+# génération des combinaisons de sommets connexes
+def gen_combi_brute(matrice_adja, atom_caract, min_ordre, max_ordre):
+    ###### Initialisations ######
+    # initialisation de la structure des combinaisons
+    combi = []
+    matrx_len = int(len(matrice_adja))
+    for i in range(matrx_len):
+        combi.append(0)
+    
+    # initialisation le parametres liés à l'ordre du graphe et des sous-graphes
+    ordre = min_ordre
+    # génération du premier sous-graphe d'ordre minimum
+    for k in range(ordre):
+        combi[k] = 1 
+
+    # initialisation des listes des combinaisons 
+    # chaque liste correspond à un ordre entre celui min et max
+    lst_combi = []  #= ordre-min_ordre : [combi*]
+    for k in range(max_ordre - min_ordre +1):
+        lst_combi.append([]) 
+
+    ###### Algorithme Bruteforce ######
+    for i in range(int(math.pow(2,int(matrx_len)))):
+        # verification que la combinaison est connexe
+        conx = verif_conx(combi, matrice_adja, ordre)
+        if (conx):
+            lst_combi[ordre].append(combi.copy())
+        # Combinaisons de sommets suivantes
+        ordre = add_ordonnee(combi, ordre)
+        if ordre > max_ordre:
+            break
+    
+    #print (dict_isomorph)
+    return lst_combi
+
+def combi_iso(matrice_adja, atom_caract, lst_combi, min_ordre, max_ordre):
+    ###### Initialisations ######
+
+    # Structures de stockage :
+    # Listes:
+    lst_certif = [] #= identifiant : certificat
+    lst_ordre = []  #= ordre-min_ordre : [identifiant*]
+    # Dictionnaires: 
+    # --> on peut revenir à des listes commes les identifiants sont consécutifs
+    dict_isomorph = {} #= {identifiant: [combi*]}
+    dict_stat = {}     #= {identifiant: [nb_occurrence,  occurrence_sommet, taux]}
+    
+    # initialisation des listes par ordre (entre le min et le max)
+    for k in range(max_ordre - min_ordre +1):
+        lst_ordre.append([]) 
+    
+    # initialisation du dictionnaire des couleurs
+    (couleur_nb, dict_couleur) = init_col(atom_caract)
+    
+    # initialisation le parametres liés à l'ordre du graphe et des sous-graphes
+    ordre = min_ordre
+
+    ###### Boucle sur la liste de combinaison ######
+    for liste in lst_combi:
+        for combi in liste :            
+            # calcule du certificat de la combinaison
+            certif = combi_to_certif(combi, matrice_adja, atom_caract, dict_couleur)
+            #print(certif.hex())
+            if certif not in lst_certif:
+                lst_certif.append(certif)
+                indice = lst_certif.index(certif)
+                dict_isomorph[indice] = [combi.copy()]
+                dict_stat[indice] = [1,combi.copy()]
+                lst_ordre[ordre - min_ordre].append(indice)
+            else:
+                indice = lst_certif.index(certif)
+                dict_isomorph[indice].append(combi.copy())
+                tmp = dict_stat.get(indice)
+                for i in range(len(combi)):
+                    tmp[1][i] += combi[i]
+                dict_stat[indice] = [tmp[0]+1,tmp[1].copy()]
+                #affiche_combi(tmp[1], ordre)
+    
+    #print (dict_isomorph)
+    return dict_isomorph, dict_stat, lst_ordre, lst_certif
 
 # methode de verification de la connexite d'une combinaison 
 # de sommets
-def verif_conx(combi, matriceadja, ordre):
+def verif_conx(combi, matrice_adja, ordre):
     # test de connexité
     listconx = []
     for k in range(ordre):
-        for i in range(int(len(matriceadja))):
+        for i in range(int(len(matrice_adja))):
             if len(listconx) == 0 and combi[i]==1: 
                 listconx.append(i)
             if combi[i] == 1 and (i not in listconx):
                 for l in listconx:
-                    if matriceadja[l][i] != 0 or matriceadja[i][l] !=0:
+                    if matrice_adja[l][i] != 0 or matrice_adja[i][l] !=0:
                         listconx.append(i)
                         break
 
@@ -122,41 +209,60 @@ def verif_conx(combi, matriceadja, ordre):
 
 # Calcul les recouvrements
 # (sommets par sommets pour chaque isomorphe)
-def recouvrement(isomorph_dict):
-    recouvre_dict = {}
-    for indice in isomorph_dict.keys():
-        l_iso = isomorph_dict.get(indice)
-        recouvre_dict[indice] = [len(l_iso),[]]
+def recouvrement(dict_isomorph):
+    dict_stat = {}
+    for indice in dict_isomorph.keys():
+        l_iso = dict_isomorph.get(indice)
+        dict_stat[indice] = [len(l_iso),[]]
         for i in range(len(l_iso)):
             for j in range(len(l_iso[i])):
                 if i==0 :
-                    recouvre_dict[indice][1].append(0)
-                recouvre_dict[indice][1][j]+=l_iso[i][j]
-    return recouvre_dict
-# renvoie un dictionnaire avec pour chaque certificat le nombre d'occurance
-# et le nombre d'apparition de chaque sommet dans ses occurances
-
+                    dict_stat[indice][1].append(0)
+                dict_stat[indice][1][j]+=l_iso[i][j]
+    return dict_stat
 
 # Calcul le taux de recouvrement pour un groupe d'isomorphes
-def Taux_recouvert(recouvre_dict):
-    for indice in recouvre_dict.keys():
-        stat = recouvre_dict.get(indice)
-        tot = 0 # cumule des occurences de sommets
+def Taux_recouvert(dict_stat):
+    for indice in dict_stat.keys():
+        stat = dict_stat.get(indice)
+        tot = 0 # cumule des occurrences de sommets
         cmpt = 0 # nombre de sommets apparus
         for i in range(len(stat[1])):
             tot += stat[1][i]
             if stat[1][i]>0 :
                 cmpt += 1 
         # taux de recouvrement
-        recouvre_dict[indice].append(tot/cmpt)
+        dict_stat[indice].append(tot/cmpt)
+
+# Calcul le nombre de sous-graphes sans équivalent isomorphe (unique)
+def Nombre_unique(lst_ordre, dict_stat):
+    cmpt = []
+    for i in range(len(lst_ordre)):
+        cmpt.append(0)
+        for indice in lst_ordre[i]:
+            tmp = dict_stat.get(indice)
+            if tmp[0] == 1:
+                cmpt[i] += 1 
+    return cmpt
 
 ###
 # 3. Certificat canonique de sous-graphes par les combinaisons de sommets
 ###
 
+# initialisation des couleurs
+def init_col(atom_caract):
+    couleur_nb = 0
+    dict_couleur = {}    
+    for i in atom_caract:
+        splitted = i.split()
+        if splitted[0] not in dict_couleur:
+            dict_couleur[splitted[0]] = couleur_nb 
+            couleur_nb += 1
+    return dict_couleur, couleur_nb
+
 # Fait et retourne un certificat de graphe à partir d'une 
 # combinaison de sommets
-def combi_to_certif(combi, matriceadja, atom_caract, dict_c):
+def combi_to_certif(combi, matrice_adja, atom_caract, dict_c):
     ###### Initialisations ######
     
     # création d'une liste permettant de renommer les sommets
@@ -185,7 +291,7 @@ def combi_to_certif(combi, matriceadja, atom_caract, dict_c):
         listconnex = []
         if combi[i] == 1:
             for j in range(len(combi)):
-                if matriceadja[i][j] != 0 and combi[j] == 1:
+                if matrice_adja[i][j] != 0 and combi[j] == 1:
                     #print(nv_nom[j])
                     listconnex.append(nv_nom[j])
             #g.connect_vertex(sommet_n, listconnex)
@@ -202,18 +308,10 @@ def combi_to_certif(combi, matriceadja, atom_caract, dict_c):
         
     g.set_vertex_coloring(list_sets)
         
-        #test #g.set_vertex_coloring([set([1])])
-        #g.set_vertex_coloring([set([2])])        
-        
-    #print(g)
-    #print(autgrp(g))
-    #print(certificate(g).decode('cp437'))
-    #print(certificate(g).decode("utf-16"))
-    
     return certificate(g) 
 
 ###
-# 4. Fonction de bases (affichage et reprise des résultats)
+# 4. Fonctions d'affichage
 ###
 
 # affichage de la combinaison en suite de 1 et de 0 (fonction de débuggage)
@@ -230,9 +328,7 @@ def comb_trad(combi,atom_caract):
     for i in range(len(combi)):
         if combi[i] == 1:
            s+= atom_caract[i]+', ' 
-    return s
-
-# rassemblement des nombres d'occurence    
+    return s   
 
 ###
 # 5. Gestion des combinaisons de sommets du graphes
@@ -249,7 +345,7 @@ def add_b2 (combi):
 
 # Une façon d'obtenir une nouvelle combinaison unique à partir de
 # la précédente et qui permet de suivre l'ordre du sous-graphe 
-def add_magique (combi, ordre):
+def add_ordonnee (combi, ordre):
     compt_end = 0
     end_full = True
     max = len(combi)

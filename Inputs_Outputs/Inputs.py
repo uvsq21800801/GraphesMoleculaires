@@ -2,75 +2,166 @@ from os import listdir, remove
 from os.path import isfile, join
 import re
 
-#initie la matrice d'adjacence
-def Init(matrice, taille):
-    for i in range(taille):
-        matrice.append([])
-        for j in range(taille):
-            matrice[i].append(0)
+###
+# 1. Fonctions de récupération de données d'atomes
+###
 
-# devra retourner le contenu des fichiers texte
-def Input_bonds(li,ma):    
-    # recuperation du fichier bonds
-    fpath = "Inputs_Outputs/Place_Bonds_file_here/"
-    filenames = [f for f in listdir(fpath) if isfile(join(fpath, f))]
-    filename = filenames[0]
-    
-    ##print(filename)
-
-    #initie la matrice d'adjacence
-    Init(ma,len(li))
-
-    # lecture du fichier bonds et transcription dans la matrice d'adjacence
-    f1 = open(fpath+filename, 'r').readlines()
-    for line in f1:
-        splitted = line.split()
-        # liaison covalente
-        if splitted[0] == '1' and len(splitted) == 3:
-            if splitted[1] in li and splitted[2] in li:
-                #ajoute un 1 dans la matrice ma de façon symétrique
-                #print(str(li.index(splitted[1]))+' '+str(li.index(splitted[2])))
-                ma[li.index(splitted[1])][li.index(splitted[2])] = 1
-                ma[li.index(splitted[2])][li.index(splitted[1])] = 1
-            #print(splitted[0]+' '+splitted[1]+' '+splitted[2])
-        # liaison hydrogene
-        if splitted[0] == '4' and len(splitted) == 4:
-            if splitted[1] in li and splitted[2] in li:
-                #ajoute un 2 dans la matrice ma de façon asymétrique
-                #print(str(li.index(splitted[1]))+' '+str(li.index(splitted[2])))
-                ma[li.index(splitted[1])][li.index(splitted[2])] = 2
-            #print(splitted[0]+' '+splitted[1]+' '+splitted[2])
-        
-    name1 = filename.split('_')
-    name2 = name1[1].split('.')
-    
-    return name2[0]
-    
-def Input_trad(li, atom_caract):
+# Retourne le contenu d'un fichier texte pour un nom donné
+def Input_trad(name, li, atom_caract):
     # recuperation du fichier trad
     fpath = "Inputs_Outputs/Place_Trad_file_here/" 
     filenames = [f for f in listdir(fpath) if isfile(join(fpath, f))]
-    filename = filenames[0]
-    
-    # lecture du fichier bonds et transcription dans la matrice de traduction
-    f1 = open(fpath+filename, 'r').readlines()
-    for line in f1:
-        splitted = line.split()
-        if len(splitted) == 3:
-            if splitted[1] != 'H':
-                li.append(splitted[0])
-                
-                # Liste de traduction suivant le modele '[type atome] [numero]'
-                temp = splitted[2]
-                caracteristiques = splitted[1]+' '+temp[len(splitted[1]):]
-                atom_caract.append(caracteristiques)
-            #print(splitted[0]+' '+splitted[1]+' '+splitted[2])
-        
-    name1 = filename.split('_')
-    name2 = name1[1].split('.')
-    
-    return name2[0]
+    filename = "trad-atom_"+name+".txt"
+    # si le nom est bien représenté, on récupère les données
+    if filename in filenames:
+        # lecture du fichier bonds et transcription dans la matrice de traduction
+        f1 = open(fpath+filename, 'r').readlines()
+        for line in f1:
+            splitted = line.split()
+            if len(splitted) == 3:
+                if splitted[1] != 'H':
+                    li.append(splitted[0])
+                    
+                    # Liste de traduction suivant le modele '[type atome] [numero]'
+                    temp = splitted[2]
+                    caracteristiques = splitted[1]+' '+temp[len(splitted[1]):]
+                    atom_caract.append(caracteristiques)
+                #print(splitted[0]+' '+splitted[1]+' '+splitted[2])
+        return name
+    else :
+        return ""
 
+# Retourne le contenu des fichiers textes en liste
+def Inputs_trad_all(li, atom_caract):
+    # recuperation du fichier trad
+    fpath = "Inputs_Outputs/Place_Trad_file_here/" 
+    filenames = [f for f in listdir(fpath) if isfile(join(fpath, f))]
+    names = []
+
+    for filename in filenames :
+        # definie le nom du graphe
+        name = get_name(filename)
+        names.append(name)
+        #initie les listes pour ce graphe (écrase le précédent si 2 noms identiques)
+        li[name] = []
+        atom_caract[name] = []
+        # lecture du fichier bonds et transcription dans la matrice de traduction
+        f1 = open(fpath+filename, 'r').readlines()
+        for line in f1:
+            splitted = line.split()
+            if len(splitted) == 3:
+                if splitted[1] != 'H':
+                    li[name].append(splitted[0])
+                    
+                    # Liste de traduction suivant le modele '[type atome] [numero]'
+                    temp = splitted[2]
+                    caracteristiques = splitted[1]+' '+temp[len(splitted[1]):]
+                    atom_caract[name].append(caracteristiques)
+                #print(splitted[0]+' '+splitted[1]+' '+splitted[2])
+    return names
+
+###
+# 1. Fonctions de récupération de données de liaisons
+###
+
+def Input_bonds(name, li, ma):    
+    # recuperation du fichier bonds
+    fpath = "Inputs_Outputs/Place_Bonds_file_here/"
+    filenames = [f for f in listdir(fpath) if isfile(join(fpath, f))]
+    filename = "bonds_"+name+".txt"
+    # si le nom est bien représenté, on récupère les données
+    if filename in filenames:
+
+        #initie la matrice d'adjacence
+        init_matrice(ma,len(li))
+
+        # lecture du fichier bonds et transcription dans la matrice d'adjacence
+        f1 = open(fpath+filename, 'r').readlines()
+        for line in f1:
+            splitted = line.split()
+            # liaison covalente
+            if splitted[0] == '1' and len(splitted) == 3:
+                if splitted[1] in li and splitted[2] in li:
+                    #ajoute un 1 dans la matrice ma de façon symétrique
+                    #print(str(li.index(splitted[1]))+' '+str(li.index(splitted[2])))
+                    ma[li.index(splitted[1])][li.index(splitted[2])] = 1
+                    ma[li.index(splitted[2])][li.index(splitted[1])] = 1
+                #print(splitted[0]+' '+splitted[1]+' '+splitted[2])
+            # liaison hydrogene
+            if splitted[0] == '4' and len(splitted) == 4:
+                if splitted[1] in li and splitted[2] in li:
+                    #ajoute un 2 dans la matrice ma de façon asymétrique
+                    #print(str(li.index(splitted[1]))+' '+str(li.index(splitted[2])))
+                    ma[li.index(splitted[1])][li.index(splitted[2])] = 2
+                #print(splitted[0]+' '+splitted[1]+' '+splitted[2])
+        return name
+    else :
+        return ""
+
+# Retourne le contenu des fichiers "bonds" texte en matrice d'adjacence
+def Inputs_bonds_all(li, ma):    
+    # recuperation du fichier bonds
+    fpath = "Inputs_Outputs/Place_Bonds_file_here/"
+    filenames = [f for f in listdir(fpath) if isfile(join(fpath, f))]
+    names = []
+    
+    matrice = []
+    for filename in filenames :
+        # definie le nom du graphe
+        name = get_name(filename)
+        names.append(name)
+        #initie la matrice d'adjacence
+        matrice = []
+        if name in li.keys() :
+            l = li.get(name)
+            init_matrice(matrice,len(l))
+
+            # lecture du fichier bonds et transcription dans la matrice d'adjacence
+            f1 = open(fpath+filename, 'r').readlines()
+            for line in f1:
+                splitted = line.split()
+                # liaison covalente
+                if splitted[0] == '1' and len(splitted) == 3:
+                    if splitted[1] in l and splitted[2] in l:
+                        #ajoute un 1 dans la matrice ma de façon symétrique
+                        matrice[l.index(splitted[1])][l.index(splitted[2])] = 1
+                        matrice[l.index(splitted[2])][l.index(splitted[1])] = 1
+                # liaison hydrogene
+                if splitted[0] == '4' and len(splitted) == 4:
+                    if splitted[1] in l and splitted[2] in l:
+                        #ajoute un 2 dans la matrice ma de façon asymétrique
+                        matrice[l.index(splitted[1])][l.index(splitted[2])] = 2
+        ma[name] = matrice.copy()
+
+    return names
+
+###
+# 3. Fonctions d'impression de données
+###
+
+## données de base redirigées dans nos structures
+def Output_data(name, lst_index, atom_caract, matrice_adja):
+    # création du fichier de sortie
+    fpath = "Inputs_Outputs/Place_Output_here/"
+    filename = name+"_data.txt"
+    if isfile(join(fpath, filename)):
+        remove(join(fpath, filename))
+    f = open(fpath+filename, 'w')
+    
+    f.write("Indice IndiceOld Caracteristique atome\n")
+    for i in range(len(lst_index)):
+        f.write(str(i)+' '+str(lst_index[i])+' '+atom_caract[i]+'\n')
+    
+    f.write("Matrice Adjacence\n")
+    r = int(len(matrice_adja))
+    for i in range(r):
+        s = ''
+        for j in range(r):
+            s += str(matrice_adja[i][j])+'  '
+        f.write(s+'\n')
+    f.close()
+
+## données pour le diagramme des nombre d'occurence et taux de recouvrement
 def Output_diagramme(name, ordre, min_ordre, lst_ordre, data):
     # création du fichier de sortie
     fpath = "Inputs_Outputs/Place_Output_here/"
@@ -79,7 +170,7 @@ def Output_diagramme(name, ordre, min_ordre, lst_ordre, data):
         remove(join(fpath, filename))
     f = open(fpath+filename, 'w')
     
-    # liste des couples de donnée { occurance : [taux] }
+    # liste des couples de donnée { occurrence : [taux] }
     d = {}
     for i in lst_ordre[ordre]:
         tmp = data.get(i)
@@ -98,3 +189,75 @@ def Output_diagramme(name, ordre, min_ordre, lst_ordre, data):
             j += 1
     
     f.close()
+
+## ajoute les données supplémentaires
+def Output_stat(name, min_ordre, lst_combi, lst_certif, lst_unique):
+    # ouverture du fichier de sortie
+    fpath = "Inputs_Outputs/Place_Output_here/"
+    filename = name+"_data.txt"
+    if isfile(join(fpath, filename)):
+        f = open(fpath+filename, 'a')
+    
+    f.write("\nNombre de sous-graphes connexes :"+str(len(lst_combi))+"\n")
+    f.write("Nombre de certificats différents :"+str(len(lst_certif))+"\n")
+    f.write("Nombre de sous-graphes uniques par ordre :\n")
+    for i in range(len(lst_unique)):
+        f.write(srt(i+min_ordre)+':  'str(lst_unique[i])+'\n')
+    f.close()
+
+## données de résultats sous un format pouvant rentrer dans un tableaux excel (si l'on retire la dernière ligne)
+def Output_result(name, min_ordre, lst_certif, lst_ordre, dict_isomorph, dict_stat):
+    # création du fichier de sortie
+    fpath = "Inputs_Outputs/Place_Output_here/"
+    filename = name+"_res.txt"
+    if isfile(join(fpath, filename)):
+        remove(join(fpath, filename))
+    f = open(fpath+filename, 'w')
+    
+    f.write("Resultat")
+    f.write("ordre identifiant nombre_occurrence taux_recouvrement recouvrement certificat liste_combi\n")
+    iso_uniq = 0
+    for i in range(len(lst_ordre)):
+        for indice in lst_ordre[i]:
+            tmp1 = dict_isomorph.get(indice)
+            tmp2 = dict_stat.get(indice)
+            if tmp2[0] > 1:
+                #       ordre               identifiant nombre_occurrence taux_recouvrement  recouvrement                 certificat                liste combinaison
+                f.write(str(i+min_ordre)+' '+str(indice)+str(tmp2[0])+' '+str(tmp2[2])+' \''+affiche_liste(tmp2[1])+' \''+lst_certif[indice].hex()+' \''+str(tmp1))
+            else :
+                iso_uniq += 1
+                #f.write(str(i+min_ordre)+' '+str(indice)+str(tmp2[0])+' '+str(tmp2[2])+' \''+affiche_liste(tmp2[1])+' \''+lst_certif[indice].hex()+' \''+str(tmp1))
+    f.write("Nombre unique "+str(iso_uniq)+'\n')
+    
+    f.close()
+
+
+
+###
+# 4. Fonctions utile à la lecture ou l'écriture de données
+###
+
+# Récupère le nom dans les formats type_name.txt
+def get_name(filename):
+    name1 = filename.split('_')
+    name2 = name1[1].split('.')
+    return name2[0]
+
+# Fichiers déjà existant et donc calcul probablement non utile
+def done(name):
+    fpath = "Inputs_Outputs/Place_Output_here/"
+    filename1 = name+"_data.txt"
+    filename2 = name+"_res.txt"
+    # tests si les 2 fichiers existes déjà
+    if isfile(join(fpath, filename1)) and isfile(join(fpath, filename2)):
+        return True
+    else:
+        return False
+
+# Initie la matrice d'adjacence pour stocker les données
+def init_matrice(matrice, taille):
+    for i in range(taille):
+        matrice.append([])
+        for j in range(taille):
+            matrice[i].append(0)
+
