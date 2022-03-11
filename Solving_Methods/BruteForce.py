@@ -65,7 +65,7 @@ def BruteF(matrice_adja, atom_caract, min_ordre, max_ordre):
     # chaque liste correspond à un ordre entre celui min et max
     
     # initialisation du dictionnaire des couleurs
-    (couleur_nb, dict_couleur) = init_col(atom_caract)
+    (dict_couleur, couleur_nb) = init_col(atom_caract)
 
     ###### Algorithme Bruteforce ######
     for i in range(int(math.pow(2,int(matrx_len)))):
@@ -127,7 +127,7 @@ def gen_combi_brute(matrice_adja, atom_caract, min_ordre, max_ordre):
         # verification que la combinaison est connexe
         conx = verif_conx(combi, matrice_adja, ordre)
         if (conx):
-            lst_combi[ordre].append(combi.copy())
+            lst_combi[ordre - min_ordre].append(combi.copy())
         # Combinaisons de sommets suivantes
         ordre = add_ordonnee(combi, ordre)
         if ordre > max_ordre:
@@ -153,7 +153,7 @@ def combi_iso(matrice_adja, atom_caract, lst_combi, min_ordre, max_ordre):
         lst_ordre.append([]) 
     
     # initialisation du dictionnaire des couleurs
-    (couleur_nb, dict_couleur) = init_col(atom_caract)
+    (dict_couleur, couleur_nb) = init_col(atom_caract)
     
     # initialisation le parametres liés à l'ordre du graphe et des sous-graphes
     ordre = min_ordre
@@ -178,6 +178,7 @@ def combi_iso(matrice_adja, atom_caract, lst_combi, min_ordre, max_ordre):
                     tmp[1][i] += combi[i]
                 dict_stat[indice] = [tmp[0]+1,tmp[1].copy()]
                 #affiche_combi(tmp[1], ordre)
+        ordre += 1
     
     #print (dict_isomorph)
     return dict_isomorph, dict_stat, lst_ordre, lst_certif
@@ -362,6 +363,7 @@ def add_ordonnee (combi, ordre):
         else:
             end_full = False
         if i == max - 1:
+            print("fin ordre "+str(ordre))
             ordre += 1
             if ordre >= max:
                 ordre = max 

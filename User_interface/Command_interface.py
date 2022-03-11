@@ -13,7 +13,41 @@ def interface():
     max_ordre = 8
     min_ordre = 3
     
-    return BF_for_one_name("img58",min_ordre, max_ordre)
+    # recuperation des donnees de tous les fichiers
+    (filenames1, filenames2, lst_index, atom_caract, matrice_adja) = Inputs.data_inputs()
+    
+    # test que les fichiers sont bien associés 2 à 2
+    filenames1.sort()
+    filenames2.sort()
+    if filenames1 != filenames2 :
+        print("Erreur de lecture de fichiers "+filenames1+" "+filenames2+'\n')
+        print("Fichier(s) manquant(s) ou intrus?\n")
+        return 1
+    
+    for name in filenames1 :
+        if Inputs.done(name):
+            print(name+" déjà fait "+str(datetime.now().time()))
+        else:
+            # imprime les données de ce graphes
+            Inputs.Output_data(name, lst_index[name], atom_caract[name], matrice_adja[name])
+    
+    for name in filenames1 :
+        if not Inputs.done(name):
+            print(name+" commence "+str(datetime.now().time()))
+            
+            # sous_graphes isomorphes connexe par methode bruteforce
+            lst_combi = BruteForce.gen_combi_brute(matrice_adja[name], atom_caract[name], min_ordre, max_ordre)
+            print(name+" combinaisons finis "+str(datetime.now().time()))
+            (dict_isomorph, dict_stat, lst_ordre, lst_certif) = BruteForce.combi_iso(matrice_adja[name], atom_caract[name], lst_combi, min_ordre, max_ordre)
+            # calcul le taux de recouvrement
+            BruteForce.Taux_recouvert(dict_stat)
+            lst_unique = BruteForce.Nombre_unique(lst_ordre, dict_stat)
+            
+            # imprime les résultats
+            Inputs.res_output(name, min_ordre, lst_ordre, lst_combi, lst_certif, lst_unique, dict_isomorph, dict_stat)
+            
+            print(name+" fini "+str(datetime.now().time())+"\n")
+    return 0
 
 ###
 # 1. Type d'execution bruteforce avec plusieurs fichiers
@@ -21,7 +55,7 @@ def interface():
 
 def BF_for_any_new_name(min_ordre, max_ordre):
     # recuperation des donnees de tous les fichiers
-    (filenames1, filenames2, list_index, atom_caract, matrice_adja) = data_inputs()
+    (filenames1, filenames2, lst_index, atom_caract, matrice_adja) = Inputs.data_inputs()
     
     # test que les fichiers sont bien associés 2 à 2
     filenames1.sort()
@@ -31,12 +65,12 @@ def BF_for_any_new_name(min_ordre, max_ordre):
         print("Fichier(s) manquant(s) ou intrus?\n")
         return 1
     
-    BF_do_any_new_name(filenames1, list_index, atom_caract, matrice_adja, min_ordre, max_ordre)
+    BF_do_any_new_name(filenames1, lst_index, atom_caract, matrice_adja, min_ordre, max_ordre)
     return 0
 
 def BF_for_any_name(min_ordre, max_ordre):
     # recuperation des donnees de tous les fichiers
-    (filenames1, filenames2, list_index, atom_caract, matrice_adja) = data_inputs()
+    (filenames1, filenames2, lst_index, atom_caract, matrice_adja) = Inputs.data_inputs()
     
     # test que les fichiers sont bien associés 2 à 2
     filenames1.sort()
@@ -46,115 +80,88 @@ def BF_for_any_name(min_ordre, max_ordre):
         print("Fichier(s) manquant(s) ou intrus?\n")
         return 1
     
-    BF_do_any_name(filenames1, list_index, atom_caract, matrice_adja, min_ordre, max_ordre)
+    BF_do_any_name(filenames1, lst_index, atom_caract, matrice_adja, min_ordre, max_ordre)
     return 0
 
 # imprime et étudie tous les nouveaux noms de fichiers
-def BF_do_any_new_name(filenames, list_index, atom_caract, matrice_adja, min_ordre, max_ordre):
+def BF_do_any_new_name(filenames, lst_index, atom_caract, matrice_adja, min_ordre, max_ordre):
     for name in filenames :
         if Inputs.done(name):
-            print(name+" déjà fait"+str(datetime.now().time)+"\n")
+            print(name+" déjà fait "+str(datetime.now().time()))
         else:
             # imprime les données de ce graphes
             Inputs.Output_data(name, lst_index[name], atom_caract[name], matrice_adja[name])
     
     for name in filenames1 :
         if not Inputs.done(name):
-            print(name+" commence"+str(datetime.now().time)+"\n")
+            print(name+" commence "+str(datetime.now().time()))
             
             # sous_graphes isomorphes connexe par methode bruteforce
             (dict_isomorph, dict_stat, lst_ordre, lst_certif) = BruteForce.BruteF(matrice_adja[name], atom_caract[name], min_ordre, max_ordre)
             # calcul le taux de recouvrement
             BruteForce.Taux_recouvert(dict_stat)
+            lst_unique = BruteForce.Nombre_unique(lst_ordre, dict_stat)
             
             # imprime les résultats
-            res_output(name, min_ordre, lst_ordre, lst_combi, lst_certif, lst_unique, dict_data, dict_isomorph, dict_stat)
+            Inputs.res_output(name, min_ordre, lst_ordre, lst_combi, lst_certif, lst_unique, dict_isomorph, dict_stat)
             
-            print(name+" fini"+str(datetime.now().time)+"\n")
+            print(name+" fini "+str(datetime.now().time())+"\n")
 
 # imprime et étudie tous les nouveaux noms de fichiers
-def BF_do_any_name(filenames, list_index, atom_caract, matrice_adja, min_ordre, max_ordre):
+def BF_do_any_name(filenames, lst_index, atom_caract, matrice_adja, min_ordre, max_ordre):
     for name in filenames :
         # imprime les données de ce graphes
         Inputs.Output_data(name, lst_index[name], atom_caract[name], matrice_adja[name])
     for name in filenames :
-        print(name+" commence"+str(datetime.now().time)+"\n")
+        print(name+" commence "+str(datetime.now().time()))
         
         # sous_graphes isomorphes connexe par methode bruteforce
         (dict_isomorph, dict_stat, lst_ordre, lst_certif) = BruteForce.BruteF(matrice_adja[name], atom_caract[name], min_ordre, max_ordre)
         # calcul le taux de recouvrement
         BruteForce.Taux_recouvert(dict_stat)
+        lst_unique = BruteForce.Nombre_unique(lst_ordre, dict_stat)
         
         # imprime les résultats
-        res_output(name, min_ordre, lst_ordre, lst_combi, lst_certif, lst_unique, dict_data, dict_isomorph, dict_stat)
+        Inputs.res_output(name, min_ordre, lst_ordre, lst_combi, lst_certif, lst_unique, dict_isomorph, dict_stat)
         
-        print(name+" fini"+str(datetime.now().time)+"\n")
+        print(name+" fini "+str(datetime.now().time())+"\n")
+
 ###
-# 1. Type d'execution bruteforce avec un fichier
+# 2. Type d'execution bruteforce avec un fichier
 ###
 
 def BF_for_one_name(name, min_ordre, max_ordre):
     # recuperation des donnees de tous les fichiers
-    (filename1, filename2, list_index, atom_caract, matrice_adja) = data_input(name)
+    (filename1, filename2, lst_index, atom_caract, matrice_adja) = Inputs.data_input(name)
     
     if name != filename1 or name != filename2 :
         print("Erreur de lecture de fichiers "+filenames1+" "+filenames2+'\n')
         print("Fichier manquant?\n")
         return 1
     
-    BF_do_one_name(name, list_index, atom_caract, matrice_adja, min_ordre, max_ordre)
+    BF_do_one_name(name, lst_index, atom_caract, matrice_adja, min_ordre, max_ordre)
     return 0
 
 # imprime et étudie un nom de fichier donné
-def BF_do_one_name(name, list_index, atom_caract, matrice_adja, min_ordre, max_ordre):
+def BF_do_one_name(name, lst_index, atom_caract, matrice_adja, min_ordre, max_ordre):
     # imprime les données de ce graphes
     Inputs.Output_data(name, lst_index, atom_caract, matrice_adja)
 
-    print(name+" commence"+str(datetime.now().time)+"\n")
+    print(name+" commence "+str(datetime.now().time()))
     
     # sous_graphes isomorphes connexe par methode bruteforce
     (dict_isomorph, dict_stat, lst_ordre, lst_certif) = BruteForce.BruteF(matrice_adja, atom_caract, min_ordre, max_ordre)
     # calcul le taux de recouvrement
     BruteForce.Taux_recouvert(dict_stat)
-    unique = BruteForce.Nombre_unique(lst_ordre, dict_stat)
+    lst_unique = BruteForce.Nombre_unique(lst_ordre, dict_stat)
     
     # imprime les résultats
-    res_output(name, min_ordre, lst_ordre, lst_combi, lst_certif, lst_unique, dict_data, dict_isomorph, dict_stat)
+    Inputs.res_output(name, min_ordre, lst_ordre, lst_combi, lst_certif, lst_unique, dict_isomorph, dict_stat)
     
-    print(name+" fini"+str(datetime.now().time)+"\n")
+    print(name+" fini "+str(datetime.now().time())+"\n")
 
 ###
-# 3. Fonctions de lecture et écriture sur fichiers
-###
-
-# recuperation des donnees des fichiers
-def data_inputs():
-    list_index = {}
-    atom_caract = {}
-    filenames1 = Inputs.Inputs_trad_all(list_index, atom_caract)
-    matrice_adja = {}
-    filenames2 = Inputs.Inputs_bonds_all(list_index, matrice_adja)
-    return filenames1, filenames2, list_index, atom_caract, matrice_adja
-
-# recuperation des donnees d'un type de fichier
-def data_input(name):
-    list_index = []
-    atom_caract = []
-    filename1 = Inputs.Input_trad(name, list_index, atom_caract)
-    matrice_adja = []
-    filename2 = Inputs.Input_bonds(name, list_index, matrice_adja)
-    
-    return filename1, filename2, list_index, atom_caract, matrice_adja
-
-# impression des resultats pour un graphe
-def res_output(name, min_ordre, lst_ordre, lst_combi, lst_certif, lst_unique, dict_data, dict_isomorph, dict_stat):
-    for i in range(int(len(lst_ordre))):
-        Inputs.Output_diagramme(name, i, min_ordre, lst_ordre, dict_stat)
-    Inputs.Output_result(name, min_ordre, lst_certif, lst_ordre, dict_isomorph, dict_stat)
-    Inputs.Output_stat(name, min_ordre, lst_combi, lst_certif, lst_unique)
-
-###
-# 4. Fonctions d'affichage de structures
+# 3. Fonctions d'affichage de structures
 ###
 
 ### fonctions d'affichage matrice et liste
@@ -172,10 +179,10 @@ def affiche_matrice2(m):
         print(s)
 
 def affiche_liste(l):
-    s = '"'
+    s = ''
     for i in range(len(l)):
         s += str(l[i])
-    return s+'"'
+    return s+''
 
 # affiche les infos sur les motifs (groupes à isomorphismes près)
 def affiche_data(min_ordre, lst_ordre, dict_isomorph, dict_stat, lst_certif):
