@@ -11,3 +11,14 @@ ordre 5: 221
 ordre 6: 491
 ordre 7: 1043
 ordre 8: 2061
+
+# Dépendences:
+Avant de lancer l'application, entrez cela dans le terminal depuis le dossier contenant ce Readme:
+```
+pip install -r requirement.txt
+```
+
+Après avoir ajouté de nouvelles dépendences au projet (afin que d'autres personnes travaillant sur le projet puisse installer les bonnes librairies):
+```
+pip freeze > requirement.txt
+```

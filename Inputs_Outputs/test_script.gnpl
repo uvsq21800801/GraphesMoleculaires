@@ -6,7 +6,7 @@ set ytics 5
 set y2lab "Taux de recouvrement"
 set y2range [0:6]
 set y2tics 1
-set style line 12 lt1 lw 1
+set style line 12 lt 1 lw 1
 set grid noxtics ytics y2tics ls 12
 set key left top
 set terminal pdf
