@@ -3,26 +3,30 @@ from os.path import isfile, join
 import re
 
 ###
+### option : 0 = tout ; 1 = pas les hydrogènes
+###
+
+###
 # 1. Fonctions de lecture et écriture sur fichiers
 ###
 
 # recuperation des donnees des fichiers
-def data_inputs():
+def data_inputs(option):
     lst_index = {}
     atom_caract = {}
-    filenames1 = Inputs_trad_all(lst_index, atom_caract)
+    filenames1 = Inputs_trad_all(option, lst_index, atom_caract)
     matrice_adja = {}
-    filenames2 = Inputs_bonds_all(lst_index, matrice_adja)
+    filenames2 = Inputs_bonds_all(option, lst_index, matrice_adja)
     
     return filenames1, filenames2, lst_index, atom_caract, matrice_adja
 
 # recuperation des donnees d'un type de fichier
-def data_input(name):
+def data_input(option, name):
     lst_index = []
     atom_caract = []
-    filename1 = Input_trad(name, lst_index, atom_caract)
+    filename1 = Input_trad(option, name, lst_index, atom_caract)
     matrice_adja = []
-    filename2 = Input_bonds(name, lst_index, matrice_adja)
+    filename2 = Input_bonds(option, name, lst_index, matrice_adja)
     
     return filename1, filename2, lst_index, atom_caract, matrice_adja
 
@@ -39,7 +43,7 @@ def res_output(name, min_ordre, lst_ordre, lst_combi, lst_certif, lst_unique, di
 ###
 
 # Retourne le contenu d'un fichier texte pour un nom donné
-def Input_trad(name, li, atom_caract):
+def Input_trad(option, name, li, atom_caract):
     # recuperation du fichier trad
     fpath = "Inputs_Outputs/Place_Trad_file_here/" 
     filenames = [f for f in listdir(fpath) if isfile(join(fpath, f))]
@@ -51,7 +55,7 @@ def Input_trad(name, li, atom_caract):
         for line in f1:
             splitted = line.split()
             if len(splitted) == 3:
-                if splitted[1] != 'H':
+                if (option == 1 and splitted[1] != 'H') or (option == 0):
                     li.append(splitted[0])
                     
                     # Liste de traduction suivant le modele '[type atome] [numero]'
@@ -64,7 +68,7 @@ def Input_trad(name, li, atom_caract):
         return ""
 
 # Retourne le contenu des fichiers textes en liste
-def Inputs_trad_all(li, atom_caract):
+def Inputs_trad_all(option, li, atom_caract):
     # recuperation du fichier trad
     fpath = "Inputs_Outputs/Place_Trad_file_here/" 
     filenames = [f for f in listdir(fpath) if isfile(join(fpath, f))]
@@ -82,7 +86,7 @@ def Inputs_trad_all(li, atom_caract):
         for line in f1:
             splitted = line.split()
             if len(splitted) == 3:
-                if splitted[1] != 'H':
+                if (option == 1 and splitted[1] != 'H') or (option == 0):
                     li[name].append(splitted[0])
                     
                     # Liste de traduction suivant le modele '[type atome] [numero]'
@@ -96,7 +100,7 @@ def Inputs_trad_all(li, atom_caract):
 # 3. Fonctions de récupération de données de liaisons
 ###
 
-def Input_bonds(name, li, ma):    
+def Input_bonds(option, name, li, ma):    
     # recuperation du fichier bonds
     fpath = "Inputs_Outputs/Place_Bonds_file_here/"
     filenames = [f for f in listdir(fpath) if isfile(join(fpath, f))]
@@ -114,24 +118,24 @@ def Input_bonds(name, li, ma):
             # liaison covalente
             if splitted[0] == '1' and len(splitted) == 3:
                 if splitted[1] in li and splitted[2] in li:
-                    #ajoute un 1 dans la matrice ma de façon symétrique
-                    #print(str(li.index(splitted[1]))+' '+str(li.index(splitted[2])))
+                    #ajoute deux 1 dans la matrice ma de façon symétrique
                     ma[li.index(splitted[1])][li.index(splitted[2])] = 1
                     ma[li.index(splitted[2])][li.index(splitted[1])] = 1
-                #print(splitted[0]+' '+splitted[1]+' '+splitted[2])
             # liaison hydrogene
             if splitted[0] == '4' and len(splitted) == 4:
                 if splitted[1] in li and splitted[2] in li:
-                    #ajoute un 2 dans la matrice ma de façon asymétrique
-                    #print(str(li.index(splitted[1]))+' '+str(li.index(splitted[2])))
-                    ma[li.index(splitted[1])][li.index(splitted[2])] = 2
-                #print(splitted[0]+' '+splitted[1]+' '+splitted[2])
+                    if option == 1 : # hydrogène présent
+                        #ajoute un 2 de l'atomes donneur vers l'accepteur
+                        ma[li.index(splitted[1])][li.index(splitted[2])] = 2
+                    elif option == 0 and splitted[3] in li:
+                        #ajoute un 2 de l'hydrogène vers l'accepteur
+                        ma[li.index(splitted[3])][li.index(splitted[2])] = 2
         return name
     else :
         return ""
 
 # Retourne le contenu des fichiers "bonds" texte en matrice d'adjacence
-def Inputs_bonds_all(li, ma):    
+def Inputs_bonds_all(option, li, ma):    
     # recuperation du fichier bonds
     fpath = "Inputs_Outputs/Place_Bonds_file_here/"
     filenames = [f for f in listdir(fpath) if isfile(join(fpath, f))]
@@ -161,8 +165,12 @@ def Inputs_bonds_all(li, ma):
                 # liaison hydrogene
                 if splitted[0] == '4' and len(splitted) == 4:
                     if splitted[1] in l and splitted[2] in l:
-                        #ajoute un 2 dans la matrice ma de façon asymétrique
-                        matrice[l.index(splitted[1])][l.index(splitted[2])] = 2
+                        if option == 1 : # hydrogène présent
+                            #ajoute un 2 de l'atomes donneur vers l'accepteur
+                            matrice[l.index(splitted[1])][l.index(splitted[2])] = 2
+                        elif option == 0 and splitted[3] in l:
+                            #ajoute un 2 de l'hydrogène vers l'accepteur
+                            matrice[l.index(splitted[3])][l.index(splitted[2])] = 2
         ma[name] = matrice.copy()
 
     return names

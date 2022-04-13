@@ -14,7 +14,7 @@ def interface():
     min_ordre = 3
     
     # recuperation des donnees de tous les fichiers
-    (filenames1, filenames2, lst_index, atom_caract, matrice_adja) = Inputs.data_inputs()
+    (filenames1, filenames2, lst_index, atom_caract, matrice_adja) = Inputs.data_inputs(1)
     
     # test que les fichiers sont bien associés 2 à 2
     filenames1.sort()
@@ -55,7 +55,7 @@ def interface():
 
 def BF_for_any_new_name(min_ordre, max_ordre):
     # recuperation des donnees de tous les fichiers
-    (filenames1, filenames2, lst_index, atom_caract, matrice_adja) = Inputs.data_inputs()
+    (filenames1, filenames2, lst_index, atom_caract, matrice_adja) = Inputs.data_inputs(1)
     
     # test que les fichiers sont bien associés 2 à 2
     filenames1.sort()
@@ -70,7 +70,7 @@ def BF_for_any_new_name(min_ordre, max_ordre):
 
 def BF_for_any_name(min_ordre, max_ordre):
     # recuperation des donnees de tous les fichiers
-    (filenames1, filenames2, lst_index, atom_caract, matrice_adja) = Inputs.data_inputs()
+    (filenames1, filenames2, lst_index, atom_caract, matrice_adja) = Inputs.data_inputs(1)
     
     # test que les fichiers sont bien associés 2 à 2
     filenames1.sort()
@@ -132,7 +132,7 @@ def BF_do_any_name(filenames, lst_index, atom_caract, matrice_adja, min_ordre, m
 
 def BF_for_one_name(name, min_ordre, max_ordre):
     # recuperation des donnees de tous les fichiers
-    (filename1, filename2, lst_index, atom_caract, matrice_adja) = Inputs.data_input(name)
+    (filename1, filename2, lst_index, atom_caract, matrice_adja) = Inputs.data_input(1, name)
     
     if name != filename1 or name != filename2 :
         print("Erreur de lecture de fichiers "+filenames1+" "+filenames2+'\n')
