@@ -2,9 +2,11 @@
 import sys
 sys.path.append('GraphesMoleculaires/Inputs_Outputs')
 sys.path.append('GraphesMoleculaires/Solving_Methods')
+sys.path.append('GraphesMoleculaires/MCIS')
 
 from Inputs_Outputs import Inputs
 from Solving_Methods import BruteForce
+from MCIS import Mcis_algo
 
 from datetime import datetime
 
@@ -39,6 +41,11 @@ def interface():
             lst_combi = BruteForce.gen_combi_brute(matrice_adja[name], atom_caract[name], min_ordre, max_ordre)
             print(name+" combinaisons finis "+str(datetime.now().time()))
             (dict_isomorph, dict_stat, lst_ordre, lst_certif) = BruteForce.combi_iso(matrice_adja[name], atom_caract[name], lst_combi, min_ordre, max_ordre)
+            
+            # MCIS/ Génération des données pour calculer le taux de chaleur
+            Tab_sim = Mcis_algo.mcis_algo(matrice_adja[name], atom_caract[name], lst_combi,min_ordre, max_ordre)
+
+
             # calcul le taux de recouvrement
             BruteForce.Taux_recouvert(dict_stat)
             lst_unique = BruteForce.Nombre_unique(lst_ordre, dict_stat)
