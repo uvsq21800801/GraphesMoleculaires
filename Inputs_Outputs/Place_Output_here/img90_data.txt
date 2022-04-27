@@ -41,12 +41,9 @@ Matrice Adjacence
 0  0  0  0  0  0  2  0  0  0  0  0  0  0  0  0  0  0  0  0  
 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  
 
-Nombre de sous-graphes connexes :1908
-Nombre de certificats différents :1171
+Nombre de sous-graphes connexes :244
+Nombre de certificats différents :52
 Ordre Nb_certif Nb_unique Nb_sg :
 3 3 0 36
 4 10 2 68
 5 39 13 140
-6 125 53 278
-7 321 192 515
-8 673 515 871

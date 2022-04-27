@@ -5,6 +5,7 @@ sys.path.append('GraphesMoleculaires/Solving_Methods')
 sys.path.append('GraphesMoleculaires/MCIS')
 
 from Inputs_Outputs import Inputs
+from Inputs_Outputs import Output
 from Solving_Methods import BruteForce
 from MCIS import Mcis_algo
 
@@ -12,8 +13,8 @@ from datetime import datetime
 
 def interface():
     # définition des ordres des sous-graphes
-    max_ordre = 8
     min_ordre = 3
+    max_ordre = 5
     
     # recuperation des donnees de tous les fichiers
     (filenames1, filenames2, lst_index, atom_caract, matrice_adja) = Inputs.data_inputs(1)
@@ -44,12 +45,15 @@ def interface():
             
             # MCIS/ Génération des données pour calculer le taux de chaleur
             Tab_sim = Mcis_algo.mcis_algo(matrice_adja[name], atom_caract[name], lst_combi,min_ordre, max_ordre)
-
+            #Output à faire
 
             # calcul le taux de recouvrement
             BruteForce.Taux_recouvert(dict_stat)
             lst_unique = BruteForce.Nombre_unique(lst_ordre, dict_stat)
-            
+            # imprime le taux de recouvrement
+            Output.res_sim(name, min_ordre, max_ordre, Tab_sim)
+
+
             # imprime les résultats
             Inputs.res_output(name, min_ordre, lst_ordre, lst_combi, lst_certif, lst_unique, dict_isomorph, dict_stat)
             
