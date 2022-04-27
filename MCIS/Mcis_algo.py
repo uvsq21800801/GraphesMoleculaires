@@ -35,33 +35,34 @@ def extract_sub(matrice_adja,atom_caract,combi, taille):
 # Entrées:
 #
 # Sortie: Tableau [ordre] [x] [y]
-def mcis_algo(matrice_adja,atom_caract, lst_combi,min_ordre, max_ordre):
+def mcis_algo(matrice_adja,atom_caract, lst_ord, dict_iso,min_ordre, max_ordre):
     
     # tableau 3D [ordre][nb_occurence de cet ordre][nb_occurence de cet ordre]
     tab_sim = []
     
-    for h in range(0, max_ordre - min_ordre):
-        cb = len(lst_combi[h])
+    for h in range(max_ordre - min_ordre+1):
+        cb = len(lst_ord[h])
         adja_s = [None for x in range(cb)]
         carac_s = [None for x in range(cb)]
 
         # tableau intermédiaire à append
         #d = [ [ None for y in range( 2 ) ] for x in range( 2 ) ]
-        tab_ordre = [[None for y in range(cb)] for x in range(cb)]
+        tab_ord_h = [[None for y in range(cb)] for x in range(cb)]
         #tab_ordre = [len(lst_combi[h])][len(lst_combi[h])]
         
         # initialisation des sous-graphes à évaluer
-        for i in range(0, len(lst_combi[h])):
-            adja_s[i], carac_s[i] = extract_sub(matrice_adja, atom_caract, lst_combi[h][i], h+min_ordre)
+        for i in range(cb):
+            getlist = dict_iso[lst_ord[h][i]]
+            adja_s[i], carac_s[i] = extract_sub(matrice_adja, atom_caract, getlist[0], h+min_ordre)
         
-        for i in range(0, len(lst_combi[h])):
-            for j in range(0, len(lst_combi[h])):
-                tab_ordre[i][j] = Mcis_decl.simmilarite(adja_s[i], carac_s[i], adja_s[j], carac_s[j])
+        for i in range(cb):
+            for j in range(cb):
+                tab_ord_h[i][j] = Mcis_decl.simmilarite(adja_s[i], carac_s[i], adja_s[j], carac_s[j])
 
                 #print('MCIS/Mcis_algo: Pas fini')
-        tab_sim.append(tab_ordre)
+        tab_sim.append(tab_ord_h)
     
-    for h in range(0, max_ordre - min_ordre):
+    for h in range( max_ordre - min_ordre +1):
     
         print(tab_sim[h])
 

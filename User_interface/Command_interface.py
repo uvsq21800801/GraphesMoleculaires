@@ -12,7 +12,7 @@ from MCIS import Mcis_algo
 from datetime import datetime
 
 def interface():
-    # définition des ordres des sous-graphes
+    # définition des ordres (inclus) des sous-graphes
     min_ordre = 3
     max_ordre = 5
     
@@ -44,7 +44,7 @@ def interface():
             (dict_isomorph, dict_stat, lst_ordre, lst_certif) = BruteForce.combi_iso(matrice_adja[name], atom_caract[name], lst_combi, min_ordre, max_ordre)
             
             # MCIS/ Génération des données pour calculer le taux de chaleur
-            Tab_sim = Mcis_algo.mcis_algo(matrice_adja[name], atom_caract[name], lst_combi,min_ordre, max_ordre)
+            Tab_sim = Mcis_algo.mcis_algo(matrice_adja[name], atom_caract[name], lst_ordre, dict_isomorph,min_ordre, max_ordre)
             #Output à faire
 
             # calcul le taux de recouvrement
