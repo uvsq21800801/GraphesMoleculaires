@@ -222,8 +222,11 @@ def Output_diagramme(name, ordre, min_ordre, lst_ordre, dict_stat):
     
     j = 1
     f.write("ordonne nbOccur taux indice\n")
+    # pour tous les nombre d'occurrence trié
     for k in sorted(d.keys()) :
+        # récupère la liste des couples [indice, taux]
         tmp = d.get(k)
+        # pour tous les couples triés (ATTENTION : est-ce que c'est bien trié?)
         for l in sorted(tmp):
             f.write(str(j)+' '+str(k)+' '+str(l[1])+' '+str(l[0])+'\n')
             j += 1
