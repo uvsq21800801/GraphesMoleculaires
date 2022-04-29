@@ -193,19 +193,6 @@ def done(name):
     else:
         return False
 
-def str_liste(l):
-    s = ''
-    for i in range(len(l)):
-        s += str(l[i])
-    return s
-
-def str_matrice(m):
-    s = '[ '
-    for l in m:
-        s += str(str_liste(l))+' '
-    return s+']'
-
-
 # Initie la matrice d'adjacence pour stocker les données
 def init_matrice(matrice, taille):
     for i in range(taille):

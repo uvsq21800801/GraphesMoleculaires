@@ -62,8 +62,8 @@ def mcis_algo(matrice_adja, atom_caract, lst_ord, dict_iso,min_ordre, max_ordre)
                 #print('MCIS/Mcis_algo: Pas fini')
         tab_sim.append(tab_ord_h)
     
-    for h in range( max_ordre - min_ordre +1):
+    '''for h in range( max_ordre - min_ordre +1):
     
         print(tab_sim[h])
-
+'''
     return tab_sim

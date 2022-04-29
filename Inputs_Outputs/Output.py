@@ -154,7 +154,21 @@ def res_sim(name, min_ordre, max_ordre, Tab_sim):
 
             for j in range(len(Tab_sim[h])):
                 s+=str(Tab_sim[h][i][j])+' '
-                print(' ')
+                #print(' ')
 
             f.write(s+'\n')
         f.close()
+
+##### Fonctions utiles
+
+def str_liste(l):
+    s = ''
+    for i in range(len(l)):
+        s += str(l[i])
+    return s
+
+def str_matrice(m):
+    s = '[ '
+    for l in m:
+        s += str(str_liste(l))+' '
+    return s+']'

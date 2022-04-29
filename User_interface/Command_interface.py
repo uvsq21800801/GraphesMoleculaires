@@ -32,7 +32,7 @@ def interface():
             print(name+" déjà fait "+str(datetime.now().time()))
         else:
             # imprime les données de ce graphes
-            Inputs.Output_data(name, lst_index[name], atom_caract[name], matrice_adja[name])
+            Output.Output_data(name, lst_index[name], atom_caract[name], matrice_adja[name])
     
     for name in filenames1 :
         if not Inputs.done(name):
@@ -43,16 +43,23 @@ def interface():
             print(name+" combinaisons finis "+str(datetime.now().time()))
             (dict_isomorph, dict_stat, lst_ordre, lst_certif) = BruteForce.combi_iso(matrice_adja[name], atom_caract[name], lst_combi, min_ordre, max_ordre)
             
-            for i in range(max_ordre - min_ordre + 1):
-                BruteForce.Tri_indice(i, lst_ordre, dict_stat)
-            
-            # MCIS/ Génération des données pour calculer le taux de chaleur
-            Tab_sim = Mcis_algo.mcis_algo(matrice_adja[name], atom_caract[name], lst_ordre, dict_isomorph, min_ordre, max_ordre)
-            print(name+" mcis finis "+str(datetime.now().time()))
-            
             # calcul le taux de recouvrement et les sommets uniques
             BruteForce.Taux_recouvert(dict_stat)
             lst_unique = BruteForce.Nombre_unique(lst_ordre, dict_stat)
+
+            # tri de lst_ordre par nombre d'occurence
+            #new_list = []
+            for i in range(max_ordre - min_ordre + 1):
+
+                #new_liste_ordre_x = lst_ordre[i]
+                BruteForce.Tri_indice(i, lst_ordre, dict_stat)
+                #new_list.append(new_liste_ordre_x)
+            #lst_ordre = new_list
+             
+
+            # MCIS/ Génération des données pour calculer le taux de chaleur
+            Tab_sim = Mcis_algo.mcis_algo(matrice_adja[name], atom_caract[name], lst_ordre, dict_isomorph, min_ordre, max_ordre)
+            print(name+" mcis finis "+str(datetime.now().time()))
             
             # imprime les matrices de chaleur
             Output.res_sim(name, min_ordre, max_ordre, Tab_sim)

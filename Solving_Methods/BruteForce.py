@@ -83,7 +83,7 @@ def BruteF(matrice_adja, atom_caract, min_ordre, max_ordre):
             if certif not in lst_certif:
                 lst_certif.append(certif)
                 dict_isomorph[lst_certif.index(certif)] = [combi.copy()]
-                dict_stat[lst_certif.index(certif)] = [1,combi.copy()]
+                dict_stat[lst_certif.index(certif)] = [1,combi.copy(),0]
                 lst_ordre[ordre - min_ordre].append(lst_certif.index(certif))
             else:
                 dict_isomorph[lst_certif.index(certif)].append(combi.copy())
@@ -207,7 +207,7 @@ def verif_conx(combi, matrice_adja, ordre):
 # 2. Recouvrement des sommets du graphes par un type de sous-graphes
 ###
 
-
+##### Deprecated ####################################
 # Calcul les recouvrements
 # (sommets par sommets pour chaque isomorphe)
 def recouvrement(dict_isomorph):
@@ -233,7 +233,10 @@ def Taux_recouvert(dict_stat):
             if stat[1][i]>0 :
                 cmpt += 1 
         # taux de recouvrement
-        dict_stat[indice].append(tot/cmpt)
+        if cmpt > 0 :
+            dict_stat[indice].append(tot/cmpt)
+        else :
+            dict_stat[indice].append(0)
 
 # Calcul le nombre de sous-graphes sans équivalent isomorphe (unique)
 def Nombre_unique(lst_ordre, dict_stat):
@@ -248,7 +251,7 @@ def Nombre_unique(lst_ordre, dict_stat):
 
 # retourne le second terme d'un tableau 
 def second(tab):
-    return tab[1]:
+    return tab[1]
 
 # Tri par occurrence et recouvrement croissant
 def Tri_indice(ordre, lst_ordre, dict_stat):
@@ -257,11 +260,10 @@ def Tri_indice(ordre, lst_ordre, dict_stat):
     d = {}
     for i in lst_ordre[ordre]:
         tmp = dict_stat.get(i)
-        if tmp[0] != 1:
-            if tmp[0] not in d.keys():
-                d[tmp[0]] = [[i, tmp[2]]]
-            else :
-                d[tmp[0]].append([i, tmp[2]])
+        if tmp[0] not in d.keys():
+            d[tmp[0]] = [[i, tmp[2]]]
+        else :
+            d[tmp[0]].append([i, tmp[2]])
     
     # pour tous les nombres d'occurrence triés
     for k in sorted(d.keys()) :
@@ -391,7 +393,7 @@ def add_ordonnee (combi, ordre):
         else:
             end_full = False
         if i == max - 1:
-            print("fin ordre "+str(ordre))
+            #print("fin ordre "+str(ordre))
             ordre += 1
             if ordre >= max:
                 ordre = max 
