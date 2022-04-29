@@ -35,7 +35,7 @@ def extract_sub(matrice_adja,atom_caract,combi, taille):
 # Entrées:
 #
 # Sortie: Tableau [ordre] [x] [y]
-def mcis_algo(matrice_adja,atom_caract, lst_ord, dict_iso,min_ordre, max_ordre):
+def mcis_algo(matrice_adja, atom_caract, lst_ord, dict_iso,min_ordre, max_ordre):
     
     # tableau 3D [ordre][nb_occurence de cet ordre][nb_occurence de cet ordre]
     tab_sim = []

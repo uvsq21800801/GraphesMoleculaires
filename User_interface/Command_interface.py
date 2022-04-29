@@ -43,19 +43,22 @@ def interface():
             print(name+" combinaisons finis "+str(datetime.now().time()))
             (dict_isomorph, dict_stat, lst_ordre, lst_certif) = BruteForce.combi_iso(matrice_adja[name], atom_caract[name], lst_combi, min_ordre, max_ordre)
             
+            for i in range(max_ordre - min_ordre + 1):
+                BruteForce.Tri_indice(i, lst_ordre, dict_stat)
+            
             # MCIS/ Génération des données pour calculer le taux de chaleur
-            Tab_sim = Mcis_algo.mcis_algo(matrice_adja[name], atom_caract[name], lst_ordre, dict_isomorph,min_ordre, max_ordre)
-            #Output à faire
-
-            # calcul le taux de recouvrement
+            Tab_sim = Mcis_algo.mcis_algo(matrice_adja[name], atom_caract[name], lst_ordre, dict_isomorph, min_ordre, max_ordre)
+            print(name+" mcis finis "+str(datetime.now().time()))
+            
+            # calcul le taux de recouvrement et les sommets uniques
             BruteForce.Taux_recouvert(dict_stat)
             lst_unique = BruteForce.Nombre_unique(lst_ordre, dict_stat)
-            # imprime le taux de recouvrement
+            
+            # imprime les matrices de chaleur
             Output.res_sim(name, min_ordre, max_ordre, Tab_sim)
 
-
             # imprime les résultats
-            Inputs.res_output(name, min_ordre, lst_ordre, lst_combi, lst_certif, lst_unique, dict_isomorph, dict_stat)
+            Output.res_output(name, min_ordre, lst_ordre, lst_combi, lst_certif, lst_unique, dict_isomorph, dict_stat)
             
             print(name+" fini "+str(datetime.now().time())+"\n")
     return 0
@@ -114,7 +117,7 @@ def BF_do_any_new_name(filenames, lst_index, atom_caract, matrice_adja, min_ordr
             lst_unique = BruteForce.Nombre_unique(lst_ordre, dict_stat)
             
             # imprime les résultats
-            Inputs.res_output(name, min_ordre, lst_ordre, lst_combi, lst_certif, lst_unique, dict_isomorph, dict_stat)
+            Output.res_output(name, min_ordre, lst_ordre, lst_combi, lst_certif, lst_unique, dict_isomorph, dict_stat)
             
             print(name+" fini "+str(datetime.now().time())+"\n")
 
@@ -133,7 +136,7 @@ def BF_do_any_name(filenames, lst_index, atom_caract, matrice_adja, min_ordre, m
         lst_unique = BruteForce.Nombre_unique(lst_ordre, dict_stat)
         
         # imprime les résultats
-        Inputs.res_output(name, min_ordre, lst_ordre, lst_combi, lst_certif, lst_unique, dict_isomorph, dict_stat)
+        Output.res_output(name, min_ordre, lst_ordre, lst_combi, lst_certif, lst_unique, dict_isomorph, dict_stat)
         
         print(name+" fini "+str(datetime.now().time())+"\n")
 
@@ -167,7 +170,7 @@ def BF_do_one_name(name, lst_index, atom_caract, matrice_adja, min_ordre, max_or
     lst_unique = BruteForce.Nombre_unique(lst_ordre, dict_stat)
     
     # imprime les résultats
-    Inputs.res_output(name, min_ordre, lst_ordre, lst_combi, lst_certif, lst_unique, dict_isomorph, dict_stat)
+    Output.res_output(name, min_ordre, lst_ordre, lst_combi, lst_certif, lst_unique, dict_isomorph, dict_stat)
     
     print(name+" fini "+str(datetime.now().time())+"\n")
 

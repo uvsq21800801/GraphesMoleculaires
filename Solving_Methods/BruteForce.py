@@ -246,6 +246,34 @@ def Nombre_unique(lst_ordre, dict_stat):
                 cmpt[i] += 1 
     return cmpt
 
+# retourne le second terme d'un tableau 
+def second(tab):
+    return tab[1]:
+
+# Tri par occurrence et recouvrement croissant
+def Tri_indice(ordre, lst_ordre, dict_stat):
+    tri_indice = []
+    # liste des couples de donnée { occurrence : [[indice, taux]] }
+    d = {}
+    for i in lst_ordre[ordre]:
+        tmp = dict_stat.get(i)
+        if tmp[0] != 1:
+            if tmp[0] not in d.keys():
+                d[tmp[0]] = [[i, tmp[2]]]
+            else :
+                d[tmp[0]].append([i, tmp[2]])
+    
+    # pour tous les nombres d'occurrence triés
+    for k in sorted(d.keys()) :
+        # récupère la liste des couples [indice, taux]
+        tmp = d.get(k)
+        # pour tous les couples triés selon le taux
+        for l in sorted(tmp, key=second):
+            tri_indice.append(l[0])
+    
+    lst_ordre[ordre] = tri_indice
+    
+
 ###
 # 3. Certificat canonique de sous-graphes par les combinaisons de sommets
 ###
