@@ -57,7 +57,10 @@ def mcis_algo(matrice_adja, atom_caract, lst_ord, dict_iso,min_ordre, max_ordre)
         
         for i in range(cb):
             for j in range(cb):
-                tab_ord_h[i][j] = Mcis_decl.simmilarite(adja_s[i], carac_s[i], adja_s[j], carac_s[j])
+                '''ce qui est en commentaire ci-dessous, c'est les différentes façons de calculer la simmilarité'''
+                #tab_ord_h[i][j] = Mcis_decl.simmilarite(adja_s[i], carac_s[i], adja_s[j], carac_s[j])
+                #tab_ord_h[i][j] = Mcis_decl.sim_raymond(adja_s[i], carac_s[i], adja_s[j], carac_s[j])
+                tab_ord_h[i][j] = Mcis_decl.sim_barth(adja_s[i], carac_s[i], adja_s[j], carac_s[j], i, j)
 
                 #print('MCIS/Mcis_algo: Pas fini')
         tab_sim.append(tab_ord_h)

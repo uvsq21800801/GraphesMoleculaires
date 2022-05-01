@@ -14,7 +14,7 @@ from datetime import datetime
 def interface():
     # définition des ordres (inclus) des sous-graphes
     min_ordre = 3
-    max_ordre = 5
+    max_ordre = 6
     
     # recuperation des donnees de tous les fichiers
     (filenames1, filenames2, lst_index, atom_caract, matrice_adja) = Inputs.data_inputs(1)
