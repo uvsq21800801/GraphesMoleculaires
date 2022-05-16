@@ -52,14 +52,12 @@ def Output_diagramme(dir_O, name, detail, lst_id, dict_stat):
         remove(join(fpath, filename))
     f = open(fpath+filename, 'w')
 
-    i = 1
     f.write("ordonne nbOccur taux indice\n")
     # pour les indices des la liste (trié au préalable)
-    for j in lst_id:
+    for i in range(len(lst_id)):
         # récupère les stats
-        tmp = dict_stat.get(j)
-        f.write(str(i)+' '+str(tmp[0])+' '+str(tmp[2])+' '+str(j)+'\n')
-        i += 1
+        tmp = dict_stat.get(lst_id[i])
+        f.write(str(i+1)+' '+str(tmp[0])+' '+str(tmp[2])+' '+str(lst_id[i])+'\n')
 
     f.close()
 
@@ -101,17 +99,19 @@ def Output_result(dir_O, name, detail, lst_certif, lst_id, dict_stat):
         f = open(fpath+filename, 'w')
         f.write("ordre id_c id_o nb_occurrence taux_recouvrement recouvrement certificat\n")
     else :
-        f = open(fpath+filename, 'w')
+        f = open(fpath+filename, 'a')
         
     i = 0
-    for indice in lst_id:
-        tmp2 = dict_stat.get(indice)
-        if tmp2[0] > 1:
-            f.write(str(detail[1])+' '+str(indice)+' '+str(i)+' '+str(tmp2[0])+' '+str(
-                tmp2[2])+' \''+str_liste(tmp2[1])+' \''+lst_certif[indice].hex()+'\n')
+    for i in range(len(lst_id)):
+        indice = lst_id[i]
+        tmp1 = dict_stat.get(indice)
+        if tmp1[0] > 1:
+            f.write(str(detail[1])+' '+str(indice)+' '+str(i)+' '+str(tmp1[0])+' '+str(
+                tmp1[2])+' \''+str_liste(tmp1[1])+' \''+lst_certif[indice].hex()+'\n')
         else:
-            f.write(str(detail[1])+' '+str(indice)+' '+str(i)+' '+str(tmp2[0])+' '+str(
-                tmp2[2])+' \''+str_liste(tmp2[1])+' \''+lst_certif[indice].hex()+'\n')
+            f.write(str(detail[1])+' '+str(indice)+' '+str(i)+' '+str(tmp1[0])+' '+str(
+                tmp1[2])+' \''+str_liste(tmp1[1])+' \''+lst_certif[indice].hex()+'\n')
+        i += 1
     f.close()
 
 # données des listes de combinaisons

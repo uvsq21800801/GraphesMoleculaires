@@ -31,7 +31,7 @@ def gen_combi_brute(matrice_adja, ordre):
         # Combinaisons de sommets suivantes
         taille = add_ordonnee(combi, taille)
         # Stop si la taille courante dépasse la taille étudié
-        if ordre > taille:
+        if ordre < taille:
             break
     
     return lst_combi

@@ -42,8 +42,6 @@ def extract_sub(matrice_adja, atom_caract, combi, taille):
 def mcis_algo(matrice_adja, atom_caract, lst_id, dict_iso, ordre):
 
     # tableau 3D [0][nb_occurence de cet ordre][nb_occurence de cet ordre]
-    tab_sim = []
-
     cb = len(lst_id)
     adja_s = [None for x in range(cb)]
     carac_s = [None for x in range(cb)]
@@ -56,25 +54,20 @@ def mcis_algo(matrice_adja, atom_caract, lst_id, dict_iso, ordre):
     # initialisation des sous-graphes à évaluer
     for i in range(cb):
         getlist = dict_iso[lst_id[i]]
-        adja_s[i], carac_s[i] = extract_sub(
+        (adja_s[i], carac_s[i]) = extract_sub(
             matrice_adja, atom_caract, getlist[0], ordre)
 
-        for i in range(cb):
-            for j in range(cb):
-                '''ce qui est en commentaire ci-dessous, c'est les différentes façons de calculer la simmilarité'''
-                # tab_ord[i][j] = Mcis_decl.simmilarite(adja_s[i], carac_s[i], adja_s[j], carac_s[j])
-                # tab_ord[i][j] = Mcis_decl.sim_raymond(adja_s[i], carac_s[i], adja_s[j], carac_s[j])
-                tab_ord[i][j] = Mcis_decl.sim_barth(
-                    adja_s[i], carac_s[i], adja_s[j], carac_s[j], i, j)
+    for i in range(cb):
+        for j in range(cb):
+            '''ce qui est en commentaire ci-dessous, c'est les différentes façons de calculer la simmilarité'''
+            # tab_ord[i][j] = Mcis_decl.simmilarite(adja_s[i], carac_s[i], adja_s[j], carac_s[j])
+            # tab_ord[i][j] = Mcis_decl.sim_raymond(adja_s[i], carac_s[i], adja_s[j], carac_s[j])
+            tab_ord[i][j] = Mcis_decl.sim_barth(adja_s[i], carac_s[i], adja_s[j], carac_s[j], i, j)
 
-                # print('MCIS/Mcis_algo: Pas fini')
-        tab_sim.append(tab_ord)
+            # print('MCIS/Mcis_algo: Pas fini')
 
-    '''for h in range( max_ordre - min_ordre +1):
-    
-        print(tab_sim[h])
-    '''
-    return tab_sim
+    # print(tab_ord)
+    return tab_ord
 
 # Fonction calculant les valeurs de la table de chaleur
 #
@@ -101,7 +94,7 @@ def mcis_algo_range(matrice_adja, atom_caract, lst_ord, dict_iso, min_ordre, max
         # initialisation des sous-graphes à évaluer
         for i in range(cb):
             getlist = dict_iso[lst_ord[h][i]]
-            adja_s[i], carac_s[i] = extract_sub(
+            (adja_s[i], carac_s[i]) = extract_sub(
                 matrice_adja, atom_caract, getlist[0], h+min_ordre)
 
         for i in range(cb):
