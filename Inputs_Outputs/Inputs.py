@@ -38,12 +38,11 @@ def data_input(option, name):
 def Input_trad(option, name, li, atom_caract):
     # recuperation du fichier trad
     fpath = "Inputs_Outputs/Place_Trad_file_here/" 
-    filenames = [f for f in listdir(fpath) if isfile(join(fpath, f))]
     filename = "trad-atom_"+name+".txt"
     # si le nom est bien représenté, on récupère les données
-    if filename in filenames:
+    if isfile(join(fpath,filename)):
         # lecture du fichier bonds et transcription dans la matrice de traduction
-        f1 = open(fpath+filename, 'r').readlines()
+        f1 = open(join(fpath,filename), 'r').readlines()
         for line in f1:
             splitted = line.split()
             if len(splitted) == 3:
@@ -74,7 +73,7 @@ def Inputs_trad_all(option, li, atom_caract):
         li[name] = []
         atom_caract[name] = []
         # lecture du fichier bonds et transcription dans la matrice de traduction
-        f1 = open(fpath+filename, 'r').readlines()
+        f1 = open(join(fpath,filename), 'r').readlines()
         for line in f1:
             splitted = line.split()
             if len(splitted) == 3:
@@ -95,16 +94,14 @@ def Inputs_trad_all(option, li, atom_caract):
 def Input_bonds(option, name, li, ma):    
     # recuperation du fichier bonds
     fpath = "Inputs_Outputs/Place_Bonds_file_here/"
-    filenames = [f for f in listdir(fpath) if isfile(join(fpath, f))]
     filename = "bonds_"+name+".txt"
     # si le nom est bien représenté, on récupère les données
-    if filename in filenames:
-
+    if isfile(join(fpath,filename)):
         #initie la matrice d'adjacence
         init_matrice(ma,len(li))
 
         # lecture du fichier bonds et transcription dans la matrice d'adjacence
-        f1 = open(fpath+filename, 'r').readlines()
+        f1 = open(join(fpath,filename), 'r').readlines()
         for line in f1:
             splitted = line.split()
             # liaison covalente
@@ -145,7 +142,7 @@ def Inputs_bonds_all(option, li, ma):
             init_matrice(matrice,len(l))
 
             # lecture du fichier bonds et transcription dans la matrice d'adjacence
-            f1 = open(fpath+filename, 'r').readlines()
+            f1 = open(join(fpath,filename), 'r').readlines()
             for line in f1:
                 splitted = line.split()
                 # liaison covalente
@@ -168,25 +165,38 @@ def Inputs_bonds_all(option, li, ma):
     return names
 
 ###
-# 4. Fonctions d'impression de données
-###
-
-
-###
 # 5. Fonctions utile à la lecture ou l'écriture de données
 ###
 
 # Récupère le nom dans les formats type_name.txt
 def get_name(filename):
-    name1 = filename.split('_')
+    name1 = filename.split('_',1)
     name2 = name1[1].split('.')
     return name2[0]
 
 # Fichiers déjà existant et donc calcul probablement non utile
-def done(name):
+def done(name, detail):
+    if detail[0] == 1 :
+        compl = "_H"
+    else :
+        compl = ""
     fpath = "Inputs_Outputs/Place_Output_here/"
-    filename1 = name+"_data.txt"
-    filename2 = name+"_res.txt"
+    filename1 = name+compl+"_data.txt"
+    filename2 = name+compl+"_res.txt"
+    # tests si les 2 fichiers existes déjà
+    if isfile(join(fpath, filename1)) and isfile(join(fpath, filename2)):
+        return True
+    else:
+        return False
+
+# Fichiers déjà existant dans le dossier donné et donc calcul probablement inutile
+def done_here(fpath, name, detail):
+    if detail[0] == 1 :
+        compl = "_H"
+    else :
+        compl = ""
+    filename1 = name+compl+"_data.txt"
+    filename2 = name+compl+"_res.txt"
     # tests si les 2 fichiers existes déjà
     if isfile(join(fpath, filename1)) and isfile(join(fpath, filename2)):
         return True

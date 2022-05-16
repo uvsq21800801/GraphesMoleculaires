@@ -1,34 +1,31 @@
 from os import listdir, remove
 from os.path import isfile, join
-import re
 import matplotlib.pyplot as plt
 import numpy as np
 
 ############################## Principale ##############################
 
-# impression des resultats pour un graphe
-def res_output(name, min_ordre, lst_ordre, lst_combi, lst_certif, lst_unique, dict_isomorph, dict_stat):
-    for i in range(int(len(lst_ordre))):
-        Output_diagramme(name, i, min_ordre, lst_ordre, dict_stat)
-    Output_result(name, min_ordre, lst_certif, lst_ordre, dict_stat)
-    Output_combi(name, lst_ordre, dict_isomorph)
-    Output_stat(name, min_ordre, lst_combi, lst_certif, lst_ordre, lst_unique)
+# données de base redirigées dans nos structures
 
-############ Isomorphisme
 
-## données de base redirigées dans nos structures
-def Output_data(name, lst_index, atom_caract, matrice_adja):
+def Output_data(dir_O, name, detail, lst_index, atom_caract, matrice_adja):
+    # selon les paramètres
+    if detail[0] == 1:
+        compl = "_H"
+    else:
+        compl = ""
+
     # création du fichier de sortie
-    fpath = "Inputs_Outputs/Place_Output_here/"
-    filename = name+"_data.txt"
+    fpath = "Inputs_Outputs/Place_Output_here/"+dir_O+'/'
+    filename = name+compl+"_data.txt"
     if isfile(join(fpath, filename)):
         remove(join(fpath, filename))
     f = open(fpath+filename, 'w')
-    
-    f.write("Indice IndiceOld Caracteristique atome\n")
+
+    f.write("Indice IndiceOld Caract_atome\n")
     for i in range(len(lst_index)):
         f.write(str(i)+' '+str(lst_index[i])+' '+atom_caract[i]+'\n')
-    
+
     f.write("Matrice Adjacence\n")
     r = int(len(matrice_adja))
     for i in range(r):
@@ -38,134 +35,147 @@ def Output_data(name, lst_index, atom_caract, matrice_adja):
         f.write(s+'\n')
     f.close()
 
-## données pour le diagramme des nombre d'occurence et taux de recouvrement
-def Output_diagramme(name, ordre, min_ordre, lst_ordre, dict_stat):
+# données pour le diagramme des nombre d'occurence et taux de recouvrement
+
+
+def Output_diagramme(dir_O, name, detail, lst_id, dict_stat):
+    # selon les paramètres
+    if detail[0] == 1:
+        compl = '_'+str(detail[1])+"_H"
+    else:
+        compl = '_'+str(detail[1])
+
     # création du fichier de sortie
-    fpath = "Inputs_Outputs/Place_Output_here/"
-    filename = name+'_'+str(ordre+min_ordre)+".txt"
+    fpath = "Inputs_Outputs/Place_Output_here/"+dir_O+'/'
+    filename = name+compl+".txt"
     if isfile(join(fpath, filename)):
         remove(join(fpath, filename))
     f = open(fpath+filename, 'w')
-    
-    # liste des couples de donnée { occurrence : [[indice, taux]] }
-    d = {}
-    for i in lst_ordre[ordre]:
-        tmp = dict_stat.get(i)
-        if tmp[0] != 1:
-            if tmp[0] not in d.keys():
-                d[tmp[0]] = [[i, tmp[2]]]
-            else :
-                d[tmp[0]].append([i, tmp[2]])
-    
-    j = 1
+
+    i = 1
     f.write("ordonne nbOccur taux indice\n")
-    # pour tous les nombre d'occurrence trié
-    for k in sorted(d.keys()) :
-        # récupère la liste des couples [indice, taux]
-        tmp = d.get(k)
-        # pour tous les couples triés (ATTENTION : est-ce que c'est bien trié?)
-        for l in sorted(tmp):
-            f.write(str(j)+' '+str(k)+' '+str(l[1])+' '+str(l[0])+'\n')
-            j += 1
-    
+    # pour les indices des la liste (trié au préalable)
+    for j in lst_id:
+        # récupère les stats
+        tmp = dict_stat.get(j)
+        f.write(str(i)+' '+str(tmp[0])+' '+str(tmp[2])+' '+str(j)+'\n')
+        i += 1
+
     f.close()
 
-## ajoute les données supplémentaires
-def Output_stat(name, min_ordre, lst_combi, lst_certif, lst_ordre, lst_unique):
+# ajoute les données supplémentaires
+
+
+def Output_stat(dir_O, name, detail, lst_combi, lst_certif, lst_id, nb_unique):
+    # selon les paramètres
+    if detail[0] == 1:
+        compl = "_H"
+    else:
+        compl = ""
     # ouverture du fichier de sortie
-    fpath = "Inputs_Outputs/Place_Output_here/"
-    filename = name+"_data.txt"
+    fpath = "Inputs_Outputs/Place_Output_here/"+dir_O+'/'
+    filename = name+compl+"_data.txt"
     if isfile(join(fpath, filename)):
         f = open(fpath+filename, 'a')
-    
-    cmpt = 0
-    for l in lst_combi:
-        cmpt += len(l)
-    
-    f.write("\nNombre de sous-graphes connexes :"+str(cmpt)+"\n")
-    f.write("Nombre de certificats différents :"+str(len(lst_certif))+"\n")
-    f.write("Ordre Nb_certif Nb_unique Nb_sg :\n")
-    for i in range(len(lst_unique)):
-        f.write(str(i+min_ordre)+" "+str(len(lst_ordre[i]))+" "+str(lst_unique[i])+" "+str(len(lst_combi[i]))+"\n")
+
+    f.write("\nOrdre : "+str(detail[1])+'\n')
+    f.write("Nombre de sous-graphes connexes : "+str(len(lst_combi))+'\n')
+    f.write("Nombre de certificats différents : "+str(len(lst_certif))+'\n')
+    f.write("Nombre de motifs uniques :"+str(nb_unique)+'\n')
+    f.write("Indices triés :\n"+str_liste(lst_id)+'\n')
     f.close()
 
-## données de résultats sous un format pouvant rentrer dans un tableaux excel (si l'on retire la dernière ligne)
-def Output_result(name, min_ordre, lst_certif, lst_ordre, dict_stat):
+# données de résultats sous un format pouvant rentrer dans un tableaux excel
+
+
+def Output_result(dir_O, name, detail, lst_certif, lst_id, dict_stat):
+    # selon les paramètres
+    if detail[0] == 1:
+        compl = "_H"
+    else:
+        compl = ""
     # création du fichier de sortie
-    fpath = "Inputs_Outputs/Place_Output_here/"
-    filename = name+"_res.txt"
-    if isfile(join(fpath, filename)):
-        remove(join(fpath, filename))
-    f = open(fpath+filename, 'w')
-    
-    f.write("ordre identifiant nombre_occurrence taux_recouvrement recouvrement certificat\n")
-    iso_uniq = 0
-    for i in range(len(lst_ordre)):
-        for indice in lst_ordre[i]:
-            tmp2 = dict_stat.get(indice)
-            if tmp2[0] > 1:
-                #       ordre               identifiant    nombre_occurrence taux_recouvrement  recouvrement                 certificat                
-                f.write(str(i+min_ordre)+' '+str(indice)+' '+str(tmp2[0])+' '+str(tmp2[2])+' \''+str_liste(tmp2[1])+' \''+lst_certif[indice].hex()+'\n')
-            else :
-                iso_uniq += 1
-                #f.write(str(i+min_ordre)+' '+str(indice)+' '+str(tmp2[0])+' '+str(tmp2[2])+' \''+str_liste(tmp2[1])+' \''+lst_certif[indice].hex()+'\n')
-    #f.write("Nombre unique "+str(iso_uniq)+'\n')
-    
-    f.close()
-
-## données des liste de combinaisons
-def Output_combi(name, lst_ordre, dict_isomorph):
-    # création du fichier de sortie
-    fpath = "Inputs_Outputs/Place_Output_here/"
-    filename = name+"_combi.txt"
-    if isfile(join(fpath, filename)):
-        remove(join(fpath, filename))
-    f = open(fpath+filename, 'w')
-    
-    f.write("identifiant liste_combi \n")
-    for i in range(len(lst_ordre)):
-        for indice in lst_ordre[i]:
-            tmp = dict_isomorph.get(indice)
-            #       identifiant    liste_combi                
-            f.write(str(indice)+' '+str_matrice(tmp)+'\n')
-    
-    f.close()
-
-######## Similarité
-
-# données de similarité de "motifs"
-def res_sim(name, min_ordre, max_ordre, Tab_sim):
-
-    for h in range(max_ordre-min_ordre+1):
-    
-        # création du fichier de sortie
-        fpath = "Inputs_Outputs/Place_Output_here/"
-        filename = name+"_sim_ord_"+str(h+min_ordre)+".txt"
-        if isfile(join(fpath, filename)):
-            remove(join(fpath, filename))
+    fpath = "Inputs_Outputs/Place_Output_here/"+dir_O+'/'
+    filename = name+compl+"_res.txt"
+    if not isfile(join(fpath, filename)):
         f = open(fpath+filename, 'w')
-        plt.imshow(Tab_sim[h], cmap='hot', interpolation='nearest')
-        #plt.show()
-        plt.savefig(fpath+name+"_heatmap_ord_"+str(h+min_ordre)+".png")
-        for i in range(len(Tab_sim[h])):
-            
+        f.write("ordre id_c id_o nb_occurrence taux_recouvrement recouvrement certificat\n")
+    else :
+        f = open(fpath+filename, 'w')
+        
+    i = 0
+    for indice in lst_id:
+        tmp2 = dict_stat.get(indice)
+        if tmp2[0] > 1:
+            f.write(str(detail[1])+' '+str(indice)+' '+str(i)+' '+str(tmp2[0])+' '+str(
+                tmp2[2])+' \''+str_liste(tmp2[1])+' \''+lst_certif[indice].hex()+'\n')
+        else:
+            f.write(str(detail[1])+' '+str(indice)+' '+str(i)+' '+str(tmp2[0])+' '+str(
+                tmp2[2])+' \''+str_liste(tmp2[1])+' \''+lst_certif[indice].hex()+'\n')
+    f.close()
 
-            s =""
+# données des listes de combinaisons
 
-            for j in range(len(Tab_sim[h])):
-                s+=str(Tab_sim[h][i][j])+' '
-                #print(' ')
 
-            f.write(s+'\n')
-        f.close()
+def Output_combi(dir_O, name, detail, lst_id, dict_isomorph):
+    # selon les paramètres
+    if detail[0] == 1:
+        compl = '_'+str(detail[1])+"_H"
+    else:
+        compl = '_'+str(detail[1])
+    # création du fichier de sortie
+    fpath = "Inputs_Outputs/Place_Output_here/"+dir_O+'/'
+    filename = name+compl+"_combi.txt"
+    if isfile(join(fpath, filename)):
+        remove(join(fpath, filename))
+    f = open(fpath+filename, 'w')
 
-##### Fonctions utiles
+    f.write("identifiant liste_combi \n")
+    for indice in lst_id:
+        tmp = dict_isomorph.get(indice)
+        #       identifiant    liste_combi
+        f.write(str(indice)+' '+str_matrice(tmp)+'\n')
+
+    f.close()
+
+# Similarité
+
+# données de similarité de "motifs" et matrice de chaleur
+
+
+def Output_sim(dir_O, name, detail, Tab_sim):
+    # selon les paramètres
+    if detail[0] == 1:
+        compl = "_H"
+    else:
+        compl = ""
+
+    # création du fichier de sortie
+    fpath = "Inputs_Outputs/Place_Output_here/"+dir_O+'/'
+    filename = name+compl+"_sim_ord_"+str(detail[1])+".txt"
+    if isfile(join(fpath, filename)):
+        remove(join(fpath, filename))
+    f = open(fpath+filename, 'w')
+    plt.imshow(Tab_sim, cmap='hot', interpolation='nearest')
+    # plt.show()
+    plt.savefig(fpath+name+"_heatmap_ord_"+str(detail[1])+".png")
+    for i in range(len(Tab_sim)):
+        s = ""
+        for j in range(len(Tab_sim)):
+            s += str(Tab_sim[i][j])+' '
+            #print(' ')
+        f.write(s+'\n')
+    f.close()
+
+# Fonctions utiles
+
 
 def str_liste(l):
     s = ''
     for i in range(len(l)):
         s += str(l[i])
     return s
+
 
 def str_matrice(m):
     s = '[ '
