@@ -18,7 +18,7 @@ from datetime import datetime
 
 
 def interface():
-    Multi_Taille = False
+    Multi_Taille = True
     Multi_File = False
     File_exist = False
 

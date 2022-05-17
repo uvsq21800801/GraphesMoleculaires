@@ -85,6 +85,27 @@ Matrice Adjacence
 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  1  0  0  
 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  1  0  0  
 
+Ordre : 1
+Nombre de sous-graphes connexes : 42
+Nombre de certificats différents : 1
+Nombre de motifs uniques :0
+Indices triés :
+0
+
+Ordre : 2
+Nombre de sous-graphes connexes : 42
+Nombre de certificats différents : 1
+Nombre de motifs uniques :0
+Indices triés :
+0
+
+Ordre : 3
+Nombre de sous-graphes connexes : 54
+Nombre de certificats différents : 3
+Nombre de motifs uniques :0
+Indices triés :
+210
+
 Ordre : 4
 Nombre de sous-graphes connexes : 68
 Nombre de certificats différents : 5

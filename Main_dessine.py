@@ -30,7 +30,15 @@ def interface():
     # nom
     name = input("Nom fichier entré : ")
 
-    filename = name+'_'+ordre+"_combi.txt"
+    option = input("Retirer les H et déplacer les liaisons H sur donneur [0|1]: ")
+    while (option!='0' and option!='1'):
+        option = input("(atome H) Attend 0 ou 1 : ")
+    option = int(option)   
+    s = ''
+    if(option):
+        s+='_H'
+
+    filename = name+'_'+ordre+s+"_combi.txt"
 
     ##### indice du graphe qui nous intéresse
     indice = input("indice du sous-graphe(indiqué sur les axes de la matrice de chaleur) : ")
@@ -49,12 +57,7 @@ def interface():
 
     #####
     # 2 - caractéristiques du graphe et matrice adja
-    #####
-    option = input("Retirer les H et déplacer les liaisons H sur donneur [0|1]: ")
-    while (option!='0' and option!='1'):
-        option = input("(atome H) Attend 0 ou 1 : ")
-    option = int(option)    
-
+    ##### 
     filename1, filename2, lst_index, atom_caract, matrice_adja = Inputs.data_input(option, name)
 
     
