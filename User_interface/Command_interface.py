@@ -95,6 +95,13 @@ def interface():
             matrice_adja = []
             filename_B = In.Input_bonds(detail[0], name, lst_index, matrice_adja)
 
+            # test: taille raisonnable?
+            
+            if (len(atom_caract)<int(input_num)):
+                print('Erreur: Taille entrée trop grande')
+                print('Taille maximum:'+str(len(atom_caract)))
+                break
+
             ### déjà exécuté?
             if In.done_here(join(path_O, dir_O), name, detail):
                 print(name+" déjà fait")
