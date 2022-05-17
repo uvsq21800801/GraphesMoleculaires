@@ -82,6 +82,18 @@ def interface():
         option = input("(atome H) Attend 0 ou 1 : ")
     detail = [int(option), 0]
     
+    # Choix du type de Similarite
+    print("Quel type de similarite étudier? ")
+    print("\t 1 : similarité par dout d'édition ")
+    print("\t 2 : similarité par calcul de Raymond sur MCIS ")
+    print("\t 3 : similarité par calcul asymétrique sur MCIS ")
+    print("\t 0 : les 3 types de similarité ")
+    option = input("(Similarité) Attend entre 0 et 3 : ")
+    while (option!='0' and option!='1' and option!='2' and option!='3'):
+        option = input("(Similarité) Attend entre 0 et 3 : ")
+    detail.append(int(option))
+    
+    
     ###### Lancement de l'execution du programme
     if not Multi_File :
         filenames = [name]
@@ -176,18 +188,6 @@ def programm_1 (dir_O, name, detail, matrice_adja, atom_caract, lst_combi):
     
 def programm_2 (dir_O, name, detail, matrice_adja, atom_caract, lst_id, dict_isomorph):
     # MCIS/ Génération des données pour calculer le taux de chaleur
-    
-    # Choix du type de Similarite
-    print("Quel type de similarite étudier? ")
-    print("\t 1 : similarité par dout d'édition ")
-    print("\t 2 : similarité par calcul de Raymond sur MCIS ")
-    print("\t 3 : similarité par calcul asymétrique sur MCIS ")
-    print("\t 0 : les 3 types de similarité ")
-    option = input("(Similarité) Attend entre 0 et 3 : ")
-    while (option!='0' and option!='1' and option!='2' and option!='3'):
-        option = input("(Similarité) Attend entre 0 et 3 : ")
-    detail.append(int(option))
-    
     if detail[2] == 0:
         for i in range(3):
             detail[2] = i+1
@@ -195,6 +195,7 @@ def programm_2 (dir_O, name, detail, matrice_adja, atom_caract, lst_id, dict_iso
             # imprime les matrices de chaleur
             Out.Output_sim(dir_O, name, detail, Tab_sim)
             print(name+" mcis "+str(detail[2])+" fini "+str(datetime.now().time()))
+        detail[2] = 0
     else :
         Tab_sim = Simil.mcis_algo(detail, matrice_adja, atom_caract, lst_id, dict_isomorph)
         # imprime les matrices de chaleur
