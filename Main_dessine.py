@@ -16,7 +16,6 @@ Ce main permet d'afficher le dessin d'un sous graphe à partir de:
 - la taille étudiée
 - son indice (indiqué dans la matrice de chaleur)
 '''
-
 def interface():
 
     ##### Sous dossier
@@ -58,8 +57,6 @@ def interface():
 
     filename1, filename2, lst_index, atom_caract, matrice_adja = Inputs.data_input(option, name)
 
-    #print(matrice_adja)
-    #print(atom_caract)
     
     #####
     # 3 - construction du graph avec nx
@@ -88,9 +85,9 @@ def interface():
     #####
     nx.draw(g,with_labels = True,edge_color=colors)
     #plt.show()  
-    plt.savefig("Inputs_Outputs/Draw_Graph/draw_"+name+"_"+str(ordre)+"_"+str(indice)+".png")
+    plt.savefig("Inputs_Outputs/Draw_Graph/draw_"+name+"_ord"+str(ordre)+"_"+str(indice)+".png")
     print("dessin sauvegardé dans Inputs_Outputs/Draw_Graph"
-            +"en tant que : "+name+"_"+str(ordre)+"_"+str(indice)+".png")
+            +"en tant que : "+name+"_ord"+str(ordre)+"_"+str(indice)+".png")
 
 def main():
     interface()
