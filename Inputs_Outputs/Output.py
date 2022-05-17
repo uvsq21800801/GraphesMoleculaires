@@ -97,7 +97,7 @@ def Output_result(dir_O, name, detail, lst_certif, lst_id, dict_stat):
     filename = name+compl+"_res.txt"
     if not isfile(join(fpath, filename)):
         f = open(fpath+filename, 'w')
-        f.write("ordre id_c id_o nb_occurrence taux_recouvrement recouvrement certificat\n")
+        f.write("ordre id_c id_t nb_occurrence taux_recouvrement recouvrement certificat\n")
     else :
         f = open(fpath+filename, 'a')
         
@@ -131,10 +131,10 @@ def Output_combi(dir_O, name, detail, lst_id, dict_isomorph):
     f = open(fpath+filename, 'w')
 
     f.write("identifiant liste_combi \n")
-    for indice in lst_id:
-        tmp = dict_isomorph.get(indice)
+    for i in range(len(lst_id)):
+        tmp = dict_isomorph.get(lst_id[i])
         #       identifiant    liste_combi
-        f.write(str(indice)+' '+str_matrice(tmp)+'\n')
+        f.write(str(lst_id[i])+' '+str_liste(tmp[0])+' '+str_matrice(tmp)+'\n')
 
     f.close()
 
@@ -146,9 +146,9 @@ def Output_combi(dir_O, name, detail, lst_id, dict_isomorph):
 def Output_sim(dir_O, name, detail, Tab_sim):
     # selon les paramètres
     if detail[0] == 1:
-        compl = "_H"
+        compl = "_H_"+str(detail[2])
     else:
-        compl = ""
+        compl = "_"+str(detail[2])
 
     # création du fichier de sortie
     fpath = "Inputs_Outputs/Place_Output_here/"+dir_O+'/'

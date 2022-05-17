@@ -39,7 +39,7 @@ def extract_sub(matrice_adja, atom_caract, combi, taille):
 # Sortie: Tableau  [0] [x] [y]
 
 
-def mcis_algo(matrice_adja, atom_caract, lst_id, dict_iso, ordre):
+def mcis_algo(detail, matrice_adja, atom_caract, lst_id, dict_iso):
 
     # tableau 3D [0][nb_occurence de cet ordre][nb_occurence de cet ordre]
     cb = len(lst_id)
@@ -55,16 +55,16 @@ def mcis_algo(matrice_adja, atom_caract, lst_id, dict_iso, ordre):
     for i in range(cb):
         getlist = dict_iso[lst_id[i]]
         (adja_s[i], carac_s[i]) = extract_sub(
-            matrice_adja, atom_caract, getlist[0], ordre)
-
+            matrice_adja, atom_caract, getlist[0], detail[1])
+    
     for i in range(cb):
         for j in range(cb):
-            '''ce qui est en commentaire ci-dessous, c'est les différentes façons de calculer la simmilarité'''
-            # tab_ord[i][j] = Mcis_decl.simmilarite(adja_s[i], carac_s[i], adja_s[j], carac_s[j])
-            # tab_ord[i][j] = Mcis_decl.sim_raymond(adja_s[i], carac_s[i], adja_s[j], carac_s[j])
-            tab_ord[i][j] = Mcis_decl.sim_barth(adja_s[i], carac_s[i], adja_s[j], carac_s[j], i, j)
-
-            # print('MCIS/Mcis_algo: Pas fini')
+            if detail[2] == 1 :
+                tab_ord[i][j] = Mcis_decl.simmilarite(adja_s[i], carac_s[i], adja_s[j], carac_s[j])
+            if detail[2] == 2 :
+                tab_ord[i][j] = Mcis_decl.sim_raymond(adja_s[i], carac_s[i], adja_s[j], carac_s[j])
+            if detail[2] == 3 :
+                tab_ord[i][j] = Mcis_decl.sim_barth(adja_s[i], carac_s[i], adja_s[j], carac_s[j], i, j)
 
     # print(tab_ord)
     return tab_ord

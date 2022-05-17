@@ -130,8 +130,8 @@ def interface():
                     for i in range(max_ordre - min_ordre + 1):
                         ordre = min_ordre+i
                         detail[1] = ordre
-                        (dict_isomorph, dict_stat, lst_id, lst_certif, nb_unique) = programm_1(dir_O, name, detail, matrice_adja, atom_caract, lst_combi[i], ordre)
-                        programm_2(dir_O, name, detail, ordre, matrice_adja, atom_caract, lst_id, dict_isomorph)
+                        (dict_isomorph, dict_stat, lst_id, lst_certif, nb_unique) = programm_1(dir_O, name, detail, matrice_adja, atom_caract, lst_combi[i])
+                        programm_2(dir_O, name, detail, matrice_adja, atom_caract, lst_id, dict_isomorph)
                     
                         print(name+" taille "+str(ordre)+" fini "+str(datetime.now().time())+"\n")
                     
@@ -143,22 +143,23 @@ def interface():
                     print(name+" combinaisons finis "+str(datetime.now().time()))
                     
                     detail[1] = ordre
-                    (dict_isomorph, dict_stat, lst_id, lst_certif, nb_unique) = programm_1(dir_O, name, detail, matrice_adja, atom_caract, lst_combi, ordre)
-                    programm_2(dir_O, name, detail, ordre, matrice_adja, atom_caract, lst_id, dict_isomorph)
+                    (dict_isomorph, dict_stat, lst_id, lst_certif, nb_unique) = programm_1(dir_O, name, detail, matrice_adja, atom_caract, lst_combi)
+                    
+                    programm_2(dir_O, name, detail, matrice_adja, atom_caract, lst_id, dict_isomorph)
                     
                     print(name+" fini "+str(datetime.now().time())+"\n")
                 
     return 0
 
-def programm_1 (dir_O, name, detail, matrice_adja, atom_caract, lst_combi, ordre):
-    (dict_isomorph, dict_stat, lst_id, lst_certif) = Iso.combi_iso(matrice_adja, atom_caract, lst_combi, ordre)
+def programm_1 (dir_O, name, detail, matrice_adja, atom_caract, lst_combi):
+    (dict_isomorph, dict_stat, lst_id, lst_certif) = Iso.combi_iso(matrice_adja, atom_caract, lst_combi, detail[1])
     
     print(name+" isomorph fini "+str(datetime.now().time()))
                         
     # calcul le taux de recouvrement 
     Stat.Taux_recouvert(dict_stat)
     # tri de lst_id par nombre d'occurence et le nombre de motif unique
-    Stat.Tri_indice(lst_id, dict_stat)
+    lst_id = Stat.Tri_indice(lst_id, dict_stat)
     nb_unique = Stat.Nombre_unique(lst_id, dict_stat)
     
     # imprime combinaisons
@@ -173,9 +174,29 @@ def programm_1 (dir_O, name, detail, matrice_adja, atom_caract, lst_combi, ordre
     print(name+" sortie fini "+str(datetime.now().time()))
     return (dict_isomorph, dict_stat, lst_id, lst_certif, nb_unique)
     
-def programm_2 (dir_O, name, detail, ordre, matrice_adja, atom_caract, lst_id, dict_isomorph):
+def programm_2 (dir_O, name, detail, matrice_adja, atom_caract, lst_id, dict_isomorph):
     # MCIS/ Génération des données pour calculer le taux de chaleur
-    Tab_sim = Simil.mcis_algo(matrice_adja, atom_caract, lst_id, dict_isomorph, ordre)
-    # imprime les matrices de chaleur
-    Out.Output_sim(dir_O, name, detail, Tab_sim)
-    print(name+" mcis fini "+str(datetime.now().time()))
+    
+    # Choix du type de Similarite
+    print("Quel type de similarite étudier? ")
+    print("\t 1 : similarité par dout d'édition ")
+    print("\t 2 : similarité par calcul de Raymond sur MCIS ")
+    print("\t 3 : similarité par calcul asymétrique sur MCIS ")
+    print("\t 0 : les 3 types de similarité ")
+    option = input("(Similarité) Attend entre 0 et 3 : ")
+    while (option!='0' and option!='1' and option!='2' and option!='3'):
+        option = input("(Similarité) Attend entre 0 et 3 : ")
+    detail.append(int(option))
+    
+    if detail[2] == 0:
+        for i in range(3):
+            detail[2] = i+1
+            Tab_sim = Simil.mcis_algo(detail, matrice_adja, atom_caract, lst_id, dict_isomorph)
+            # imprime les matrices de chaleur
+            Out.Output_sim(dir_O, name, detail, Tab_sim)
+            print(name+" mcis "+str(detail[2])+" fini "+str(datetime.now().time()))
+    else :
+        Tab_sim = Simil.mcis_algo(detail, matrice_adja, atom_caract, lst_id, dict_isomorph)
+        # imprime les matrices de chaleur
+        Out.Output_sim(dir_O, name, detail, Tab_sim)
+        print(name+" mcis fini "+str(datetime.now().time()))

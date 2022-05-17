@@ -53,7 +53,7 @@ def Tri_indice(lst_id, dict_stat):
         for l in sorted(tmp, key=second):
             tri_indice.append(l[0])
     
-    lst_id = tri_indice
+    return tri_indice
 
 # retourne le second terme d'un tableau 
 def second(tab):
