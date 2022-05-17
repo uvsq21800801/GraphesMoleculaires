@@ -60,7 +60,7 @@ def mcis_algo(detail, matrice_adja, atom_caract, lst_id, dict_iso):
     for i in range(cb):
         for j in range(cb):
             if detail[2] == 1 :
-                tab_ord[i][j] = Mcis_decl.simmilarite(adja_s[i], carac_s[i], adja_s[j], carac_s[j])
+                tab_ord[i][j] = 1 - Mcis_decl.simmilarite(adja_s[i], carac_s[i], adja_s[j], carac_s[j])
             if detail[2] == 2 :
                 tab_ord[i][j] = Mcis_decl.sim_raymond(adja_s[i], carac_s[i], adja_s[j], carac_s[j])
             if detail[2] == 3 :

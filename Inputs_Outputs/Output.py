@@ -158,7 +158,7 @@ def Output_sim(dir_O, name, detail, Tab_sim):
     f = open(fpath+filename, 'w')
     plt.imshow(Tab_sim, cmap='hot', interpolation='nearest')
     # plt.show()
-    plt.savefig(fpath+name+"_heatmap_ord_"+str(detail[1])+".png")
+    plt.savefig(fpath+name+compl+"_heatmap_ord_"+str(detail[1])+".png")
     for i in range(len(Tab_sim)):
         s = ""
         for j in range(len(Tab_sim)):
