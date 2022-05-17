@@ -68,6 +68,8 @@ def Output_diagramme(dir_O, name, detail, lst_id, dict_stat):
 
     occur = np.array(plot_occur)
     occur = occur.astype(np.float)
+
+    plt.clf()
     plt.scatter(plot_indice, occur)
     #plt.title("")
     plt.xlabel("Indices triés dans l'ordre d'occurrence")
@@ -84,6 +86,7 @@ def Output_diagramme(dir_O, name, detail, lst_id, dict_stat):
     plt.ylabel("Taux de recouvrement d'un motif")
     #plt.show()  
     plt.savefig(fpath+name+compl+"_recouv.png")
+    plt.clf()
 
 # ajoute les données supplémentaires
 
@@ -180,9 +183,13 @@ def Output_sim(dir_O, name, detail, Tab_sim):
     if isfile(join(fpath, filename)):
         remove(join(fpath, filename))
     f = open(fpath+filename, 'w')
+    plt.clf()
+    plt.xlabel("Indices des motifs triés dans l'ordre d'occurrence")
+    plt.ylabel("Indices des motifs triés dans l'ordre d'occurrence")
     plt.imshow(Tab_sim, cmap='hot', interpolation='nearest')
     # plt.show()
     plt.savefig(fpath+name+compl+"_heatmap_ord_"+str(detail[1])+".png")
+    plt.clf()
     for i in range(len(Tab_sim)):
         s = ""
         for j in range(len(Tab_sim)):
