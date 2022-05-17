@@ -84,10 +84,13 @@ def interface():
     # 4 - dessin
     #####
     nx.draw(g,with_labels = True,edge_color=colors)
-    #plt.show()  
-    plt.savefig("Inputs_Outputs/Draw_Graph/draw_"+name+"_ord"+str(ordre)+"_"+str(indice)+".png")
+    #plt.show()
+    s = ''  
+    if (option == 1):
+        s+='_H'
+    plt.savefig("Inputs_Outputs/Draw_Graph/draw_"+name+"_ord"+str(ordre)+"_"+str(indice)+s+".png")
     print("dessin sauvegardé dans Inputs_Outputs/Draw_Graph"
-            +"en tant que : "+name+"_ord"+str(ordre)+"_"+str(indice)+".png")
+            +"en tant que : "+name+"_ord"+str(ordre)+"_"+str(indice)+s+".png")
 
 def main():
     interface()

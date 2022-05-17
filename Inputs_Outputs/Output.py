@@ -54,12 +54,36 @@ def Output_diagramme(dir_O, name, detail, lst_id, dict_stat):
 
     f.write("ordonne nbOccur taux indice\n")
     # pour les indices des la liste (trié au préalable)
+    plot_indice = []
+    plot_occur = []
+    plot_recouv = []
     for i in range(len(lst_id)):
         # récupère les stats
         tmp = dict_stat.get(lst_id[i])
         f.write(str(i+1)+' '+str(tmp[0])+' '+str(tmp[2])+' '+str(lst_id[i])+'\n')
-
+        plot_indice.append(int(i+1))
+        plot_occur.append(float(tmp[0]))
+        plot_recouv.append(float(tmp[2]))
     f.close()
+
+    occur = np.array(plot_occur)
+    occur = occur.astype(np.float)
+    plt.scatter(plot_indice, occur)
+    #plt.title("")
+    plt.xlabel("Indices triés dans l'ordre d'occurrence")
+    plt.ylabel("Nombre d'occurrence d'un motif")
+    #plt.show()  
+    plt.savefig(fpath+name+compl+"_occur.png")
+
+    plt.clf()
+    recouv = np.array(plot_recouv)
+    recouv = recouv.astype(np.float)
+    plt.scatter(plot_indice, recouv)
+    #plt.title("")
+    plt.xlabel("Indices triés dans l'ordre d'occurrence")
+    plt.ylabel("Taux de recouvrement d'un motif")
+    #plt.show()  
+    plt.savefig(fpath+name+compl+"_recouv.png")
 
 # ajoute les données supplémentaires
 
@@ -81,7 +105,7 @@ def Output_stat(dir_O, name, detail, lst_combi, lst_certif, lst_id, nb_unique):
     f.write("Nombre de certificats différents : "+str(len(lst_certif))+'\n')
     f.write("Nombre de motifs uniques :"+str(nb_unique)+'\n')
     f.write("Indices triés :\n"+str_liste(lst_id)+'\n')
-    f.close()
+    f.close() 
 
 # données de résultats sous un format pouvant rentrer dans un tableaux excel
 
