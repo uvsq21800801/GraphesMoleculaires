@@ -19,6 +19,7 @@
   * Dossier *Place_Output_here* : rassemble les fichiers de sortie
   * *Inputs*.py : lecture des fichiers d'entrée
   * *Output*.py : écriure des fichiers de sortie
+  * Dossier *Draw_Graph* : fichiers de sortie des dessins de sous-graphes générés par Main_dessine.py
 
 ## Fichiers utilisés
 ### Entrée
@@ -60,4 +61,15 @@ Avant de lancer l'application, entrez cela dans le terminal depuis le dossier co
 Après avoir ajouté de nouvelles dépendences au projet (afin que d'autres personnes travaillant sur le projet puisse installer les bonnes librairies):
 ``` bash
   pip freeze > requirement.txt
+```
+
+## Lancer le programme:
+Lancement du programme principal
+```bash
+  python3 Main.py
+```
+
+Lancement du programme de dessin de sous-graphe (qui utilise les résultats du programme principal)
+```bash
+  python3 Main_dessine.py
 ```
