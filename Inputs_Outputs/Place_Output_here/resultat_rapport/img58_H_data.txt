@@ -41,20 +41,6 @@ Matrice Adjacence
 0  0  0  0  0  0  2  0  0  0  0  0  0  0  0  0  0  0  0  2  
 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  
 
-Ordre : 4
-Nombre de sous-graphes connexes : 99
-Nombre de certificats différents : 11
-Nombre de motifs uniques :3
-Indices triés :
-891045706213
-
-Ordre : 5
-Nombre de sous-graphes connexes : 221
-Nombre de certificats différents : 43
-Nombre de motifs uniques :14
-Indices triés :
-1418222325263133353637383941202981517192740343242316132824309267111102105412
-
 Ordre : 6
 Nombre de sous-graphes connexes : 491
 Nombre de certificats différents : 153

@@ -84,7 +84,7 @@ def interface():
     
     # Choix du type de Similarite
     print("Quel type de similarite étudier? ")
-    print("\t 1 : similarité par dout d'édition ")
+    print("\t 1 : similarité par cout d'édition ")
     print("\t 2 : similarité par calcul de Raymond sur MCIS ")
     print("\t 3 : similarité par calcul asymétrique sur MCIS ")
     print("\t 0 : les 3 types de similarité ")

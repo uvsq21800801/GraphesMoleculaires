@@ -48,9 +48,9 @@ def interface():
     #####
     f = open(fpath+"/"+filename, "r")
     lines=f.readlines()
-    for i in range(len(lines)):
+    for i in range(1,len(lines)):
         splitted = lines[i].split()
-        if (splitted[0] == indice):
+        if (i-2 == int(indice)):
             combi = splitted[1] 
             break            
     f.close()
@@ -93,7 +93,7 @@ def interface():
         s+='_H'
     plt.savefig("Inputs_Outputs/Draw_Graph/draw_"+name+"_ord"+str(ordre)+"_"+str(indice)+s+".png")
     print("dessin sauvegardé dans Inputs_Outputs/Draw_Graph"
-            +"en tant que : "+name+"_ord"+str(ordre)+"_"+str(indice)+s+".png")
+            +" en tant que : "+name+"_ord"+str(ordre)+"_"+str(indice)+s+".png")
 
 def main():
     interface()

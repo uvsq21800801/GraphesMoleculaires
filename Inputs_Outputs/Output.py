@@ -70,7 +70,7 @@ def Output_diagramme(dir_O, name, detail, lst_id, dict_stat):
     occur = occur.astype(np.float)
 
     plt.clf()
-    plt.scatter(plot_indice, occur)
+    plt.scatter(plot_indice, occur,s=3)
     #plt.title("")
     plt.xlabel("Indices triés dans l'ordre d'occurrence")
     plt.ylabel("Nombre d'occurrence d'un motif")
@@ -80,7 +80,7 @@ def Output_diagramme(dir_O, name, detail, lst_id, dict_stat):
     plt.clf()
     recouv = np.array(plot_recouv)
     recouv = recouv.astype(np.float)
-    plt.scatter(plot_indice, recouv)
+    plt.scatter(plot_indice, recouv,s=3)
     #plt.title("")
     plt.xlabel("Indices triés dans l'ordre d'occurrence")
     plt.ylabel("Taux de recouvrement d'un motif")
@@ -103,12 +103,12 @@ def Output_stat(dir_O, name, detail, lst_combi, lst_certif, lst_id, nb_unique):
     if isfile(join(fpath, filename)):
         f = open(fpath+filename, 'a')
 
-    f.write("\nOrdre : "+str(detail[1])+'\n')
-    f.write("Nombre de sous-graphes connexes : "+str(len(lst_combi))+'\n')
-    f.write("Nombre de certificats différents : "+str(len(lst_certif))+'\n')
-    f.write("Nombre de motifs uniques :"+str(nb_unique)+'\n')
-    f.write("Indices triés :\n"+str_liste(lst_id)+'\n')
-    f.close() 
+        f.write("\nOrdre : "+str(detail[1])+'\n')
+        f.write("Nombre de sous-graphes connexes : "+str(len(lst_combi))+'\n')
+        f.write("Nombre de certificats différents : "+str(len(lst_certif))+'\n')
+        f.write("Nombre de motifs uniques :"+str(nb_unique)+'\n')
+        f.write("Indices triés :\n"+str_liste(lst_id)+'\n')
+        f.close() 
 
 # données de résultats sous un format pouvant rentrer dans un tableaux excel
 
