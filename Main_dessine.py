@@ -48,9 +48,9 @@ def interface():
     #####
     f = open(fpath+"/"+filename, "r")
     lines=f.readlines()
-    for i in range(1,len(lines)):
-        splitted = lines[i].split()
-        if (i-2 == int(indice)):
+    for i in range(0,len(lines)-1):
+        splitted = lines[i+1].split()
+        if (i == int(indice)):
             combi = splitted[1] 
             break            
     f.close()
