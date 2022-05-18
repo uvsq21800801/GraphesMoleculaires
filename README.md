@@ -64,12 +64,12 @@ Après avoir ajouté de nouvelles dépendences au projet (afin que d'autres pers
 ```
 
 ## Lancer le programme:
-Lancement du programme principal
+Lancement du programme principal:
 ```bash
   python3 Main.py
 ```
 
-Lancement du programme de dessin de sous-graphe (qui utilise les résultats du programme principal)
+Lancement du programme de dessin de sous-graphe (qui utilise les résultats du programme principal):
 ```bash
   python3 Main_dessine.py
 ```
