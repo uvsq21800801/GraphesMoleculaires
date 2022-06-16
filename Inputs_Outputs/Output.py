@@ -60,8 +60,8 @@ def Output_diagramme(dir_O, name, detail, lst_id, dict_stat):
     for i in range(len(lst_id)):
         # récupère les stats
         tmp = dict_stat.get(lst_id[i])
-        f.write(str(i+1)+' '+str(tmp[0])+' '+str(tmp[2])+' '+str(lst_id[i])+'\n')
-        plot_indice.append(int(i+1))
+        f.write(str(i)+' '+str(tmp[0])+' '+str(tmp[2])+' '+str(lst_id[i])+'\n')
+        plot_indice.append(int(i))
         plot_occur.append(float(tmp[0]))
         plot_recouv.append(float(tmp[2]))
     f.close()
@@ -80,7 +80,9 @@ def Output_diagramme(dir_O, name, detail, lst_id, dict_stat):
     plt.clf()
     recouv = np.array(plot_recouv)
     recouv = recouv.astype(np.float)
+    
     plt.scatter(plot_indice, recouv,s=3)
+    
     #plt.title("")
     plt.xlabel("Indices triés dans l'ordre d'occurrence")
     plt.ylabel("Taux de recouvrement d'un motif")
