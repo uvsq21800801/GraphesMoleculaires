@@ -8,20 +8,20 @@ On prends un sommet, on génère tous les sous-graphes connexes qui le contienne
 
 
 # fonction recursive qui va chercher toutes les combinaisons générables depuis la combinaison précédente
-def subgen_rec(matrice_adja, max_ordre, combi_prec, taille_etud, combi_all):
+def subgen_rec(matrice_adja, max_ordre, combi_prec, taille_etud, combi_all, sommets_elim):
     if (taille_etud > max_ordre):
         return combi_all
 
     for i in range(len(matrice_adja)):
     
         if combi_prec[i] != 0:
-            for j in range(len(matrice_adja)):
+            for j in range(sommets_elim, len(matrice_adja)):
                 if (matrice_adja[j][i] !=0 or matrice_adja[i][j] !=0) and combi_prec[j] == 0:
                     combi_temp = combi_prec.copy()
                     combi_temp[j] = 1
                     if combi_temp not in combi_all[taille_etud]:
                         combi_all[taille_etud].append(combi_temp.copy())
-                        subgen_rec(matrice_adja, max_ordre, combi_temp, taille_etud+1, combi_all)
+                        subgen_rec(matrice_adja, max_ordre, combi_temp, taille_etud+1, combi_all, sommets_elim)
     return combi_all
 
 
@@ -47,7 +47,7 @@ def subgen(matrice_adja, min_ordre, max_ordre):
     taille_etud = 1
     for i in range(len(matrice_adja)):
         # appel de la fonction récursive pour chaque sommets étudiés
-        combi_all_ord = subgen_rec(matrice_adja, max_ordre, combi_all_ord[0][i], taille_etud+1, combi_all_ord)
+        combi_all_ord = subgen_rec(matrice_adja, max_ordre, combi_all_ord[0][i], taille_etud+1, combi_all_ord, i)
 
     if max_ordre == min_ordre:
         return combi_all_ord[min_ordre].copy()
