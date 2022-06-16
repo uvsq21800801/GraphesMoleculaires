@@ -7,6 +7,7 @@ sys.path.append('GraphesMoleculaires/MCIS')
 from Inputs_Outputs import Inputs as In
 from Inputs_Outputs import Output as Out
 from Solving_Methods import Combinations as Combi
+from Solving_Methods import SmartSubGenerator as SSG
 from Solving_Methods import Isomorph as Iso
 from Solving_Methods import Statistic as Stat
 from Solving_Methods import Similarity as Simil
@@ -47,6 +48,11 @@ def interface():
             min_ordre = max_ordre
             max_ordre = tmp
     
+    if min_ordre == max_ordre:
+        Multi_Taille = False
+    if not Multi_Taille and input_num.isnumeric():
+        ordre = int(input_num)
+        
     ##### Fichiers entrés
     fpath_T = "Inputs_Outputs/Place_Trad_file_here/" 
     fpath_B = "Inputs_Outputs/Place_Bonds_file_here/"
@@ -135,8 +141,13 @@ def interface():
                 #### Exécution sur le ou les ordre(s)
                 if Multi_Taille :
                     print(name+" commence "+str(datetime.now().time()))
+                    '''
                     # sous_graphe connexe par methode bruteforce
                     lst_combi = Combi.gen_combi_brute_range(matrice_adja, min_ordre, max_ordre)
+                    '''
+                    # sous_graphes connexes par notre méthode de parcour d'un arbre de combi de la matrice d'adja
+                    lst_combi = SSG.subgen(matrice_adja, min_ordre, max_ordre)
+
                     print(name+" combinaisons finis "+str(datetime.now().time()))
                     
                     for i in range(max_ordre - min_ordre + 1):
@@ -150,8 +161,13 @@ def interface():
                     print(name+" fini "+str(datetime.now().time())+"\n")
                 else : 
                     print(name+" commence "+str(datetime.now().time()))
+                    '''
                     # sous_graphe connexe par methode bruteforce
                     lst_combi = Combi.gen_combi_brute(matrice_adja, ordre)
+                    '''
+                    # sous_graphes connexes par notre méthode de parcour d'un arbre de combi de la matrice d'adja
+                    lst_combi = SSG.subgen(matrice_adja, ordre, ordre)
+                    
                     print(name+" combinaisons finis "+str(datetime.now().time()))
                     
                     detail[1] = ordre

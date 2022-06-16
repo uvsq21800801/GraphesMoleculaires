@@ -1,6 +1,7 @@
 import math
 from pynauty import *
 
+# plus utilisé
 
 # Explication de l'algorithme générale
 #   Génération d'une liste de combinaison de sommets = sous-graphe 

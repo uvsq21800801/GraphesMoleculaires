@@ -8,6 +8,8 @@ from Inputs_Outputs import Output as Out
 from Solving_Methods import BruteForce
 from Solving_Methods import Mcis_algo
 
+# plus utilisé?
+
 ###
 # 1. Type d'execution bruteforce avec plusieurs fichiers
 ###
