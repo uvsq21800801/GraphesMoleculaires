@@ -1,2 +1,0 @@
-ordonne nbOccur taux indice
-1 42 2.0 0

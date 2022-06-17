@@ -74,7 +74,7 @@ def Output_diagramme(dir_O, name, detail, lst_id, dict_stat):
     occur = occur.astype(np.float)
     plt.scatter(plot_indice, occur,s=3)
     #plt.title("")
-    plt.xlabel("Indices triés dans l'ordre d'occurrence")
+    plt.xlabel("Indices triés par occurrence croissance")
     plt.ylabel("Nombre d'occurrence d'un motif")
     #plt.show()  
     plt.savefig(fpath+name+compl+"_occur.png")
@@ -86,7 +86,7 @@ def Output_diagramme(dir_O, name, detail, lst_id, dict_stat):
     plt.scatter(plot_indice, recouv,s=3)
     
     #plt.title("")
-    plt.xlabel("Indices triés dans l'ordre d'occurrence")
+    plt.xlabel("Indices triés par occurrence croissance")
     plt.ylabel("Taux de recouvrement d'un motif")
     #plt.show()  
     plt.savefig(fpath+name+compl+"_recouv.png")
@@ -95,7 +95,7 @@ def Output_diagramme(dir_O, name, detail, lst_id, dict_stat):
     occup = np.array(plot_occup)
     occup = occup.astype(np.float)
     plt.scatter(plot_indice, occup,s=3)
-    plt.xlabel("Indices triés dans l'ordre d'occurrence")
+    plt.xlabel("Indices triés par occurrence croissance")
     plt.ylabel("Taux d'occupation d'un motif")
     plt.savefig(fpath+name+compl+"_occup.png")
     plt.clf()
@@ -119,7 +119,7 @@ def Output_stat(dir_O, name, detail, lst_combi, lst_certif, lst_id, nb_unique):
         f.write("Nombre de sous-graphes connexes : "+str(len(lst_combi))+'\n')
         f.write("Nombre de certificats différents : "+str(len(lst_certif))+'\n')
         f.write("Nombre de motifs uniques :"+str(nb_unique)+'\n')
-        f.write("Indices triés :\n"+str_liste(lst_id)+'\n')
+        f.write("Indices triés :\n"+str_liste(lst_id, ' ')+'\n')
         f.close() 
 
 # données de résultats sous un format pouvant rentrer dans un tableaux excel
@@ -146,10 +146,10 @@ def Output_result(dir_O, name, detail, lst_certif, lst_id, dict_stat):
         tmp1 = dict_stat.get(indice)
         if tmp1[0] > 1:
             f.write(str(detail[1])+' '+str(indice)+' '+str(i)+' '+str(tmp1[0])+' '+str(
-                tmp1[2])+' \''+str_liste(tmp1[1])+' \''+str(tmp1[3])+' \''+lst_certif[indice].hex()+'\n')
+                tmp1[2])+' \''+str_liste(tmp1[1],'')+' \''+str(tmp1[3])+' \''+lst_certif[indice].hex()+'\n')
         else:
             f.write(str(detail[1])+' '+str(indice)+' '+str(i)+' '+str(tmp1[0])+' '+str(
-                tmp1[2])+' \''+str_liste(tmp1[1])+' \''+str(tmp1[3])+' \''+lst_certif[indice].hex()+'\n')
+                tmp1[2])+' \''+str_liste(tmp1[1],'')+' \''+str(tmp1[3])+' \''+lst_certif[indice].hex()+'\n')
         i += 1
     f.close()
 
@@ -173,7 +173,7 @@ def Output_combi(dir_O, name, detail, lst_id, dict_isomorph):
     for i in range(len(lst_id)):
         tmp = dict_isomorph.get(lst_id[i])
         #       identifiant    liste_combi
-        f.write(str(lst_id[i])+' '+str_liste(tmp[0])+' '+str_matrice(tmp)+'\n')
+        f.write(str(lst_id[i])+' '+str_liste(tmp[0],'')+' '+str_matrice(tmp)+'\n')
 
     f.close()
 
@@ -213,15 +213,15 @@ def Output_sim(dir_O, name, detail, Tab_sim):
 # Fonctions utiles
 
 
-def str_liste(l):
+def str_liste(l, sep):
     s = ''
     for i in range(len(l)):
-        s += str(l[i])
+        s += str(l[i])+sep
     return s
 
 
 def str_matrice(m):
     s = '[ '
     for l in m:
-        s += str(str_liste(l))+' '
+        s += str_liste(l,' ')
     return s+']'

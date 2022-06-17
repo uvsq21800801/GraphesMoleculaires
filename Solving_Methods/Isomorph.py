@@ -83,10 +83,10 @@ def combi_to_certif(combi, matrice_adja, atom_caract, dict_c):
         list_by_colors.append([])
 
     # initialisation du graph
-    g = Graph(enum) ## PYNAUTY
+    g = Graph(enum, directed=True) ## PYNAUTY
     
     ###### Algo ######
-    # remplissage des vertex
+    # remplissage des adjacences
     sommet_n = 0
     for i in range(len(combi)):
         listconnex = []
