@@ -18,9 +18,13 @@ def Taux_recouvert(dict_stat):
             dict_stat[indice].append(tot/cmpt)
         else :
             dict_stat[indice].append(0)
+        
         # taux d'occupation
-        dict_stat[indice].append(cmpt/len(stat[1])) # diviser par le nb de sommet total.... est-ce stat[1]? oui je crois
-                                                # en % ou sur 1???
+        occupation = 0
+        for i in range(len(stat[1])):
+            if int(stat[1][i]) > 0:
+                occupation += 1
+        dict_stat[indice].append(occupation/len(stat[1])) 
 ###
 # 2. Fonctions utiles
 ###
