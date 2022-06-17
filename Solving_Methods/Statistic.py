@@ -3,7 +3,7 @@
 # 1. Recouvrement des sommets du graphes par un type de sous-graphes
 ###
 
-# Calcul le taux de recouvrement pour un groupe d'isomorphes
+# Calcul le taux de recouvrement et d'occupation pour un groupe d'isomorphes
 def Taux_recouvert(dict_stat):
     for indice in dict_stat.keys():
         stat = dict_stat.get(indice)
@@ -18,7 +18,9 @@ def Taux_recouvert(dict_stat):
             dict_stat[indice].append(tot/cmpt)
         else :
             dict_stat[indice].append(0)
-    
+        # taux d'occupation
+        dict_stat[indice].append(cmpt/len(stat[1])) # diviser par le nb de sommet total.... est-ce stat[1]? oui je crois
+                                                # en % ou sur 1???
 ###
 # 2. Fonctions utiles
 ###

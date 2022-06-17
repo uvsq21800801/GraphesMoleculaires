@@ -12,7 +12,10 @@ def combi_iso(matrice_adja, atom_caract, lst_combi, ordre):
     # Dictionnaires: 
     # --> on peut revenir à des listes commes les identifiants sont consécutifs
     dict_isomorph = {} #= {identifiant: [combi*]}
-    dict_stat = {}     #= {identifiant: [nb_occurrence,  occurrence_sommet, taux]}
+
+    # les deux éléments mis dans ce tableau sont: 
+    #     {le nb d'occurence, {nb de fois ou le sommet 1 est couvert, nb de fois ou le sommet 2 est couvert, ...}}
+    dict_stat = {}     #= {identifiant: [nb_occurrence,  occurrence_sommet, taux_recouvrement, recouvrement, taux_occupation]}
     
     # initialisation du dictionnaire des couleurs
     (dict_couleur, couleur_nb) = init_col(atom_caract)

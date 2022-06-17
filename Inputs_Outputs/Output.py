@@ -57,6 +57,7 @@ def Output_diagramme(dir_O, name, detail, lst_id, dict_stat):
     plot_indice = []
     plot_occur = []
     plot_recouv = []
+    plot_occup = []
     for i in range(len(lst_id)):
         # récupère les stats
         tmp = dict_stat.get(lst_id[i])
@@ -64,12 +65,13 @@ def Output_diagramme(dir_O, name, detail, lst_id, dict_stat):
         plot_indice.append(int(i))
         plot_occur.append(float(tmp[0]))
         plot_recouv.append(float(tmp[2]))
+        plot_occup.append(float(tmp[3]))
     f.close()
 
-    occur = np.array(plot_occur)
-    occur = occur.astype(np.float)
 
     plt.clf()
+    occur = np.array(plot_occur)
+    occur = occur.astype(np.float)
     plt.scatter(plot_indice, occur,s=3)
     #plt.title("")
     plt.xlabel("Indices triés dans l'ordre d'occurrence")
@@ -88,6 +90,14 @@ def Output_diagramme(dir_O, name, detail, lst_id, dict_stat):
     plt.ylabel("Taux de recouvrement d'un motif")
     #plt.show()  
     plt.savefig(fpath+name+compl+"_recouv.png")
+    plt.clf()
+
+    occup = np.array(plot_occup)
+    occup = occup.astype(np.float)
+    plt.scatter(plot_indice, occup,s=3)
+    plt.xlabel("Indices triés dans l'ordre d'occurrence")
+    plt.ylabel("Taux d'occupation d'un motif")
+    plt.savefig(fpath+name+compl+"_occup.png")
     plt.clf()
 
 # ajoute les données supplémentaires
@@ -114,7 +124,7 @@ def Output_stat(dir_O, name, detail, lst_combi, lst_certif, lst_id, nb_unique):
 
 # données de résultats sous un format pouvant rentrer dans un tableaux excel
 
-
+# écrit le fichier [XXX]_res.txt
 def Output_result(dir_O, name, detail, lst_certif, lst_id, dict_stat):
     # selon les paramètres
     if detail[0] == 1:
@@ -126,7 +136,7 @@ def Output_result(dir_O, name, detail, lst_certif, lst_id, dict_stat):
     filename = name+compl+"_res.txt"
     if not isfile(join(fpath, filename)):
         f = open(fpath+filename, 'w')
-        f.write("ordre id_c id_t nb_occurrence taux_recouvrement recouvrement certificat\n")
+        f.write("ordre id_c id_t nb_occurrence taux_recouvrement recouvrement taux_occupation certificat\n")
     else :
         f = open(fpath+filename, 'a')
         
@@ -136,10 +146,10 @@ def Output_result(dir_O, name, detail, lst_certif, lst_id, dict_stat):
         tmp1 = dict_stat.get(indice)
         if tmp1[0] > 1:
             f.write(str(detail[1])+' '+str(indice)+' '+str(i)+' '+str(tmp1[0])+' '+str(
-                tmp1[2])+' \''+str_liste(tmp1[1])+' \''+lst_certif[indice].hex()+'\n')
+                tmp1[2])+' \''+str_liste(tmp1[1])+' \''+str(tmp1[3])+' \''+lst_certif[indice].hex()+'\n')
         else:
             f.write(str(detail[1])+' '+str(indice)+' '+str(i)+' '+str(tmp1[0])+' '+str(
-                tmp1[2])+' \''+str_liste(tmp1[1])+' \''+lst_certif[indice].hex()+'\n')
+                tmp1[2])+' \''+str_liste(tmp1[1])+' \''+str(tmp1[3])+' \''+lst_certif[indice].hex()+'\n')
         i += 1
     f.close()
 
