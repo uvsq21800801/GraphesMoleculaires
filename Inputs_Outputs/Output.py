@@ -173,7 +173,7 @@ def Output_combi(dir_O, name, detail, lst_id, dict_isomorph):
     for i in range(len(lst_id)):
         tmp = dict_isomorph.get(lst_id[i])
         #       identifiant    liste_combi
-        f.write(str(lst_id[i])+' '+str_liste(tmp[0],'')+' '+str_matrice(tmp)+'\n')
+        f.write(str(lst_id[i])+' '+str_liste(tmp[0],'')+' '+str_matrice_combi(tmp)+'\n')
 
     f.close()
 
@@ -224,4 +224,10 @@ def str_matrice(m):
     s = '[ '
     for l in m:
         s += str_liste(l,' ')
+    return s+']'
+
+def str_matrice_combi(m):
+    s = '[ '
+    for l in m:
+        s += str_liste(l,'') +' '
     return s+']'
