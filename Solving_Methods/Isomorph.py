@@ -1,4 +1,7 @@
 from pynauty import *
+import networkx as nx
+import pynauty
+import binascii
 
 ####
 ## 1. Algo principal de regroupement des sous-graphes par certificat canonique
@@ -108,5 +111,9 @@ def combi_to_certif(combi, matrice_adja, atom_caract, dict_c):
         list_sets.append(set(list_by_colors[i]))
         
     g.set_vertex_coloring(list_sets)
-        
-    return certificate(g) ## PYNAUTY
+    #nauty_g = pynauty.Graph(g, directed=True, adjacency_dict=listconnex, vertex_coloring=list_by_colors)
+    
+    #print(binascii.hexlify(str(autgrp(g)).encode('ascii')))
+    #return binascii.hexlify(str(autgrp(g)).encode('ascii')) ## PYNAUTY
+    print(canon_label(g))
+    return binascii.hexlify(str(canon_label(g)).encode('ascii'))

@@ -8,6 +8,7 @@ from Inputs_Outputs import Inputs as In
 from Inputs_Outputs import Output as Out
 from Solving_Methods import Combinations as Combi
 from Solving_Methods import SmartSubGenerator as SSG
+from Solving_Methods import OrderedSubGen as OSG
 from Solving_Methods import Isomorph as Iso
 from Solving_Methods import Statistic as Stat
 from Solving_Methods import Similarity as Simil
@@ -146,8 +147,9 @@ def interface():
                     lst_combi = Combi.gen_combi_brute_range(matrice_adja, min_ordre, max_ordre)
                     '''
                     # sous_graphes connexes par notre méthode de parcour d'un arbre de combi de la matrice d'adja
-                    lst_combi = SSG.subgen(matrice_adja, min_ordre, max_ordre)
-
+                    #lst_combi = SSG.subgen(matrice_adja, min_ordre, max_ordre)
+                    lst_combi = OSG.subgen_deg_decroiss(matrice_adja, min_ordre, max_ordre)
+                    
                     print(name+" combinaisons finis "+str(datetime.now().time()))
                     
                     for i in range(max_ordre - min_ordre + 1):
@@ -166,8 +168,9 @@ def interface():
                     lst_combi = Combi.gen_combi_brute(matrice_adja, ordre)
                     '''
                     # sous_graphes connexes par notre méthode de parcour d'un arbre de combi de la matrice d'adja
-                    lst_combi = SSG.subgen(matrice_adja, ordre, ordre)
-                    
+                    #lst_combi = SSG.subgen(matrice_adja, ordre, ordre)
+                    lst_combi = OSG.subgen_deg_decroiss(matrice_adja, ordre, ordre)
+
                     print(name+" combinaisons finis "+str(datetime.now().time()))
                     
                     detail[1] = ordre
