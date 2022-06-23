@@ -1,115 +1,65 @@
-## Pour les fonctions de calcul de similarité de graphes 2 à 2
-
 from Solving_Methods import Mcis_decl
+from Solving_Methods import BronKerborsch.py
 
-# extraction d'un sous-graphe à partir d'une combinaison du graphe original
+'''
+######## Etude de la similarité des sous-graphes dans un jeux de combinaison d'un graphe
 
+Perspectives : Généralisé l'étude sur un jeux de motif avec matrice d'adjacences et caractéristiques atomiques associées
+'''
 
-def extract_sub(matrice_adja, atom_caract, combi, taille):
-
-    # new_adja = [[None for y in range(taille)] for x in range(taille)]
-    # new_caract = [None for x in range(taille)]
-    new_adja = []
-    new_caract = []
-
-    for i in range(0, len(combi)):
-        cnt_i = 0
-        if (combi[i] != 0):
-            new_caract.append(atom_caract[i])
-            # adja_ligne = [None for x in range(taille)]
-            adja_ligne = []
-            cnt_j = 0
-            for j in range(0, len(combi)):
-                if (combi[j] != 0):
-                    # adja_ligne[cnt_j] = matrice_adja[i][j]
-                    adja_ligne.append(matrice_adja[i][j])
-
-                    cnt_j += 1
-            new_adja.append(adja_ligne)
-            # new_caract.append(carac_ligne)
-            cnt_i += 1
-
-    return new_adja, new_caract
-    # print('MCIS/Mcis_algo: rien pour l\'instant')
-
-# Fonction calculant les valeurs de la table de chaleur
+# Fonction calculant les valeurs de la table de chaleur sur un ensemble de combinaison unique
 #
-# Entrées: matrice d'adjacence , caractéristique des atomes, liste des identifiants de motif et dict les rassemblant
+# Entrées: detail d'exécution, matrice d'adjacence , caractéristique des atomes, liste des identifiants de motif, dict les rassemblant et parametre d'exécution
 #
-# Sortie: Tableau  [0] [x] [y]
+# Sortie: Tableau [x] [y]
 
-
-def mcis_algo(detail, matrice_adja, atom_caract, lst_id, dict_iso):
-
-    # tableau 3D [0][nb_occurence de cet ordre][nb_occurence de cet ordre]
+def Similarity(matrice_adja, atom_caract, lst_id, dict_iso, detail):
+    # Tableau rassemblant les matrice d'adjacence et caractéristique des motifs
     cb = len(lst_id)
     adja_s = [None for x in range(cb)]
     carac_s = [None for x in range(cb)]
 
-    # tableau intermédiaire à append
-    # d = [ [ None for y in range( 2 ) ] for x in range( 2 ) ]
+    # tableau de sortie
     tab_ord = [[None for y in range(cb)] for x in range(cb)]
-    # tab_ordre = [len(lst_combi[h])][len(lst_combi[h])]
 
     # initialisation des sous-graphes à évaluer
     for i in range(cb):
         getlist = dict_iso[lst_id[i]]
         (adja_s[i], carac_s[i]) = extract_sub(
-            matrice_adja, atom_caract, getlist[0], detail[1])
+            matrice_adja, atom_caract, getlist[0])
     
+    # boucle sur tous les duo à évaluer selon la méthode choisie et 
     for i in range(cb):
         for j in range(cb):
-            if detail[2] == 1 :
+            if detail[2] == 1 and j>i:
                 tab_ord[i][j] = 1 - Mcis_decl.simmilarite(adja_s[i], carac_s[i], adja_s[j], carac_s[j])
-            if detail[2] == 2 :
+                tab_ord[j][i] = tab_ord[i][j]
+            if detail[2] == 2 and j>i:
                 tab_ord[i][j] = Mcis_decl.sim_raymond(adja_s[i], carac_s[i], adja_s[j], carac_s[j])
+                tab_ord[j][i] = tab_ord[i][j]
             if detail[2] == 3 :
                 tab_ord[i][j] = Mcis_decl.sim_barth(adja_s[i], carac_s[i], adja_s[j], carac_s[j], i, j)
+            if i == j :
+                tab_ord[i][i] = 1
 
     # print(tab_ord)
     return tab_ord
 
-# Fonction calculant les valeurs de la table de chaleur
+# Fonction calculant les valeurs de la table de chaleur sur une liste d'ensemble de combinaison (taille par taille)
 #
 # Entrées: matrice d'adjacence , caractéristique des atomes, liste des identifiants de motif par ordre et dict les rassemblant
 #
-# Sortie: Tableau [ordre] [x] [y]
+# Sortie: Tableau [ordre - min] [x] [y]
 
-
-def mcis_algo_range(matrice_adja, atom_caract, lst_ord, dict_iso, min_ordre, max_ordre):
-
-    # tableau 3D [ordre][nb_occurence de cet ordre][nb_occurence de cet ordre]
+def Similarity_range(matrice_adja, atom_caract, lst_ord, dict_iso, min_ordre, max_ordre, detail):
+    # Tableau rassemblant les matrice de chaleur sur les différents ensembles étudiés
     tab_sim = []
-
+    # Etude par ensemble
     for h in range(max_ordre - min_ordre+1):
-        cb = len(lst_ord[h])
-        adja_s = [None for x in range(cb)]
-        carac_s = [None for x in range(cb)]
-
-        # tableau intermédiaire à append
-        # d = [ [ None for y in range( 2 ) ] for x in range( 2 ) ]
-        tab_ord_h = [[None for y in range(cb)] for x in range(cb)]
-        # tab_ordre = [len(lst_combi[h])][len(lst_combi[h])]
-
-        # initialisation des sous-graphes à évaluer
-        for i in range(cb):
-            getlist = dict_iso[lst_ord[h][i]]
-            (adja_s[i], carac_s[i]) = extract_sub(
-                matrice_adja, atom_caract, getlist[0], h+min_ordre)
-
-        for i in range(cb):
-            for j in range(cb):
-                '''ce qui est en commentaire ci-dessous, c'est les différentes façons de calculer la simmilarité'''
-                # tab_ord_h[i][j] = Mcis_decl.simmilarite(adja_s[i], carac_s[i], adja_s[j], carac_s[j])
-                # tab_ord_h[i][j] = Mcis_decl.sim_raymond(adja_s[i], carac_s[i], adja_s[j], carac_s[j])
-                tab_ord_h[i][j] = Mcis_decl.sim_barth(
-                    adja_s[i], carac_s[i], adja_s[j], carac_s[j], i, j)
-
-                # print('MCIS/Mcis_algo: Pas fini')
-        tab_sim.append(tab_ord_h)
-
-    '''for h in range( max_ordre - min_ordre +1):
-    
-        print(tab_sim[h])
-    '''
+        tab_sim.append(Similarity(matrice_adja, atom_caract, lst_ord[h], dict_iso, detail))
     return tab_sim
+
+
+# Distance d'édition
+# Metrique de Raymond symétrique
+# Metrique de Raymond asymétrique
