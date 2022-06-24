@@ -176,7 +176,7 @@ def interface():
                     detail[1] = ordre
                     (dict_isomorph, dict_stat, lst_id, lst_certif, nb_unique) = programm_1(dir_O, name, detail, matrice_adja, atom_caract, lst_combi)
                     
-                    programm_2(dir_O, name, detail, matrice_adja, atom_caract, lst_id, dict_isomorph)
+                    #programm_2(dir_O, name, detail, matrice_adja, atom_caract, lst_id, dict_isomorph)
                     
                     print(name+" fini "+str(datetime.now().time())+"\n")
                 
@@ -204,7 +204,8 @@ def programm_1 (dir_O, name, detail, matrice_adja, atom_caract, lst_combi):
 
     print(name+" sortie fini "+str(datetime.now().time()))
     return (dict_isomorph, dict_stat, lst_id, lst_certif, nb_unique)
-    
+
+'''
 def programm_2 (dir_O, name, detail, matrice_adja, atom_caract, lst_id, dict_isomorph):
     # MCIS/ Génération des données pour calculer le taux de chaleur
     if detail[2] == 0:
@@ -220,3 +221,4 @@ def programm_2 (dir_O, name, detail, matrice_adja, atom_caract, lst_id, dict_iso
         # imprime les matrices de chaleur
         Out.Output_sim(dir_O, name, detail, Tab_sim)
         print(name+" mcis fini "+str(datetime.now().time()))
+'''

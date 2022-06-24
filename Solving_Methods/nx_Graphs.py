@@ -1,6 +1,6 @@
 import networkx as nx
 
-## Affichage des matrice d'adjacence des graphes NetworkX
+## Affichage des matrices d'adjacence des graphes NetworkX
 
 # Matrice d'adjacence du graphe
 def print_adj(G):
@@ -33,14 +33,38 @@ def print_adj_compatib(Gc, nodes_comp, option):
 	print(s)
 
 
-# Construction digraphes avec combinaisons
-def combi_to_digraph(combi, matrice_adja, atom_caract):
+# Fonction extrayant un sous-graphe à partir d'une combinaison du graphe original
+#
+# Entrées : matrice d'adjacence , caractéristique des atomes et combinaisons de sommet du motif
+#
+# Sorties : matrice d'adjacence et caractéristique des atomes du motif
+
+def extract_sub(matrice_adja, atom_caract, combi):
+    # initialise les sorties
+    new_adja = []
+    new_caract = []
+    # pour tous les sommets du graphe original
+    for i in range(0, len(combi)):
+        # s'il appartienne au sous-graphe
+        if combi[i]:
+            # copie des caractéristiques
+            new_caract.append(atom_caract[i])
+            adja_ligne = []
+            # copie des liaison avec d'autres sommets du sous-graphe
+            for j in range(0, len(combi)):
+                if combi[j]:
+                    adja_ligne.append(matrice_adja[i][j])
+            new_adja.append(adja_ligne)
+    return new_adja, new_caract
+
+
+# Construction d'un digraphe sur NetworkX
+def create_digraph(matrice_adja, atom_caract):
 	# graphe orienté et label sur les sommets
 	G = nx.DiGraph()
 	# ajoute les sommets avec leur élément associé
-	for i in range(len(combi)):
-		if combi[i]:
-			G.add_node(i, label=atom_caract[i].split()[0])
+	for i in range(len(atom_caract)):
+		G.add_node(i, label=atom_caract[i].split()[0])
 	# ajoute les relations de la matrice d'adjacence
 	for n in G:
 		for m in G:
@@ -54,6 +78,7 @@ def combi_to_digraph(combi, matrice_adja, atom_caract):
 					G.add_edge(m,n)
 	return G
 
+# Construction d'un graphe de compatibilité entre 2 digraphes
 def graph_compatibility(A, B):
 	# graphe non orienté et label sur les arêtes
 	Gc = nx.Graph()
@@ -96,6 +121,12 @@ def graph_compatibility(A, B):
 						Gc.add_edge(x,y,label='f')
 	return (Gc, nodes_comp)
 
+# Construction du MCIS issus de la clique forte maximale sur le graphe de compatibilité
+#
+# Entrées : Matrice d'adjacence du sous-graphe de l'index donnée, clique forte du graphe de compatibilité et noms des sommets associés
+#
+# Sorties : 
+
 def Mcis_by_compatibility(matrice_adja, atom_caract, nodes_comp, clique, index) :
 	MCIS = nx.DiGraph()
 	# ajoute les sommets avec leur élément associé
@@ -115,83 +146,16 @@ def Mcis_by_compatibility(matrice_adja, atom_caract, nodes_comp, clique, index) 
 					MCIS.add_edge(m,n)
 	return MCIS
 
-def BronKerborsch(Gc, maxClique, R, P, X):
-	if len(P) == 0 and len(X) == 0 :
-		#print("max : ",R)
-		if len(maxClique) == 0 or len(R) == len(maxClique[0]):
-			maxClique.append(R.copy())
-		elif len(R) > len(maxClique[0]) :
-			maxClique.clear()
-			maxClique.append(R.copy())
-	else :
-		T = P|X
-		u = T.pop()
-		Nu = nx.neighbors(Gc, u)
-		#print(u,list(Nu))
-		for v in P - set(Nu):
-			Nv = nx.neighbors(Gc, v)
-			maxClique = BronKerborsch(Gc, maxClique, set(R)|set([v]), P&set(Nv), X&set(Nv))
-			P.discard(v)
-			X = X|set([v])
-	return maxClique
+# Recherche des voisins non faible de u sans Gc
+#
+# Entrées : Graphes de compatibilité et sommet u
+# 
+# Sorties : ensemble des voisins de u ayant une liaison forte
 
-def arbre_strong(Gc, clique):
-	Next = clique.copy()
-	u = Next.pop()
-	marquage_strong(Gc, Next, u)
-	if len(Next):
-		return False
-	else :
-		return True
+## à voir
 
 
-def marquage_strong(Gc, Next, u):
-	V = set(nx.neighbors(Gc,u))&Next
-	for v in V:
-		if Gc[u][v]['label'] in "sf" and v in Next:
-			Next.discard(v)
-			marquage_strong(Gc, Next, v)
-
-
-def MaxStrongClique(Gc, MaxClique):
-	# sur les cliques maximals tester l'existence d'arbre couvrant strong ou floppy
-	for clique in MaxClique :
-		if arbre_strong(Gc, clique):
-			return clique
-
-
-########################################################################
-########################### Experimentations ###########################
-########################################################################
-#combinaisons
-combi_A = [0,0,1,1,1,1]
-combi_B = [1,1,1,0,1,0]
-
-#data
-atom_caract = ["O 1","O 2","Si 1","O 3","O 4","Si 2"]
-matrice_adja = [[0,0,2,0,0,0],[0,0,2,0,0,0],[0,0,0,2,1,0],[0,0,0,0,0,2],[0,0,1,0,0,2],[0,0,0,0,0,0]]
-
-#Construction graphes
-A = combi_to_digraph(combi_A, matrice_adja, atom_caract)
-B = combi_to_digraph(combi_B, matrice_adja, atom_caract)
-
-#Construction graphe compatibilité
-(Gc, nodes_comp) = graph_compatibility(A,B)
-
-print_adj_compatib(Gc, nodes_comp, 1)
-
-
-MaxClique = BronKerborsch(Gc, [], set(), set(range(len(Gc))), set())
-MCIS_nodes = MaxStrongClique(Gc, MaxClique)
-
-print(MCIS_nodes)
-C = Gc.subgraph(MCIS_nodes)
-
-MCIS_0 = Mcis_by_compatibility(matrice_adja, atom_caract, nodes_comp, MCIS_nodes, 0)
-MCIS_1 = Mcis_by_compatibility(matrice_adja, atom_caract, nodes_comp, MCIS_nodes, 1)
-
-print(MCIS_0.nodes(data=True))
-print_adj(MCIS_0)
-
-IsoM = nx.isomorphism.DiGraphMatcher(MCIS_0, MCIS_1)
-print(IsoM.is_isomorphic())
+# Line DiGraphes :
+# Construction
+# DiGraphe <-> LineDiGraphe
+# LineDiGraphes -> Gcompatibilité
