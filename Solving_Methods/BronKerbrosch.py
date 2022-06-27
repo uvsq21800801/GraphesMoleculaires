@@ -1,6 +1,6 @@
 import networkx as nx
 import random
-import nx_Graphs as nxg
+from Solving_Methods import nx_Graphs as nxg
 
 # Fonction regroupant l'ensemble de la ou des clique(s) maximum(s) (unique ou multiple)
 #

@@ -1,5 +1,5 @@
 from Solving_Methods import Mcis_decl
-from Solving_Methods import BronKerborsch.py
+from Solving_Methods import BronKerbrosch
 
 '''
 ######## Etude de la similarité des sous-graphes dans un jeux de combinaison d'un graphe
