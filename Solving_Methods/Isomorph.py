@@ -31,7 +31,7 @@ def combi_iso(matrice_adja, atom_caract, lst_combi, ordre):
     for combi in lst_combi:
         # calcule du certificat de la combinaison
         certif = combi_to_certif(combi, matrice_adja, atom_caract, dict_couleur)
-        #print(certif.hex())
+
         if certif not in lst_certif:
             lst_certif.append(certif)
             indice = lst_certif.index(certif)
@@ -45,9 +45,7 @@ def combi_iso(matrice_adja, atom_caract, lst_combi, ordre):
             for i in range(len(combi)):
                 tmp[1][i] += combi[i]
             dict_stat[indice] = [tmp[0]+1,tmp[1].copy()]
-            #affiche_combi(tmp[1], taille)
-    
-    #print (dict_isomorph)
+
     return dict_isomorph, dict_stat, lst_id, lst_certif
 
 ###
@@ -98,6 +96,8 @@ def combi_to_certif(combi, matrice_adja, atom_caract, dict_c):
     # Cela nous permettera de prendre en compte lors de la génération de 
     # signature de PyNauty. (De plus, parait-il, réduire le problème de cette 
     # façon serait moins couteux)
+    dict_connex = {}
+    num_prochain_sommet = len(ref)
     for i in ref:
         
         # boucle dans la matrice d'adjacence pour trouver tous les sommets sur
@@ -108,7 +108,21 @@ def combi_to_certif(combi, matrice_adja, atom_caract, dict_c):
             if matrice_adja[i][j] != 0 and combi[j] == 1:
                     list_connex.append(ref.index(j))
 
-    #print (matrice_adja)
+        # création des nouveaux sommets par couleurs
+        temp_couleur = atom_caract[i].split()
+        nb_couleur = dict_c.get(temp_couleur[0])+1 # +1 car on veut éviter que la couleur 0 ne crée de confusion
+                                                    # (je ne suis pas sûre si cela crucial mais ça ne peut être 
+                                                    #  un détriment)
+        
+        for j in range(nb_couleur):
+            list_connex.append(num_prochain_sommet)
+            num_prochain_sommet += 1
+        
+        # ajout de la liste d'arcs dont ref(index) i est la queue dans le dictionnaire
+        dict_connex.setdefault(ref.index(i),list_connex)
+
+    # génération du graph
+    g = Graph(num_prochain_sommet, directed=True, adjacency_dict=dict_connex) 
 
     return certificate(g)
 
