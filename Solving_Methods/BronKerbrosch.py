@@ -39,10 +39,54 @@ def BronKerborsch(Gc, maxClique, R, P, X):
 
 # Fonction regroupant l'ensemble de la ou des clique(s) maximum(s) (unique ou multiple)
 #   Utilisant l'heuristique de Johnston adaptée avec les voisinages par arêtes strong ou floppy
+# Entrées: Graphe étudié, ensemble des clique maximum connus et les ensembles de sommets R, P et X
+# 			R : ensemble des sommets de la clique courante
+# 			P : ensemble des sommets candidats à l'ajout dans la clique (voisin de tous les sommets déjà considérés)
+# 			X : ensemble des sommets exclus (déjà traité ou appartenant déjà à une clique maximale)
+#
+# Sortie: liste des cliques maximales sur le graphe de compatibilité et les ensembles P et X (récursivité)
 
-### à voir
+def BronKerborsch_2(Gc, maxClique, R, P, X):
+	if len(P) == 0 and len(X) == 0 :
+		if len(maxClique) == 0 :
+			maxClique.append(R.copy())
+		elif len(R) > len(maxClique[0]) :
+			maxClique.insert(0,R.copy())
+		else :
+			i = 0
+			while i < len(maxClique) and len(maxClique[i]) > len(R):
+				i += 1
+			maxClique.insert(i,R.copy())
+		#print("tab :", maxClique)
+	else :
+		T = P|X
+		u = random.choice(list(T))
+		Nu = set(nx.neighbors(Gc, u))
+		#print('u',u,Nu)
+		V = P-Nu
+		for v in V:
+			Nv = set(nx.neighbors(Gc, v))
+			sNv = strong_neighbors(Gc, v)
+			#print('v',v,Nv)
+			maxClique = BronKerborsch(Gc, maxClique, R|set([v]), P&sNv, X&Nv)
+			P.discard(v)
+			X = X|set([v])
+	return maxClique
 
+# Fonction retournant les voisins du sommet par des liens strong ou floppy (s ou f)
+#
+# Entrées : Graphe de compatibilité labélisé sur les arêtes {s, f, w} et un sommet du graphe
+#
+# Sortie : Renvoie un ensemble de sommet voisin de n par des arêtes labelisées s ou f
 
+def strong_neighbors(Gc, node):
+	res = set()
+	# ensemble des sommets voisins
+	Next = set(nx.neighbors(Gc, node))
+	for v in Next:
+		if Gc[node][v]['label'] in "sf" :
+			res.add([v])
+	return res
 
 # Fonction recherchant dans la clique, la plus grande sous-clique possédant un arbre couvrant d'arêtes s ou f.
 #

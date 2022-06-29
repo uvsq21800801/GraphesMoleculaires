@@ -145,17 +145,3 @@ def Mcis_by_compatibility(matrice_adja, atom_caract, nodes_comp, clique, index) 
 				elif matrice_adja[m][n] == 2:
 					MCIS.add_edge(m,n)
 	return MCIS
-
-# Recherche des voisins non faible de u sans Gc
-#
-# Entrées : Graphes de compatibilité et sommet u
-# 
-# Sorties : ensemble des voisins de u ayant une liaison forte
-
-## à voir
-
-
-# Line DiGraphes :
-# Construction
-# DiGraphe <-> LineDiGraphe
-# LineDiGraphes -> Gcompatibilité
