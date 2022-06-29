@@ -34,7 +34,7 @@ def choix_rec(matrice_adja, max_ordre, combi_prec, taille_etud, combi_all, degre
 
 # génération de toutes les combinaisons connexes possibles à partir de chaque sommet (dans l'ordre croissant) 
 # et pour chaque tailles     
-def subgen_deg_decroiss(matrice_adja, min_ordre, max_ordre):
+def subgen_deg_decroiss(matrice_adja, atm_caract, min_ordre, max_ordre, crible):
     taille = len(matrice_adja)
 
     # tri des sommets par degré
@@ -56,7 +56,8 @@ def subgen_deg_decroiss(matrice_adja, min_ordre, max_ordre):
 
     # ajout de la liste dans la structure de degrés
     for i in range(taille):
-        degres[10-temp_list[i]-1].append(i)
+        if not (crible and atm_caract[i].split()[0] != 'O'):
+            degres[10-temp_list[i]-1].append(i)
 
 
     # cette variable est la structure qui contient les graphlet de chaque tailles

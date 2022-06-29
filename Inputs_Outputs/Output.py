@@ -15,6 +15,9 @@ def Output_data(dir_O, name, detail, lst_index, atom_caract, matrice_adja):
     else:
         compl = ""
 
+    if detail[3] == True:
+        compl += "_Cr" 
+
     # création du fichier de sortie
     fpath = "Inputs_Outputs/Place_Output_here/"+dir_O+'/'
     filename = name+compl+"_data.txt"
@@ -44,6 +47,9 @@ def Output_diagramme(dir_O, name, detail, lst_id, dict_stat):
         compl = '_'+str(detail[1])+"_H"
     else:
         compl = '_'+str(detail[1])
+
+    if detail[3] == True:
+        compl += "_Cr" 
 
     # création du fichier de sortie
     fpath = "Inputs_Outputs/Place_Output_here/"+dir_O+'/'
@@ -109,6 +115,10 @@ def Output_stat(dir_O, name, detail, lst_combi, lst_certif, lst_id, nb_unique):
         compl = "_H"
     else:
         compl = ""
+
+    if detail[3] == True:
+        compl += "_Cr" 
+    
     # ouverture du fichier de sortie
     fpath = "Inputs_Outputs/Place_Output_here/"+dir_O+'/'
     filename = name+compl+"_data.txt"
@@ -131,6 +141,10 @@ def Output_result(dir_O, name, detail, lst_certif, lst_id, dict_stat):
         compl = "_H"
     else:
         compl = ""
+
+    if detail[3] == True:
+        compl += "_Cr" 
+    
     # création du fichier de sortie
     fpath = "Inputs_Outputs/Place_Output_here/"+dir_O+'/'
     filename = name+compl+"_res.txt"
@@ -162,6 +176,10 @@ def Output_combi(dir_O, name, detail, lst_id, dict_isomorph):
         compl = '_'+str(detail[1])+"_H"
     else:
         compl = '_'+str(detail[1])
+    
+    if detail[3] == True:
+        compl += "_Cr" 
+    
     # création du fichier de sortie
     fpath = "Inputs_Outputs/Place_Output_here/"+dir_O+'/'
     filename = name+compl+"_combi.txt"
@@ -188,6 +206,9 @@ def Output_sim(dir_O, name, detail, Tab_sim):
         compl = "_H_"+str(detail[2])
     else:
         compl = "_"+str(detail[2])
+    
+    if detail[3] == True:
+        compl += "_Cr" 
 
     # création du fichier de sortie
     fpath = "Inputs_Outputs/Place_Output_here/"+dir_O+'/'

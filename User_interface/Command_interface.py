@@ -48,6 +48,14 @@ def interface():
             tmp = min_ordre
             min_ordre = max_ordre
             max_ordre = tmp
+        
+    crible = input("Crible (y/n default: no) : ")
+    while not (crible == 'y' or crible == 'n' or crible == ''):
+        crible = input("Crible (y/n default: no) : ")
+    if crible == 'y':
+        crible = True
+    else:
+        crible = False
     
     if min_ordre == max_ordre:
         Multi_Taille = False
@@ -99,7 +107,10 @@ def interface():
     while (option!='0' and option!='1' and option!='2' and option!='3'):
         option = input("(Similarité) Attend entre 0 et 3 : ")
     detail.append(int(option))
-    
+
+    print(detail)
+    detail.append(crible)
+    print(detail)
     
     ###### Lancement de l'execution du programme
     if not Multi_File :
@@ -148,7 +159,7 @@ def interface():
                     '''
                     # sous_graphes connexes par notre méthode de parcour d'un arbre de combi de la matrice d'adja
                     #lst_combi = SSG.subgen(matrice_adja, min_ordre, max_ordre)
-                    lst_combi = OSG.subgen_deg_decroiss(matrice_adja, min_ordre, max_ordre)
+                    lst_combi = OSG.subgen_deg_decroiss(matrice_adja, atom_caract, min_ordre, max_ordre, crible)
                     
                     print(name+" combinaisons finis "+str(datetime.now().time()))
                     
@@ -169,7 +180,7 @@ def interface():
                     '''
                     # sous_graphes connexes par notre méthode de parcour d'un arbre de combi de la matrice d'adja
                     #lst_combi = SSG.subgen(matrice_adja, ordre, ordre)
-                    lst_combi = OSG.subgen_deg_decroiss(matrice_adja, ordre, ordre)
+                    lst_combi = OSG.subgen_deg_decroiss(matrice_adja, atom_caract, ordre, ordre, crible)
 
                     print(name+" combinaisons finis "+str(datetime.now().time()))
                     
