@@ -1,5 +1,6 @@
 import networkx as nx
 import nx_Graphs as nxg
+import sys
 
 ########################################################################
 ########################### Experimentations ###########################
@@ -21,14 +22,32 @@ print(atA)
 
 #Construction DiGraphes
 A = nxg.create_digraph(mA, atA)
-#B = nxg.create_digraph(mB, atB)
+B = nxg.create_digraph(mB, atB)
 print(A.nodes(data=True))
 print(A.edges)
 
+edge_mem = sum([sys.getsizeof(e) for e in A.edges])
+edge_mem += sum([sys.getsizeof(e) for e in B.edges])
+node_mem = sum([sys.getsizeof(n) for n in A.nodes])
+node_mem += sum([sys.getsizeof(n) for n in B.nodes])
+
+print("Edge memory:", edge_mem)
+print("Node memory:", node_mem)
+print("Total memory:", edge_mem + node_mem)
+
+matrice_mem = sum([sys.getsizeof(i) for i in mA])
+matrice_mem += sum([sys.getsizeof(i) for i in mB])
+caract_mem = sum([sys.getsizeof(j) for j in atA])
+caract_mem += sum([sys.getsizeof(j) for j in atB])
+
+print("matrice memory:", matrice_mem)
+print("caract memory:", caract_mem)
+print("Total memory:", matrice_mem + caract_mem)
+
 #Construction LineGraphes
-lA = nx.line_graph(A, create_using=nx.DiGraph)
-print(lA.nodes(data=True))
-print(lA.edges)
+#lA = nx.line_graph(A, create_using=nx.DiGraph)
+#print(lA.nodes(data=True))
+#print(lA.edges)
 #lB = nxg.create_line_digraph(B)
 #print(lB.nodes(data=True))
 

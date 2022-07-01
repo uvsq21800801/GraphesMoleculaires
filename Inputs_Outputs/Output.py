@@ -200,29 +200,27 @@ def Output_combi(dir_O, name, detail, lst_id, dict_isomorph):
 # données de similarité de "motifs" et matrice de chaleur
 
 
-def Output_sim(dir_O, name, detail, Tab_sim):
+def Output_sim(dir_O, name, detail, lst_id, Tab_sim):
     # selon les paramètres
     if detail[0] == 1:
         compl = "_H_"+str(detail[2])
     else:
         compl = "_"+str(detail[2])
     
-    if detail[3] == True:
-        compl += "_Cr" 
+    #if detail[3] == True:
+    #    compl += "_Cr"
+    
+    nb = 1
 
     # création du fichier de sortie
     fpath = "Inputs_Outputs/Place_Output_here/"+dir_O+'/'
-    filename = name+compl+"_sim_ord_"+str(detail[1])+".txt"
-    if isfile(join(fpath, filename)):
-        remove(join(fpath, filename))
+    filename = name+compl+"_sim_ord_"+str(detail[1])+'_'+str(nb)+".txt"
+    while isfile(join(fpath, filename)):
+        nb += 1
+        filename = name+compl+"_sim_ord_"+str(detail[1])+'_'+str(nb)+".txt"
     f = open(fpath+filename, 'w')
-    plt.clf()
-    plt.xlabel("Indices des motifs triés dans l'ordre d'occurrence")
-    plt.ylabel("Indices des motifs triés dans l'ordre d'occurrence")
-    plt.imshow(Tab_sim, cmap='hot', interpolation='nearest')
-    # plt.show()
-    plt.savefig(fpath+name+compl+"_heatmap_ord_"+str(detail[1])+".png")
-    plt.clf()
+    
+    print(lst_id)
     for i in range(len(Tab_sim)):
         s = ""
         for j in range(len(Tab_sim)):
@@ -230,6 +228,17 @@ def Output_sim(dir_O, name, detail, Tab_sim):
             #print(' ')
         f.write(s+'\n')
     f.close()
+    
+    plt.clf()
+    plt.xlabel("Indices des motifs triés dans l'ordre d'occurrence")
+    plt.ylabel("Indices des motifs triés dans l'ordre d'occurrence")
+    
+    # PB : Invalid shape (5,) for image data
+    plt.imshow(Tab_sim, cmap='hot', interpolation='nearest')
+    # plt.show()
+    plt.savefig(fpath+name+compl+"_heatmap_ord_"+str(detail[1])+'_'+str(nb)+".png")
+    plt.clf()
+    
 
 # Fonctions utiles
 
