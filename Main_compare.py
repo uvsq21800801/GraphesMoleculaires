@@ -6,14 +6,15 @@ import networkx as nx
 sys.path.append('GraphesMoleculaires/Inputs_Outputs')
 sys.path.append('GraphesMoleculaires/Solving_Methods')
 from Solving_Methods import Similarity
+from User_interface import Program
 from Inputs_Outputs import Inputs
 
 '''
-Ce main permet d'afficher le dessin d'un sous graphe à partir de:
-- le nom du sous-dossier
-- un nom de graphe
+Ce main permet de lancer la comparaison entre des sous-graphes à partir :
+- du nom du sous-dossier
+- du nom de la structure
 - la taille étudiée
-- son indice (indiqué dans la matrice de chaleur)
+- son indice (dans une figure)
 '''
 def interface():
 
@@ -44,7 +45,7 @@ def interface():
     error = False
     while len(set_id) == 0:
         user_input = input("indice des sous-graphe : ")
-        splited = user_input.split(',')
+        splited = user_input.replace(' ', '').split(',')
         for part in splited :
             if '-' in part :
                 part = part.split('-')
@@ -63,7 +64,8 @@ def interface():
                     error = True
         if error:
             set_id.clear()
-    set_id.sort()
+        print(set_id)
+    set_id = sorted(set_id)
     
     #####
     # 1 - Extraction des combi  
