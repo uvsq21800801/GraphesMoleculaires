@@ -1,5 +1,6 @@
 from os import listdir, remove
 from os.path import isfile, join
+import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -206,12 +207,11 @@ def Output_sim(dir_O, name, detail, lst_id, Tab_sim):
         compl = "_H_"+str(detail[2])
     else:
         compl = "_"+str(detail[2])
-    
-    #if detail[3] == True:
-    #    compl += "_Cr"
-    
+    '''
+    if detail[3] == True:
+        compl += "_Cr"
+    '''
     nb = 1
-
     # création du fichier de sortie
     fpath = "Inputs_Outputs/Place_Output_here/"+dir_O+'/'
     filename = name+compl+"_sim_ord_"+str(detail[1])+'_'+str(nb)+".txt"
@@ -220,7 +220,7 @@ def Output_sim(dir_O, name, detail, lst_id, Tab_sim):
         filename = name+compl+"_sim_ord_"+str(detail[1])+'_'+str(nb)+".txt"
     f = open(fpath+filename, 'w')
     
-    print(lst_id)
+    #print(lst_id)
     for i in range(len(Tab_sim)):
         s = ""
         for j in range(len(Tab_sim)):
@@ -229,16 +229,35 @@ def Output_sim(dir_O, name, detail, lst_id, Tab_sim):
         f.write(s+'\n')
     f.close()
     
+    if detail[2] == 1:
+        cmap = "hot_r"
+    else:
+        cmap = "hot"
+        
     plt.clf()
-    plt.xlabel("Indices des motifs triés dans l'ordre d'occurrence")
-    plt.ylabel("Indices des motifs triés dans l'ordre d'occurrence")
+    fig, ax = plt.subplots()
+    im = ax.imshow(Tab_sim, cmap=cmap, interpolation='nearest')
     
-    # PB : Invalid shape (5,) for image data
-    plt.imshow(Tab_sim, cmap='hot', interpolation='nearest')
-    # plt.show()
-    plt.savefig(fpath+name+compl+"_heatmap_ord_"+str(detail[1])+'_'+str(nb)+".png")
-    plt.clf()
+    cbarlabels = ["distance d'édition", "similarité Raymond", "similarité Asymétrique"]
+    cbarlabel = cbarlabels[detail[2]-1]
     
+    cbar = ax.figure.colorbar(im, ax=ax, cmap=cmap)
+    cbar.ax.set_ylabel(cbarlabel, rotation=-90, va="bottom")
+    
+    ax.set_xticks(np.arange(len(lst_id)), labels=lst_id)
+    ax.set_yticks(np.arange(len(lst_id)), labels=lst_id)
+    
+    plt.setp(ax.get_xticklabels(), rotation=45, ha="right", rotation_mode="anchor")
+    
+    for i in range(len(lst_id)):
+        for j in range(len(lst_id)):
+            val = round(Tab_sim[i][j],2)
+            ax.text(j,i, val, ha="center", va="center", color='b')
+    
+    ax.set_title("Heatmap de motifs de "+name+" de taille "+str(detail[1])+" "+compl)
+    fig.tight_layout()
+    plt.savefig(fpath+name+compl+"_heatmap_ord_"+str(detail[1])+'_'+str(nb)+".png")   
+    plt.clf() 
 
 # Fonctions utiles
 

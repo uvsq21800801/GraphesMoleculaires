@@ -25,6 +25,9 @@ def Similarity_sansMcis(tab_sg, detail):
             if j>i and detail[2] == 1 :
                 Tab_sim[i][j] = distance_edition(tab_sg[i], tab_sg[j])
                 Tab_sim[j][i] = Tab_sim[i][j]
+            if i==j:
+                Tab_sim[i][j] = 0.0
+                Tab_sim[j][i] = Tab_sim[i][j]
             
     # print(Tab_sim)
     return Tab_sim
@@ -53,7 +56,7 @@ def Similarity_avecMcis(tab_sg, tab_mcis, detail):
                     Tab_sim[i][j] = sim_barth(tab_mcis[i-1][j], tab_sg[i], tab_sg[j], i, j)
                     Tab_sim[j][i] = sim_barth(tab_mcis[i-1][j], tab_sg[j], tab_sg[i], j, i)
             if i == j :
-                Tab_sim[i][i] = 1
+                Tab_sim[i][i] = 1.0
     return Tab_sim
 
 # Distance d'édition

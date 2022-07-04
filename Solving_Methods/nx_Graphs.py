@@ -46,13 +46,13 @@ def extract_sub(matrice_adja, atom_caract, combi):
     # pour tous les sommets du graphe original
     for i in range(0, len(combi)):
         # s'il appartienne au sous-graphe
-        if combi[i]:
+        if int(combi[i])==1:
             # copie des caractéristiques
             new_caract.append(atom_caract[i])
             adja_ligne = []
             # copie des liaisons avec d'autres sommets du sous-graphe
             for j in range(0, len(combi)):
-                if combi[j]:
+                if int(combi[j])==1:
                     adja_ligne.append(matrice_adja[i][j])
             new_adja.append(adja_ligne)
     return new_adja, new_caract
