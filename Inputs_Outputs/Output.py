@@ -235,29 +235,47 @@ def Output_sim(dir_O, name, detail, lst_id, Tab_sim):
         cmap = "hot"
         
     plt.clf()
+    
+    
     fig, ax = plt.subplots()
+    
+    fig.set_size_inches(12.8,9.6)
+        
     im = ax.imshow(Tab_sim, cmap=cmap, interpolation='nearest')
     
     cbarlabels = ["distance d'édition", "similarité Raymond", "similarité Asymétrique"]
     cbarlabel = cbarlabels[detail[2]-1]
     
     cbar = ax.figure.colorbar(im, ax=ax, cmap=cmap)
-    cbar.ax.set_ylabel(cbarlabel, rotation=-90, va="bottom")
+    cbar.ax.set_ylabel(cbarlabel, rotation=-90, va="bottom", fontsize=16)
     
-    ax.set_xticks(np.arange(len(lst_id)), labels=lst_id)
-    ax.set_yticks(np.arange(len(lst_id)), labels=lst_id)
+    step = int(len(lst_id)/20) + 1
     
-    plt.setp(ax.get_xticklabels(), rotation=45, ha="right", rotation_mode="anchor")
+    ax.set_xticks(np.arange(0,len(lst_id),step), labels=lst_id[::step], fontsize=12)
+    ax.set_yticks(np.arange(0,len(lst_id),step), labels=lst_id[::step], fontsize=12)
+    ax.tick_params(top=True, labeltop=True, bottom=False, labelbottom=False)
+
+    ax.xaxis.set_label_position("top")
+    ax.set_xlabel("MCIS/maxG : Isomorphisme si 1", fontsize=16)
+    ax.set_ylabel("MCIS/minG : Inclusion si 1", fontsize=16)
     
-    for i in range(len(lst_id)):
-        for j in range(len(lst_id)):
-            val = round(Tab_sim[i][j],2)
-            ax.text(j,i, val, ha="center", va="center", color='b')
+    #plt.setp(ax.get_xticklabels(), rotation=45, ha="right", rotation_mode="anchor")
     
-    ax.set_title("Heatmap de motifs de "+name+" de taille "+str(detail[1])+" "+compl)
+    if len(lst_id) < 20 :
+        for i in range(len(lst_id)):
+            for j in range(len(lst_id)):
+                fontsize = 10
+                round_size = 2
+                val = round(Tab_sim[i][j],round_size)
+                ax.text(j,i, val, ha="center", va="center", color='b', fontsize=fontsize)
+    
+    titlecompl= str(nb)
+    if detail[0] == 1:
+        titlecompl = "H "+titlecompl
+    ax.set_title("Heatmap de motifs de "+name+" de taille "+str(detail[1])+" "+titlecompl, fontsize=20)
     fig.tight_layout()
     plt.savefig(fpath+name+compl+"_heatmap_ord_"+str(detail[1])+'_'+str(nb)+".png")   
-    plt.clf() 
+    plt.clf()  
 
 # Fonctions utiles
 
