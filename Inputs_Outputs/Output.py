@@ -1,5 +1,6 @@
 from os import listdir, remove
 from os.path import isfile, join
+import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -200,29 +201,26 @@ def Output_combi(dir_O, name, detail, lst_id, dict_isomorph):
 # données de similarité de "motifs" et matrice de chaleur
 
 
-def Output_sim(dir_O, name, detail, Tab_sim):
+def Output_sim(dir_O, name, detail, lst_id, Tab_sim):
     # selon les paramètres
     if detail[0] == 1:
         compl = "_H_"+str(detail[2])
     else:
         compl = "_"+str(detail[2])
-    
+    '''
     if detail[3] == True:
-        compl += "_Cr" 
-
+        compl += "_Cr"
+    '''
+    nb = 1
     # création du fichier de sortie
     fpath = "Inputs_Outputs/Place_Output_here/"+dir_O+'/'
-    filename = name+compl+"_sim_ord_"+str(detail[1])+".txt"
-    if isfile(join(fpath, filename)):
-        remove(join(fpath, filename))
+    filename = name+compl+"_sim_ord_"+str(detail[1])+'_'+str(nb)+".txt"
+    while isfile(join(fpath, filename)):
+        nb += 1
+        filename = name+compl+"_sim_ord_"+str(detail[1])+'_'+str(nb)+".txt"
     f = open(fpath+filename, 'w')
-    plt.clf()
-    plt.xlabel("Indices des motifs triés dans l'ordre d'occurrence")
-    plt.ylabel("Indices des motifs triés dans l'ordre d'occurrence")
-    plt.imshow(Tab_sim, cmap='hot', interpolation='nearest')
-    # plt.show()
-    plt.savefig(fpath+name+compl+"_heatmap_ord_"+str(detail[1])+".png")
-    plt.clf()
+    
+    #print(lst_id)
     for i in range(len(Tab_sim)):
         s = ""
         for j in range(len(Tab_sim)):
@@ -230,6 +228,36 @@ def Output_sim(dir_O, name, detail, Tab_sim):
             #print(' ')
         f.write(s+'\n')
     f.close()
+    
+    if detail[2] == 1:
+        cmap = "hot_r"
+    else:
+        cmap = "hot"
+        
+    plt.clf()
+    fig, ax = plt.subplots()
+    im = ax.imshow(Tab_sim, cmap=cmap, interpolation='nearest')
+    
+    cbarlabels = ["distance d'édition", "similarité Raymond", "similarité Asymétrique"]
+    cbarlabel = cbarlabels[detail[2]-1]
+    
+    cbar = ax.figure.colorbar(im, ax=ax, cmap=cmap)
+    cbar.ax.set_ylabel(cbarlabel, rotation=-90, va="bottom")
+    
+    ax.set_xticks(np.arange(len(lst_id)), labels=lst_id)
+    ax.set_yticks(np.arange(len(lst_id)), labels=lst_id)
+    
+    plt.setp(ax.get_xticklabels(), rotation=45, ha="right", rotation_mode="anchor")
+    
+    for i in range(len(lst_id)):
+        for j in range(len(lst_id)):
+            val = round(Tab_sim[i][j],2)
+            ax.text(j,i, val, ha="center", va="center", color='b')
+    
+    ax.set_title("Heatmap de motifs de "+name+" de taille "+str(detail[1])+" "+compl)
+    fig.tight_layout()
+    plt.savefig(fpath+name+compl+"_heatmap_ord_"+str(detail[1])+'_'+str(nb)+".png")   
+    plt.clf() 
 
 # Fonctions utiles
 

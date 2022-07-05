@@ -11,8 +11,8 @@
   * *Combination*.py : Génération sous-graphes
   * *Isomorph*.py : Isomorphisme, certificat canonique
   * *Statistic*.py : Fonction pour le taux de recouvrement, le nombre de motif unique et le tri des indices
-  * *Similarity*.py : Similarité selon les différentes méthodes [à revoir]
-  * *Mcis_decl*.py : méthodes nécessaire pour la similarité [à revoir]
+  * *Similarity*.py : Similarité selon les différentes méthodes et construction des matrices de chaleurs
+  * *nx_Graphs*.py : méthodes nécessaire pour la manipulation de grpahs de networkx
 * Dossier **Inputs_Outputs** : Methodes de lecture et d'écriture de fichiers
   * Dossier *Place_Bonds_file_here* : fichiers d'entrée de liaison des sommets (1 covalent et 4 liaison H)
   * Dossier *Place_Trad_file_here* : fichiers d'entrée de caractéristique des sommets (nom de l'atome)
