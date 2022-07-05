@@ -104,7 +104,7 @@ def interface():
         splitted = lines[i+1].split()
         if (i in set_id):
             dict_combi[i] = splitted[1]
-            print(i, dict_combi[i])
+            #print(i, dict_combi[i])
     ##### Récupération des données du graphe général
     filename1, filename2, lst_index, atom_caract, matrice_adja = Inputs.data_input(detail[0], name)
 
@@ -124,7 +124,7 @@ def interface():
         (adja_tmp, carac_tmp) = nxg.extract_sub(
             matrice_adja, atom_caract, dict_combi[lst_id[i]])
         tab_sg[i] = nxg.create_graph(adja_tmp, carac_tmp)
-        print(i, tab_sg[i])
+        #print(i, tab_sg[i])
     
     # Choix du type de Similarite
     print("Quel type de similarite étudier? ")
