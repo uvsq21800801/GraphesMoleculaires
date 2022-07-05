@@ -17,14 +17,21 @@ from os import listdir, remove, mkdir
 from os.path import isfile, isdir, join
 from datetime import datetime
 
+cimport cython
+cimport numpy as np
+import numpy as np
 
 
 def interface():
-    Multi_Taille = True
-    Multi_File = False
-    File_exist = False
+    cpdef bint Multi_Taille = False
+    cpdef bint Multi_File = False
+    cpdef bint File_exist = False
 
     ##### Choix des tailles de sous-graphes
+    cpdef bint min_ordre
+    cpdef bint max_ordre
+    
+
     input_num = input("Taille des sous-graphes : ")
     while not Multi_Taille and not input_num.isnumeric():
         if input_num == '*':
@@ -108,90 +115,107 @@ def interface():
         option = input("(Similarité) Attend entre 0 et 3 : ")
     detail.append(int(option))
 
-    print(detail)
     detail.append(crible)
-    print(detail)
     
     ###### Lancement de l'execution du programme
     if not Multi_File :
         filenames = [name]
     for filename in filenames:
-            ## Extraction des données
-            if Multi_File:
-                name = In.get_name(filename)
-            lst_index = []
-            atom_caract = []
-            filename_T = In.Input_trad(detail[0], name, lst_index, atom_caract)
-            matrice_adja = []
-            filename_B = In.Input_bonds(detail[0], name, lst_index, matrice_adja)
+        
+        # appel fonction
+        exec_for_one_file(filename, detail, Multi_Taille, Multi_File, ordre, min_ordre, max_ordre, input_num, dir_O, path_O, name)
+        
+    return 1
 
-            # test: taille raisonnable?
+# permet de dégraisser une boucle de l'interface, execute tout pour un fichier
+def exec_for_one_file(filename, detail, Multi_Taille, Multi_File, ordre, min_ordre, max_ordre, input_num, dir_O, path_O, name):
+    ## Extraction des données
+    if Multi_File:
+        name = In.get_name(filename)
+    
+    
+    # nombre de sommets utile à l'initialisation des plus grosses structures
+    cdef int nb_sommet = In.Get_nb_vertex(detail[0], name)
+    atom_caract = np.empty((nb_sommet,), dtype='<U32')
+    cdef np.ndarray[np.int32_t, ndim=1] lst_index = np.empty(nb_sommet, dtype=np.int32)
+
+    filename_T = In.Input_trad(detail[0], name, lst_index, atom_caract)
+    matrice_adja = np.zeros((nb_sommet,nb_sommet),dtype=bool)
+
+    #matrice_adja[0][0] = True
+
+    filename_B = In.Input_bonds(detail[0], name, lst_index, matrice_adja)
+
+    #print('#################################################################')
+    #print(matrice_adja)
+    #print('#################################################################')
+    
+    # test: taille raisonnable ou non
+    if (len(atom_caract)<int(input_num)):
+        print('Erreur: Taille entrée trop grande')
+        print('Taille maximum:'+str(len(atom_caract)))
+        return 0
+
+    ### déjà exécuté?
+    if In.done_here(join(path_O, dir_O), name, detail):
+        print(name+" déjà fait")
+        test = input("Effacer les précédents résultats? :[y|n]: ")
+        while (test!='y' and test!='n') :
+            test = input("(Effacer resultats) Attend y ou n: ")
+        if test=='y' :
+            if detail[0] == 1 :
+                compl = "_H"
+            else :
+                compl = ""
+            remove(join(join(path_O, dir_O), name+compl+"_data.txt"))
+            remove(join(join(path_O, dir_O), name+compl+"_res.txt"))
+    
+    if not In.done_here(join(path_O, dir_O), name, detail):
+        ### imprime les données de ce graphe
+        Out.Output_data(dir_O, name, detail, lst_index, atom_caract, matrice_adja)
+
+        #### Exécution sur le ou les ordre(s)
+        if Multi_Taille :
+            print(name+" commence "+str(datetime.now().time()))
+            '''
+            # sous_graphe connexe par methode bruteforce
+            lst_combi = Combi.gen_combi_brute_range(matrice_adja, min_ordre, max_ordre)
+            '''
+            # sous_graphes connexes par notre méthode de parcour d'un arbre de combi de la matrice d'adja
+            lst_combi = SSG.subgen(matrice_adja, min_ordre, max_ordre)
+            #lst_combi = OSG.subgen_deg_decroiss(matrice_adja, atom_caract, min_ordre, max_ordre, crible)
             
-            if (len(atom_caract)<int(input_num)):
-                print('Erreur: Taille entrée trop grande')
-                print('Taille maximum:'+str(len(atom_caract)))
-                break
-
-            ### déjà exécuté?
-            if In.done_here(join(path_O, dir_O), name, detail):
-                print(name+" déjà fait")
-                test = input("Effacer les précédents résultats? :[y|n]: ")
-                while (test!='y' and test!='n') :
-                    test = input("(Effacer resultats) Attend y ou n: ")
-                if test=='y' :
-                    if detail[0] == 1 :
-                        compl = "_H"
-                    else :
-                        compl = ""
-                    remove(join(join(path_O, dir_O), name+compl+"_data.txt"))
-                    remove(join(join(path_O, dir_O), name+compl+"_res.txt"))
+            print(name+" combinaisons finis "+str(datetime.now().time()))
             
-            if not In.done_here(join(path_O, dir_O), name, detail):
-                ### imprime les données de ce graphe
-                Out.Output_data(dir_O, name, detail, lst_index, atom_caract, matrice_adja)
+            for i in range(max_ordre - min_ordre + 1):
+                ordre = min_ordre+i
+                detail[1] = ordre
+                (dict_isomorph, dict_stat, lst_id, lst_certif, nb_unique) = programm_1(dir_O, name, detail, matrice_adja, atom_caract, lst_combi[i])
+                #programm_2(dir_O, name, detail, matrice_adja, atom_caract, lst_id, dict_isomorph)
+            
+                print(name+" taille "+str(ordre)+" fini "+str(datetime.now().time())+"\n")
+            
+            print(name+" fini "+str(datetime.now().time())+"\n")
+        else : 
+            print(name+" commence "+str(datetime.now().time()))
+            '''
+            # sous_graphe connexe par methode bruteforce
+            lst_combi = Combi.gen_combi_brute(matrice_adja, ordre)
+            '''
+            # sous_graphes connexes par notre méthode de parcour d'un arbre de combi de la matrice d'adja
+            lst_combi = SSG.subgen(matrice_adja, ordre, ordre)
+            #lst_combi = OSG.subgen_deg_decroiss(matrice_adja, atom_caract, ordre, ordre, crible)
 
-                #### Exécution sur le ou les ordre(s)
-                if Multi_Taille :
-                    print(name+" commence "+str(datetime.now().time()))
-                    '''
-                    # sous_graphe connexe par methode bruteforce
-                    lst_combi = Combi.gen_combi_brute_range(matrice_adja, min_ordre, max_ordre)
-                    '''
-                    # sous_graphes connexes par notre méthode de parcour d'un arbre de combi de la matrice d'adja
-                    #lst_combi = SSG.subgen(matrice_adja, min_ordre, max_ordre)
-                    lst_combi = OSG.subgen_deg_decroiss(matrice_adja, atom_caract, min_ordre, max_ordre, crible)
-                    
-                    print(name+" combinaisons finis "+str(datetime.now().time()))
-                    
-                    for i in range(max_ordre - min_ordre + 1):
-                        ordre = min_ordre+i
-                        detail[1] = ordre
-                        (dict_isomorph, dict_stat, lst_id, lst_certif, nb_unique) = programm_1(dir_O, name, detail, matrice_adja, atom_caract, lst_combi[i])
-                        programm_2(dir_O, name, detail, matrice_adja, atom_caract, lst_id, dict_isomorph)
-                    
-                        print(name+" taille "+str(ordre)+" fini "+str(datetime.now().time())+"\n")
-                    
-                    print(name+" fini "+str(datetime.now().time())+"\n")
-                else : 
-                    print(name+" commence "+str(datetime.now().time()))
-                    '''
-                    # sous_graphe connexe par methode bruteforce
-                    lst_combi = Combi.gen_combi_brute(matrice_adja, ordre)
-                    '''
-                    # sous_graphes connexes par notre méthode de parcour d'un arbre de combi de la matrice d'adja
-                    #lst_combi = SSG.subgen(matrice_adja, ordre, ordre)
-                    lst_combi = OSG.subgen_deg_decroiss(matrice_adja, atom_caract, ordre, ordre, crible)
+            print(name+" combinaisons finis "+str(datetime.now().time()))
+            
+            detail[1] = ordre
+            (dict_isomorph, dict_stat, lst_id, lst_certif, nb_unique) = programm_1(dir_O, name, detail, matrice_adja, atom_caract, lst_combi)
+            
+            #programm_2(dir_O, name, detail, matrice_adja, atom_caract, lst_id, dict_isomorph)
+            
+            print(name+" fini "+str(datetime.now().time())+"\n")
 
-                    print(name+" combinaisons finis "+str(datetime.now().time()))
-                    
-                    detail[1] = ordre
-                    (dict_isomorph, dict_stat, lst_id, lst_certif, nb_unique) = programm_1(dir_O, name, detail, matrice_adja, atom_caract, lst_combi)
-                    
-                    #programm_2(dir_O, name, detail, matrice_adja, atom_caract, lst_id, dict_isomorph)
-                    
-                    print(name+" fini "+str(datetime.now().time())+"\n")
-                
-    return 0
+    return 1    
 
 def programm_1 (dir_O, name, detail, matrice_adja, atom_caract, lst_combi):
     (dict_isomorph, dict_stat, lst_id, lst_certif) = Iso.combi_iso(matrice_adja, atom_caract, lst_combi, detail[1])

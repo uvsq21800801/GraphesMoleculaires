@@ -73,3 +73,13 @@ Lancement du programme de dessin de sous-graphe (qui utilise les résultats du p
 ```bash
   python3 Main_dessine.py
 ```
+
+Commande à utiliser lors de modifs en Cython
+```
+python setup.py build_ext --inplace
+```
+
+Commande à utiliser pour chercher les choses à optimiser en cython
+```
+cython -a chemin/nom_fichier.pyx
+```

@@ -3,6 +3,18 @@ from pynauty import *
 import networkx as nx
 import pynauty
 import binascii
+import numpy as np
+
+def interize(combi_bool):
+
+    combi_int = np.zeros(len(combi_bool))
+    for i in range(len(combi_int)):
+        if combi_bool[i] == True:
+            combi_int[i] += 1
+        
+    return combi_int
+
+
 
 ####
 ## 1. Algo principal de regroupement des sous-graphes par certificat canonique
@@ -35,16 +47,17 @@ def combi_iso(matrice_adja, atom_caract, lst_combi, ordre):
         if certif not in lst_certif:
             lst_certif.append(certif)
             indice = lst_certif.index(certif)
-            dict_isomorph[indice] = [combi.copy()]
-            dict_stat[indice] = [1,combi.copy()]
+            dict_isomorph[indice] = [interize(combi.copy())]
+            dict_stat[indice] = [1,interize(combi.copy())]
             lst_id.append(indice)
         else:
             indice = lst_certif.index(certif)
-            dict_isomorph[indice].append(combi.copy())
+            dict_isomorph[indice].append(interize(combi.copy()))
             tmp = dict_stat.get(indice)
             for i in range(len(combi)):
-                tmp[1][i] += combi[i]
-            dict_stat[indice] = [tmp[0]+1,tmp[1].copy()]
+                if combi[i] == True:
+                    tmp[1][i] += 1 
+            dict_stat[indice] = [tmp[0]+1 , tmp[1].copy()]
 
     return dict_isomorph, dict_stat, lst_id, lst_certif
 

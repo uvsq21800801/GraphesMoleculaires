@@ -1,3 +1,5 @@
+import numpy as np
+
 
 ###
 # 1. Recouvrement des sommets du graphes par un type de sous-graphes
@@ -5,13 +7,15 @@
 
 # Calcul le taux de recouvrement et d'occupation pour un groupe d'isomorphes
 def Taux_recouvert(dict_stat):
+    # pour chaque indice 1, 2, 3, ... dans le dictionnaire des stats
     for indice in dict_stat.keys():
         stat = dict_stat.get(indice)
         tot = 0 # cumule des occurrences de sommets
         cmpt = 0 # nombre de sommets apparus
+        
         for i in range(len(stat[1])):
             tot += stat[1][i]
-            if stat[1][i]>0 :
+            if stat[1][i] > 0 :
                 cmpt += 1 
         # taux de recouvrement
         if cmpt > 0 :
@@ -20,11 +24,15 @@ def Taux_recouvert(dict_stat):
             dict_stat[indice].append(0)
         
         # taux d'occupation
+       
+        # Le programme va regarder quels sommets sont au moins occupés une fois par une des
+        # occurences du motif
         occupation = 0
         for i in range(len(stat[1])):
             if int(stat[1][i]) > 0:
                 occupation += 1
-        dict_stat[indice].append(occupation/len(stat[1])) 
+        dict_stat[indice].append(occupation/len(stat[1]))
+         
 ###
 # 2. Fonctions utiles
 ###

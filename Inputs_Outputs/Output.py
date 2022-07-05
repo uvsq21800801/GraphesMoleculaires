@@ -27,7 +27,7 @@ def Output_data(dir_O, name, detail, lst_index, atom_caract, matrice_adja):
 
     f.write("Indice IndiceOld Caract_atome\n")
     for i in range(len(lst_index)):
-        f.write(str(i)+' '+str(lst_index[i])+' '+atom_caract[i]+'\n')
+        f.write(str(i)+' '+str(lst_index[i])+' '+str(atom_caract[i])+'\n')
 
     f.write("Matrice Adjacence\n")
     r = int(len(matrice_adja))
