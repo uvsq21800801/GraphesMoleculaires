@@ -2,6 +2,8 @@ import networkx as nx
 import random
 from Solving_Methods import nx_Graphs as nxg
 
+################### DEPRECATED
+
 # Fonction regroupant l'ensemble de la ou des clique(s) maximum(s) (unique ou multiple)
 #
 # Entrées: Graphe étudié, ensemble des clique maximum connus et les ensembles de sommets R, P et X

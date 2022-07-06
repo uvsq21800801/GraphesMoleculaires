@@ -2,6 +2,7 @@ from os import listdir, remove
 from os.path import isfile, join
 import matplotlib
 import matplotlib.pyplot as plt
+
 import numpy as np
 
 ############################## Principale ##############################
@@ -27,11 +28,13 @@ def Output_data(dir_O, name, detail, lst_index, atom_caract, matrice_adja):
     f = open(fpath+filename, 'w')
 
     f.write("Indice IndiceOld Caract_atome\n")
+    cdef int i 
     for i in range(len(lst_index)):
         f.write(str(i)+' '+str(lst_index[i])+' '+str(atom_caract[i])+'\n')
 
     f.write("Matrice Adjacence\n")
     r = int(len(matrice_adja))
+    cdef int j
     for i in range(r):
         s = ''
         for j in range(r):
@@ -78,7 +81,7 @@ def Output_diagramme(dir_O, name, detail, lst_id, dict_stat):
 
     plt.clf()
     occur = np.array(plot_occur)
-    occur = occur.astype(np.float)
+    occur = occur.astype(float)
     plt.scatter(plot_indice, occur,s=3)
     #plt.title("")
     plt.xlabel("Indices triés par occurrence croissance")
@@ -88,7 +91,7 @@ def Output_diagramme(dir_O, name, detail, lst_id, dict_stat):
 
     plt.clf()
     recouv = np.array(plot_recouv)
-    recouv = recouv.astype(np.float)
+    recouv = recouv.astype(float)
     
     plt.scatter(plot_indice, recouv,s=3)
     
@@ -100,7 +103,7 @@ def Output_diagramme(dir_O, name, detail, lst_id, dict_stat):
     plt.clf()
 
     occup = np.array(plot_occup)
-    occup = occup.astype(np.float)
+    occup = occup.astype(float)
     plt.scatter(plot_indice, occup,s=3)
     plt.xlabel("Indices triés par occurrence croissance")
     plt.ylabel("Taux d'occupation d'un motif")
@@ -251,6 +254,9 @@ def Output_sim(dir_O, name, detail, lst_id, Tab_sim):
     
     step = int(len(lst_id)/20) + 1
     
+    lst_id[::step]
+    np.arange(0,len(lst_id),step)
+
     ax.set_xticks(np.arange(0,len(lst_id),step), labels=lst_id[::step], fontsize=12)
     ax.set_yticks(np.arange(0,len(lst_id),step), labels=lst_id[::step], fontsize=12)
     ax.tick_params(top=True, labeltop=True, bottom=False, labelbottom=False)

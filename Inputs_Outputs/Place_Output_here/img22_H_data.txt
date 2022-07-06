@@ -1,0 +1,63 @@
+Indice IndiceOld Caract_atome
+0 4 OS 1
+1 5 OS 2
+2 6 OS 3
+3 7 OS 4
+4 8 Si 1
+5 9 Si 2
+6 10 Si 3
+7 11 Si 4
+8 12 Si 5
+9 13 O 5
+10 16 O 6
+11 19 O 7
+12 22 O 8
+13 25 O 9
+14 28 O 10
+15 31 O 11
+16 34 O 12
+17 37 O 13
+18 40 O S14
+19 42 O 15
+20 45 O 16
+21 48 O 17
+22 51 O 18
+23 54 O 19
+24 57 O 20
+25 60 O 21
+26 63 O 22
+Matrice Adjacence
+False  False  False  True  True  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  
+False  False  False  False  False  False  False  False  True  False  False  True  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  
+False  False  False  False  False  True  False  False  False  False  False  False  False  False  True  False  False  False  False  False  False  False  False  False  False  False  False  
+False  False  False  False  False  False  False  True  False  False  False  False  False  True  False  False  False  False  False  False  False  False  False  False  False  False  False  
+True  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  
+False  False  True  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  
+False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  True  False  False  False  False  False  False  False  False  
+False  False  False  True  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  
+False  True  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  
+False  False  True  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  
+False  False  False  False  False  False  False  False  False  False  False  False  False  True  False  False  False  False  False  False  False  False  False  False  False  False  False  
+False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  True  False  False  False  False  False  False  False  False  False  False  False  
+False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  True  False  False  True  False  False  False  False  False  False  False  False  
+False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  True  False  False  False  False  False  False  False  False  False  
+False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  True  False  
+False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  True  False  False  False  
+False  True  False  False  False  False  False  False  False  True  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  
+False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  
+False  False  False  False  False  False  True  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  
+False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  True  False  False  False  False  False  False  False  False  False  False  
+False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  True  
+False  True  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  True  False  False  False  False  False  False  False  
+False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  True  False  False  False  False  False  
+False  False  True  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  True  False  False  False  False  False  False  
+False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  True  False  False  False  False  False  False  False  False  False  False  
+False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  True  False  False  False  False  False  False  
+False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  True  False  False  
+
+Ordre : 3
+Nombre de sous-graphes connexes : 46
+Nombre de certificats différents : 15
+Nombre de motifs uniques :6
+Indices triés :
+0 1 2 10 11 14 7 3 6 8 13 4 5 9 12 

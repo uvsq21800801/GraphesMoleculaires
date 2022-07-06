@@ -20,6 +20,8 @@ def Similarity_sansMcis(tab_sg, detail):
     Tab_sim = [[None for y in range(nb)] for x in range(nb)]
     
     # boucle sur tous les duo à évaluer selon la méthode choisie
+    cdef int i 
+    cdef int j 
     for i in range(nb):
         for j in range(nb):
             if j>i and detail[2] == 1 :
@@ -40,12 +42,14 @@ def Similarity_sansMcis(tab_sg, detail):
 # Sortie: Tableau [x] [y]
 
 def Similarity_avecMcis(tab_sg, tab_mcis, detail):
-    nb = len(tab_sg)
+    cdef int nb = len(tab_sg)
     
     # tableau de sortie
     Tab_sim = [[None for y in range(nb)] for x in range(nb)]
     
     # boucle sur tous les duo à évaluer selon la méthode choisie et 
+    cdef int i
+    cdef int j 
     for i in range(nb):
         for j in range(nb):
             if i>j:
@@ -65,6 +69,9 @@ def distance_edition(sgA, sgB):
 
 # Metrique de Raymond symétrique
 def sim_raymond(g_mcis, g_a, g_b):
+    cdef float res 
+    cdef float val_a 
+    cdef float val_b
     if g_mcis == -1 :
         return 0
     else:
@@ -78,6 +85,10 @@ def sim_raymond(g_mcis, g_a, g_b):
 
 # Metrique de Raymond asymétrique
 def sim_barth(g_mcis, g_a, g_b, x , y):
+    cdef float res 
+    cdef float val_a 
+    cdef float val_b
+    
     # cas de la comparaison avec soi-même
     if (x==y):
         return 1
@@ -104,9 +115,10 @@ def sim_barth(g_mcis, g_a, g_b, x , y):
 # Sortie : tableau triangulaire des MCIS
 
 def tab_mcis(tab_sg):
-    nb = len(tab_sg)
-    tab_mcis = [[None for y in range(x+1)] for x in range(nb-1)]
-    
+    cdef int nb = len(tab_sg)
+    tab_mcis = [[None for y in range(x+1)] for x in range(nb-1)] 
+    cdef int x  
+    cdef int y
     for x in range(nb-1):
         for y in range(x+1):
             tab_mcis[x][y] = nxg.construct_mcis(tab_sg[x+1], tab_sg[y])

@@ -21,16 +21,17 @@ cimport cython
 cimport numpy as np
 import numpy as np
 
+import time
 
 def interface():
-    cpdef bint Multi_Taille = False
-    cpdef bint Multi_File = False
-    cpdef bint File_exist = False
+    cdef bint Multi_Taille = True
+    cdef bint Multi_File = False
+    cdef bint File_exist = False
 
     ##### Choix des tailles de sous-graphes
-    cpdef bint min_ordre
-    cpdef bint max_ordre
-    
+    cdef int min_ordre
+    cdef int max_ordre
+    cdef int ordre
 
     input_num = input("Taille des sous-graphes : ")
     while not Multi_Taille and not input_num.isnumeric():
@@ -105,6 +106,7 @@ def interface():
     detail = [int(option), 0]
     
     # Choix du type de Similarite
+    '''
     print("Quel type de similarite étudier? ")
     print("\t 1 : similarité par cout d'édition ")
     print("\t 2 : similarité par calcul de Raymond sur MCIS ")
@@ -114,6 +116,8 @@ def interface():
     while (option!='0' and option!='1' and option!='2' and option!='3'):
         option = input("(Similarité) Attend entre 0 et 3 : ")
     detail.append(int(option))
+    '''
+    detail.append(0) #
 
     detail.append(crible)
     
@@ -170,6 +174,7 @@ def exec_for_one_file(filename, detail, Multi_Taille, Multi_File, ordre, min_ord
             remove(join(join(path_O, dir_O), name+compl+"_data.txt"))
             remove(join(join(path_O, dir_O), name+compl+"_res.txt"))
     
+    cdef int i 
     if not In.done_here(join(path_O, dir_O), name, detail):
         ### imprime les données de ce graphe
         Out.Output_data(dir_O, name, detail, lst_index, atom_caract, matrice_adja)
@@ -218,8 +223,17 @@ def exec_for_one_file(filename, detail, Multi_Taille, Multi_File, ordre, min_ord
     return 1    
 
 def programm_1 (dir_O, name, detail, matrice_adja, atom_caract, lst_combi):
-    (dict_isomorph, dict_stat, lst_id, lst_certif) = Iso.combi_iso(matrice_adja, atom_caract, lst_combi, detail[1])
-    
+    t_cerif = 0 ## test
+    t_prep_c = 0 ## test
+    t_fill = 0 ## test
+    time_temp = time.time()## test
+    (dict_isomorph, dict_stat, lst_id, lst_certif, t_cerif, t_prep_c, t_fill) = Iso.combi_iso(matrice_adja, atom_caract, lst_combi, detail[1], t_cerif, t_prep_c, t_fill)
+    ## ^ 3 last values are test
+    print('exec of the whole combi iso: '+str(time.time()-time_temp)+' seconds') ## test
+    print('exec of the dict filling: '+str(t_fill)+' seconds') ## test
+    print('exec of the prep for pynauty: '+str(t_prep_c)+' seconds') ## test
+    print('exec of the pynauty: '+str(t_cerif)+' seconds') ## test
+
     print(name+" isomorph fini "+str(datetime.now().time()))
                         
     # calcul le taux de recouvrement 

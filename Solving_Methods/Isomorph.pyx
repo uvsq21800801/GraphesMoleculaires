@@ -5,9 +5,12 @@ import pynauty
 import binascii
 import numpy as np
 
+import time
+
 def interize(combi_bool):
 
-    combi_int = np.zeros(len(combi_bool))
+    combi_int = np.zeros(len(combi_bool), dtype=int)
+    cdef int i
     for i in range(len(combi_int)):
         if combi_bool[i] == True:
             combi_int[i] += 1
@@ -20,7 +23,7 @@ def interize(combi_bool):
 ## 1. Algo principal de regroupement des sous-graphes par certificat canonique
 ####
 
-def combi_iso(matrice_adja, atom_caract, lst_combi, ordre):
+def combi_iso(matrice_adja, atom_caract, lst_combi, ordre, t_cerif, t_prep_c, t_fill):## 3 last values are test
     ## Structures de stockage :
     # Listes:
     lst_certif = [] #= identifiant : certificat
@@ -40,10 +43,13 @@ def combi_iso(matrice_adja, atom_caract, lst_combi, ordre):
     taille = ordre
 
     ###### Boucle sur la liste de combinaison ######
+    cdef int i
+    
     for combi in lst_combi:
         # calcule du certificat de la combinaison
-        certif = combi_to_certif(combi, matrice_adja, atom_caract, dict_couleur)
-
+        (certif, t_cerif, t_prep_c) = combi_to_certif(combi, matrice_adja, atom_caract, dict_couleur, t_cerif, t_prep_c)
+        ## ^ 2 last values are test
+        time_begin = time.time()
         if certif not in lst_certif:
             lst_certif.append(certif)
             indice = lst_certif.index(certif)
@@ -58,8 +64,9 @@ def combi_iso(matrice_adja, atom_caract, lst_combi, ordre):
                 if combi[i] == True:
                     tmp[1][i] += 1 
             dict_stat[indice] = [tmp[0]+1 , tmp[1].copy()]
+        t_fill += time.time()-time_begin
 
-    return dict_isomorph, dict_stat, lst_id, lst_certif
+    return dict_isomorph, dict_stat, lst_id, lst_certif, t_cerif, t_prep_c, t_fill ## 3 last values are test
 
 ###
 # 2. Fonctions utiles
@@ -80,15 +87,17 @@ def init_col(atom_caract):
 #
 # La coloration se fera en ajoutant n arrètes à un sommet ayant la couleur
 # numéro n.
-def combi_to_certif(combi, matrice_adja, atom_caract, dict_c):
+def combi_to_certif(combi, matrice_adja, atom_caract, dict_c, t_cerif, t_prep_c):## 2 last values are test
     ###### Initialisations ######
     # création d'une liste permettant de renommer les sommets
     # en fonction des sommets non-concernés
 
+    temp_prep_t = time.time()
 
     # liste [] de la taille de la combinaison contenant dans chaque case,
     # l'indice de l'élément dans la matrice d'adjacence
     ref = []
+    cdef int i 
     for i in range(len(combi)):
         if combi[i] != 0:
             ref.append(i)
@@ -111,18 +120,19 @@ def combi_to_certif(combi, matrice_adja, atom_caract, dict_c):
     # façon serait moins couteux)
     dict_connex = {}
     num_prochain_sommet = len(ref)
-    for i in ref:
+    cdef int j
+    for r in ref:
         
         # boucle dans la matrice d'adjacence pour trouver tous les sommets sur
         # lequel i pointe
         list_connex = []
         for j in range(len(matrice_adja)):
             
-            if matrice_adja[i][j] != 0 and combi[j] == 1:
+            if matrice_adja[r][j] != 0 and combi[j] == 1:
                     list_connex.append(ref.index(j))
 
         # création des nouveaux sommets par couleurs
-        temp_couleur = atom_caract[i].split()
+        temp_couleur = atom_caract[r].split()
         nb_couleur = dict_c.get(temp_couleur[0])+1 # +1 car on veut éviter que la couleur 0 ne crée de confusion
                                                     # (je ne suis pas sûre si cela crucial mais ça ne peut être 
                                                     #  un détriment)
@@ -132,12 +142,17 @@ def combi_to_certif(combi, matrice_adja, atom_caract, dict_c):
             num_prochain_sommet += 1
         
         # ajout de la liste d'arcs dont ref(index) i est la queue dans le dictionnaire
-        dict_connex.setdefault(ref.index(i),list_connex)
+        dict_connex.setdefault(ref.index(r),list_connex)
 
     # génération du graph
     g = Graph(num_prochain_sommet, directed=True, adjacency_dict=dict_connex) 
+    
+    t_prep_c += time.time()-temp_prep_t
 
-    return certificate(g)
+    temp_t_cert = time.time()
+    cf = certificate(g)
+    t_cerif += time.time()-temp_t_cert
+    return cf, t_cerif, t_prep_c ## ^ 2 last values are test
 
 # Fait et retourne un certificat de graphe à partir d'une 
 # combinaison de sommets

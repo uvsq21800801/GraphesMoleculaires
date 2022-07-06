@@ -2,6 +2,7 @@ from os import listdir, remove
 from os.path import isfile, join
 import re
 import numpy as np
+cimport numpy as np
 
 ###
 ### option : 0 = tout ; 1 = pas les hydrogènes
@@ -23,12 +24,21 @@ def data_inputs(option):
 
 # recuperation des donnees d'un type de fichier
 def data_input(option, name):
+    
+    cdef int nb_sommet = Get_nb_vertex(option, name)
+    atom_caract = np.empty((nb_sommet,), dtype='<U32')
+    cdef np.ndarray[np.int32_t, ndim=1] lst_index = np.empty(nb_sommet, dtype=np.int32)
+    filename1 = Input_trad(option, name, lst_index, atom_caract)
+    matrice_adja = np.zeros((nb_sommet,nb_sommet),dtype=bool)
+    filename2 = Input_bonds(option, name, lst_index, matrice_adja)
+
+    ''' 
     lst_index = []
     atom_caract = []
     filename1 = Input_trad(option, name, lst_index, atom_caract)
     matrice_adja = []
     filename2 = Input_bonds(option, name, lst_index, matrice_adja)
-    
+    '''
     return filename1, filename2, lst_index, atom_caract, matrice_adja
 
 ###
@@ -120,8 +130,6 @@ def Input_bonds(option, name, li, ma):
     fpath = "Inputs_Outputs/Place_Bonds_file_here/"
     filename = "bonds_"+name+".txt"
     # si le nom est bien représenté, on récupère les données
-    
-    #print('isfile? '+ str(isfile(join(fpath,filename))))
 
     if isfile(join(fpath,filename)):
         #initie la matrice d'adjacence
@@ -136,18 +144,9 @@ def Input_bonds(option, name, li, ma):
             splitted = line.split()
             # liaison covalente
 
-            #print('test ?? '+ str(splitted[0] == '1' and len(splitted) == 3))
-
             if splitted[0] == '1' and len(splitted) == 3:
                 #print('AAAAA test 2 ?? '+ str(splitted[1] in li and splitted[2] in li))
                 if int(splitted[1]) in li and int(splitted[2]) in li:
-                    #print('WIN')
-                    #ajoute deux 1 dans la matrice ma de façon symétrique
-                    #print('li: '+str(li))
-                    #print('int(splitted[1]): '+str(int(splitted[1])))
-                    #print('int(splitted[1]): '+str(int(splitted[2])))
-                    #print('np.where(li == int(splitted[1]) : '+str(np.where(li == int(splitted[1]))[0][0]))
-                    #print('np.where(li == int(splitted[2]) : '+str(np.where(li == int(splitted[2]))[0][0]))
                     ma[np.where(li == int(splitted[1]))[0][0]][np.where(li == int(splitted[2]))[0][0]] = True
                     ma[np.where(li == int(splitted[2]))[0][0]][np.where(li == int(splitted[1]))[0][0]] = True
             # liaison hydrogene

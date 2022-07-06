@@ -1,5 +1,7 @@
 import networkx as nx
 
+################### DEPRECATED
+
 ## Affichage des matrice d'adjacence des graphes NetworkX
 
 # Matrice d'adjacence du graphe

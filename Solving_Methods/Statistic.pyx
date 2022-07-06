@@ -8,6 +8,10 @@ import numpy as np
 # Calcul le taux de recouvrement et d'occupation pour un groupe d'isomorphes
 def Taux_recouvert(dict_stat):
     # pour chaque indice 1, 2, 3, ... dans le dictionnaire des stats
+    cdef float tot
+    cdef float cmpt
+    cdef float occupation
+    cdef int i 
     for indice in dict_stat.keys():
         stat = dict_stat.get(indice)
         tot = 0 # cumule des occurrences de sommets
