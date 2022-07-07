@@ -15,6 +15,7 @@ from Solving_Methods import Similarity as Simil
 
 from os import listdir, remove, mkdir
 from os.path import isfile, isdir, join
+import os
 from datetime import datetime
 
 cimport cython
@@ -71,11 +72,47 @@ def interface():
         ordre = int(input_num)
         
     ##### Fichiers entrés
-    fpath_T = "Inputs_Outputs/Place_Trad_file_here/" 
-    fpath_B = "Inputs_Outputs/Place_Bonds_file_here/"
-    name = input("Nom fichier entré : ")
-    filename_T = "trad-atom_"+name+".txt"
-    filename_B = "bonds_"+name+".txt"
+    fpath = "Inputs_Outputs/Place_Folder_here/"
+    #name = input("Nom complet du dossier entré : ")
+    #fpath_T = "Inputs_Outputs/Place_Trad_file_here/" 
+    #fpath_B = "Inputs_Outputs/Place_Bonds_file_here/"
+    #filename_T = "trad-atom_"+name+".txt"
+    #filename_B = "bonds_"+name+".txt"
+    
+    # On cherche à récup la partie du nom du dossier qui nous intéresse
+    img_name = ''
+    while img_name == '':
+        name = input("Nom complet du dossier entré : ")
+        name_particles = name.split("_")
+        for i in range(len(name_particles)):
+            if "img" in name_particles[i]:
+                img_name = name_particles[i]
+        if img_name == '':
+            print("dossier ayant une syntaxe incorrecte (pas de \"img\")")
+        if not os.path.isdir(join(fpath, name)):
+            print("le dossier "+str(join(fpath, name))+" n'existe pas")
+            img_name = ''
+    
+
+    # iterate over files in
+    # that directory
+    # A METTRE LE CODE CI DESSOUS DANS UNE GROSSE BOUCLE DE GESTION D ERREUR
+    filename_T = ''
+    filename_B = ''
+    for filename in os.listdir(join(fpath,name)):
+        if "trad" in filename:
+            filename_T = filename
+        if "bonds" in filename:
+            filename_B = filename       
+
+    
+    #if isfile(join(fpath,filename_T) and join(fpath,filename_B)):
+
+    #else :
+
+    # L'idée du Multifile est possiblement obselete, si on utilise le nouveau sys
+    # de fichier, mais dans le doute, je garde ça en comms
+    ''' 
     while not Multi_File and not File_exist :
         if name == '*':
             Multi_File = True
@@ -90,10 +127,11 @@ def interface():
                 name = input("Nom fichier entré : ")
                 filename_T = "trad-atom_"+name+".txt"
                 filename_B = "bonds_"+name+".txt"
-
+    '''
     ##### Création dossier de sortie
     path_O = "Inputs_Outputs/Place_Output_here/"
-    dir_O = input("Nom sous-dossier sortant : ")
+    #dir_O = input("Nom sous-dossier sortant : ")
+    dir_O = name
     ### dossier n'existe pas déjà ?
     if not isdir(join(path_O, dir_O)) :
         ### créé le dossier
@@ -127,28 +165,28 @@ def interface():
     for filename in filenames:
         
         # appel fonction
-        exec_for_one_file(filename, detail, Multi_Taille, Multi_File, ordre, min_ordre, max_ordre, input_num, dir_O, path_O, name)
+        exec_for_one_file(filename, detail, Multi_Taille, Multi_File, ordre, min_ordre, max_ordre, input_num, dir_O, path_O, fpath+name, filename_B, filename_T, name)
         
     return 1
 
 # permet de dégraisser une boucle de l'interface, execute tout pour un fichier
-def exec_for_one_file(filename, detail, Multi_Taille, Multi_File, ordre, min_ordre, max_ordre, input_num, dir_O, path_O, name):
+def exec_for_one_file(filename, detail, Multi_Taille, Multi_File, ordre, min_ordre, max_ordre, input_num, dir_O, path_O, cfpath, filename_B, filename_T, name):
     ## Extraction des données
     if Multi_File:
         name = In.get_name(filename)
     
     
     # nombre de sommets utile à l'initialisation des plus grosses structures
-    cdef int nb_sommet = In.Get_nb_vertex(detail[0], name)
+    cdef int nb_sommet = In.Get_nb_vertex(detail[0], join(cfpath, filename_T))
     atom_caract = np.empty((nb_sommet,), dtype='<U32')
     cdef np.ndarray[np.int32_t, ndim=1] lst_index = np.empty(nb_sommet, dtype=np.int32)
 
-    filename_T = In.Input_trad(detail[0], name, lst_index, atom_caract)
+    filename_T = In.Input_trad(detail[0], cfpath, lst_index, atom_caract, filename_T)
     matrice_adja = np.zeros((nb_sommet,nb_sommet),dtype=bool)
 
     #matrice_adja[0][0] = True
 
-    filename_B = In.Input_bonds(detail[0], name, lst_index, matrice_adja)
+    filename_B = In.Input_bonds(detail[0], cfpath, lst_index, matrice_adja, filename_B)
 
     #print('#################################################################')
     #print(matrice_adja)

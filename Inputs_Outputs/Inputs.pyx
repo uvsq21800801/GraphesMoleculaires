@@ -46,11 +46,9 @@ def data_input(option, name):
 ###
 
 # retourne le nombre de sommets qui nous intéresse
-def Get_nb_vertex(option, name):
+def Get_nb_vertex(option, compl_path):
     # récum du fichier
-    fpath = "Inputs_Outputs/Place_Trad_file_here/" 
-    filename = "trad-atom_"+name+".txt"
-    f1 = open(join(fpath,filename), 'r').readlines()
+    f1 = open(compl_path, 'r').readlines()
     
     # ajoute +1 pour chaque sommet qui nous intéresse
     cdef int count_verticles = 0
@@ -64,16 +62,13 @@ def Get_nb_vertex(option, name):
     return count_verticles
 
 # Retourne le contenu d'un fichier texte pour un nom donné
-def Input_trad(option, name, li, atom_caract):
-    # recuperation du fichier trad
-    fpath = "Inputs_Outputs/Place_Trad_file_here/" 
-    filename = "trad-atom_"+name+".txt"
+def Input_trad(option, cfpath, li, atom_caract, filename_T):
     # si le nom est bien représenté, on récupère les données
     cdef int i = 0
 
-    if isfile(join(fpath,filename)):
+    if isfile(join(cfpath,filename_T)):
         # lecture du fichier bonds et transcription dans la matrice de traduction
-        f1 = open(join(fpath,filename), 'r').readlines()
+        f1 = open(join(cfpath,filename_T), 'r').readlines()
         for line in f1:
             splitted = line.split()
             if len(splitted) == 3:
@@ -88,7 +83,7 @@ def Input_trad(option, name, li, atom_caract):
                     atom_caract[i] = caracteristiques
                     #print(splitted[0]+' '+splitted[1]+' '+splitted[2])
                     i += 1
-        return name
+        return "name"
     else :
         return ""
 
@@ -125,18 +120,15 @@ def Inputs_trad_all(option, li, atom_caract):
 # 3. Fonctions de récupération de données de liaisons
 ###
 
-def Input_bonds(option, name, li, ma):    
-    # recuperation du fichier bonds
-    fpath = "Inputs_Outputs/Place_Bonds_file_here/"
-    filename = "bonds_"+name+".txt"
+def Input_bonds(option, cfpath, li, ma, filename_B):    
     # si le nom est bien représenté, on récupère les données
 
-    if isfile(join(fpath,filename)):
+    if isfile(join(cfpath,filename_B)):
         #initie la matrice d'adjacence
         #init_matrice(ma,len(li))
 
         # lecture du fichier bonds et transcription dans la matrice d'adjacence
-        f1 = open(join(fpath,filename), 'r').readlines()
+        f1 = open(join(cfpath,filename_B), 'r').readlines()
         
         #print(li)
         
@@ -159,7 +151,7 @@ def Input_bonds(option, name, li, ma):
                         #ajoute un 2 de l'hydrogène vers l'accepteur
                         ma[np.where(li == int(splitted[3]))[0][0]][np.where(li == int(splitted[2]))[0][0]] = True # 2 changé en 1 pour optimiser la matrice en bool
         #print(ma)
-        return name
+        return "name"
     else :
         #print(ma)
         return ""
