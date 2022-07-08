@@ -2,7 +2,7 @@
 import sys
 sys.path.append('GraphesMoleculaires/Inputs_Outputs')
 sys.path.append('GraphesMoleculaires/Solving_Methods')
-sys.path.append('GraphesMoleculaires/MCIS')
+sys.path.append('GraphesMoleculaires/User_interface')
 
 from Inputs_Outputs import Inputs as In
 from Inputs_Outputs import Output as Out
@@ -13,9 +13,13 @@ from Solving_Methods import Isomorph as Iso
 from Solving_Methods import Statistic as Stat
 from Solving_Methods import Similarity as Simil
 
+import pymongo as pm
+from bson.objectid import ObjectId
+from User_interface import mongo_connection as mc
+from User_interface import commande_terminal as ct
+
 from os import listdir, remove, mkdir
 from os.path import isfile, isdir, join
-import os
 from datetime import datetime
 
 cimport cython
@@ -25,140 +29,180 @@ import numpy as np
 import time
 
 def interface():
+    ##### VARIABLES 
+    # de l'interface
     cdef bint Multi_Taille = True
-    cdef bint Multi_File = False
-    cdef bint File_exist = False
-
-    ##### Choix des tailles de sous-graphes
-    cdef int min_ordre
+    cdef bint Multi_Conf = False
+    cdef bint Conf_exist = False
+    # de la taille
     cdef int max_ordre
-    cdef int ordre
-
-    input_num = input("Taille des sous-graphes : ")
-    while not Multi_Taille and not input_num.isnumeric():
-        if input_num == '*':
-            Multi_Taille = True
-        else :
-            input_num = input("(Taille sous-graphes) Entrer un nombre : ")
-    if not Multi_Taille and input_num.isnumeric():
-        ordre = int(input_num)
-    if Multi_Taille :
-        input_num = input("Taille minimum : ")    
-        while not input_num.isnumeric()  :
-            input_num = input("(Taille minimum) Entrer un nombre : ")
-        if input_num.isnumeric():
-            min_ordre = int(input_num)
-        input_num = input("Taille maximum : ")    
-        while not input_num.isnumeric()  :
-            input_num = input("(Taille maximum) Entrer un nombre : ")
-        if input_num.isnumeric():
-            max_ordre = int(input_num)
-        if min_ordre > max_ordre :
-            tmp = min_ordre
-            min_ordre = max_ordre
-            max_ordre = tmp
-        
-    crible = input("Crible (y/n default: no) : ")
-    while not (crible == 'y' or crible == 'n' or crible == ''):
-        crible = input("Crible (y/n default: no) : ")
-    if crible == 'y':
-        crible = True
-    else:
-        crible = False
-    
-    if min_ordre == max_ordre:
-        Multi_Taille = False
-    if not Multi_Taille and input_num.isnumeric():
-        ordre = int(input_num)
-        
-    ##### Fichiers entrés
-    fpath = "Inputs_Outputs/Place_Folder_here/"
-    #name = input("Nom complet du dossier entré : ")
-    #fpath_T = "Inputs_Outputs/Place_Trad_file_here/" 
-    #fpath_B = "Inputs_Outputs/Place_Bonds_file_here/"
-    #filename_T = "trad-atom_"+name+".txt"
-    #filename_B = "bonds_"+name+".txt"
-    
-    # On cherche à récup la partie du nom du dossier qui nous intéresse
-    img_name = ''
-    while img_name == '':
-        name = input("Nom complet du dossier entré : ")
-        name_particles = name.split("_")
-        for i in range(len(name_particles)):
-            if "img" in name_particles[i]:
-                img_name = name_particles[i]
-        if img_name == '':
-            print("dossier ayant une syntaxe incorrecte (pas de \"img\")")
-        if not os.path.isdir(join(fpath, name)):
-            print("le dossier "+str(join(fpath, name))+" n'existe pas")
-            img_name = ''
-    
-
-    # iterate over files in
-    # that directory
-    # A METTRE LE CODE CI DESSOUS DANS UNE GROSSE BOUCLE DE GESTION D ERREUR
-    filename_T = ''
-    filename_B = ''
-    for filename in os.listdir(join(fpath,name)):
-        if "trad" in filename:
-            filename_T = filename
-        if "bonds" in filename:
-            filename_B = filename       
-
-    
-    #if isfile(join(fpath,filename_T) and join(fpath,filename_B)):
-
-    #else :
-
-    # L'idée du Multifile est possiblement obselete, si on utilise le nouveau sys
-    # de fichier, mais dans le doute, je garde ça en comms
-    ''' 
-    while not Multi_File and not File_exist :
-        if name == '*':
-            Multi_File = True
-            print("Tous les fichiers.")
-            filenames = [f for f in listdir(fpath_T) if isfile(join(fpath_T, f))]
-        else :
-            if isfile(join(fpath_T, filename_T)) and isfile(join(fpath_B, filename_B)):
-                File_exist = True
-                print("Execution sur les fichiers %s et/ou %s."%(filename_T, filename_B))
-            else :
-                print("Les fichiers %s et/ou %s n'existent pas ou ne sont pas aux bons endroits."%(filename_T, filename_B))
-                name = input("Nom fichier entré : ")
-                filename_T = "trad-atom_"+name+".txt"
-                filename_B = "bonds_"+name+".txt"
-    '''
-    ##### Création dossier de sortie
+    cdef int min_ordre
+    # les options :
+    #      0 : Hydrogène retiré?
+    #      1 : Oxygène de l'eau présent?
+    #      2 : Taille traitée
+    #      3 : Update?
+    options = [False, False, 0, False]
+    # les _id de la BDD (format str ou non?)
+    #      0 : interface
+    #      1 : coloration
+    #      2 : configs []
+    #      3 : motifs []
+    bd_ids = ["","",[],[]]
+    # la hierarchie de fichiers
+    path_I = "Inputs_Outputs/Place_Folder_here/"
     path_O = "Inputs_Outputs/Place_Output_here/"
-    #dir_O = input("Nom sous-dossier sortant : ")
-    dir_O = name
+    interf_name = ""
+    conf_num = []
+
+    ##### Connection à la BDD 
+    client = mc.mongodb_connect()
+    # base de données
+    db = client.graphetarium
+    # tables
+    interfs = db.interfaces
+    configs = db.configurations
+    colors = db.colorations
+    motifs = db.motifs
+    occurs = db.occurrences
+
+    ##### Fichiers d'informations à traiter
+    # récupère le nom de l'interface et test son existance
+    interf_name = input("Quel est le nom de l'interface traité? ")
+    # retrouve le dossier lié
+    while not isdir(join(path_I, interf_name)) :
+        dir_I = input("Quel est le nom du dossier des fichiers d'entrés? ")
+    if isdir(join(path_I, interf_name)) :
+        dir_I = interf_name
+    else :
+        question = "Voulez vous changer "+str(interf_name)+" par "+str(dir_I)+"?"
+        res = ct.terminal_question_On(question, "", "Oui", True)
+        if res :
+            interf_name = dir_I
+    
+    # test sur la BDD si l'interface est connu ou non
+    tmp_colors = []
+    # tmp_configs = []
+    if interfs.count_documents({"name":interf_name}) > 0 :
+        result = interfs.find_one({"name":interf_name}) 
+        res = dict(result)
+        print(res)
+        bd_ids[0] =  str(res["_id"])
+        # info déjà lié à l'interface ?
+        tmp_colors = list(res["colors"])
+        # tmp_configs = list(res["configs"])
+    else :
+        # créer l'interface
+        bd_ids[0] = str(interfs.insert_one({"name":interf_name, "colors":list(), "configs": list()}).inserted_id)
+    if len(tmp_colors)>0:
+        colors_names = []
+        for _id in tmp_colors:
+            result = colors.find_one({"_id":_id})
+            res = dict(result)
+            colors_names.append(res["name"])
+        print("Coloration(s) déjà connue(s) pour l'interface :",colors_names)
+    
+    ##### Type de traitement
+    # Coloration ?
+    # créé ou existante
+    question = "Doit_on utiliser une coloration existante?"
+    if ct.terminal_question_On(question, "", "Oui", True):
+        question = "Quel est le nom de la coloration que l'on utilise? "
+        color_name = input(question)
+        # demande le nom de la coloration
+        while colors.count_documents({"name":color_name}) == 0 :
+            color_name = input(color_name+" n'exites pas. Autre nom :")
+        result = colors.find_one({"name":color_name})
+        bd_ids[1] = str(result["_id"])
+        list_color = list(result["elem"])
+        options[0] = result["hydro"]
+        print(list_color)
+    else :
+        #création du dictionnaire des couleurs
+        color_name = input("Comment est appelé la nouvelle couleurs? ")
+        while colors.count_documents({"name":color_name}) > 0 :
+            color_name = input(color_name+" exites déjà. Autre nom :")
+        # la liste des elements (index +1 pour les numéros réels)
+        count = ct.terminal_input_num("Combien d'éléments ?","")
+        list_color = []
+        for i in range(count):
+            element = input("Quel est le nom de l'élément "+str(i+1)+" ? ")
+            list_color.append(str(element))
+        # Hydrogène ou non ?
+        if "H" in list_color:
+            print("Les Hydrogènes sont présents.")
+            options[0] = False
+        else:
+            question = "Doit-on retirer les Hydrogène et déplacer les liaisons H ?"
+            options[0] = ct.terminal_question_On(question, "", "Oui", True)
+        color = {"name": color_name,
+            "elem": list_color,
+            "hydro": options[0]}
+        # insertion dans la bdd
+        result = colors.insert_one(color)
+        bd_ids[1] = result.inserted_id
+        print(result)
+    
+    ## choisi les configurations
+    # recherche les fichiers liées
+    files_T, files_B, conf_num = recherche_files_conf(path_I, dir_I)
+    conf_num = list(conf_num)
+    if len(conf_num)>1 :
+        Multi_Conf = True
+    else :
+        Multi_Conf = False
+
+    # voir dans la BDD pour les conf
+    ## pour le moment retrait des cas où homonyme
+    for i in sorted(conf_num):
+        if configs.count_documents({"interf":ObjectId(bd_ids[0]), "num": i}) > 0 :
+            conf_num.remove(i)
+        else :
+            result = configs.insert_one({"interf":ObjectId(bd_ids[0]), "num": i})
+            bd_ids[2].append(result.inserted_id)
+    if len(conf_num)==0:
+        print("Toutes les configurations sont déjà traitées")
+        return 0
+
+    # Taille des motifs étudiés
+    question = "Quelles sont les bornes de taille des motifs à enregistrer?"
+    min_ordre, max_ordre = ct.terminal_input_bornes_range(question, 2, 10)
+    if max_ordre == 0:
+        print("Erreur impossible sur les limites de taille")
+        return 0
+    if min_ordre == max_ordre :
+        Multi_Taille = False
+    
+    # Type de génération de sous-graphes  
+    question = "Ne générons-nous que des graphes avec au moins un OW?"
+    options[1] = ct.terminal_question_On(question, "Motifs avec OW", "non", False)
+
+    ##### Création dossier de sortie
+    dir_O = interf_name
     ### dossier n'existe pas déjà ?
     if not isdir(join(path_O, dir_O)) :
         ### créé le dossier
         mkdir(join(path_O, dir_O))
     
-    ##### Options:
-    option = input("Retirer les H et déplacer les liaisons H sur donneur [0|1]: ")
-    while (option!='0' and option!='1'):
-        option = input("(atome H) Attend 0 ou 1 : ")
-    detail = [int(option), 0]
-    
-    # Choix du type de Similarite
-    '''
-    print("Quel type de similarite étudier? ")
-    print("\t 1 : similarité par cout d'édition ")
-    print("\t 2 : similarité par calcul de Raymond sur MCIS ")
-    print("\t 3 : similarité par calcul asymétrique sur MCIS ")
-    print("\t 0 : les 3 types de similarité ")
-    option = input("(Similarité) Attend entre 0 et 3 : ")
-    while (option!='0' and option!='1' and option!='2' and option!='3'):
-        option = input("(Similarité) Attend entre 0 et 3 : ")
-    detail.append(int(option))
-    '''
-    detail.append(0) #
+    return 1
 
-    detail.append(crible)
-    
+
+"""
+Pour la suite : ATTENTION!!!
+- changement des structures des options
+- utilisation d'un unique duo max_ordre et min_ordre à enregistrer
+- utilisation des listes de _id de la BDD dans la sauvegarde
+- ATTENTION a bien utiliser list_color pour le certificat ou a traduire list_color en dict_color
+- définir les formats des collections et de leur attributs
+- ne pas oublier d'ajouter les couleurs et les configs associés à une interface (sauf si on utilise jamais ces listes)
+
+- Il serait plus logique de déplacer les fonctions en bas dans Inputs.pyx et de supprimer les anciennes fonctions
+- Bien entendu il faudra optimiser cette nouvelle interface (je pourrais aussi le faire Chloé)
+
+- Bon courage pour reprendre la suite du programme qui est pour le moment en commentaire
+"""
+
+"""
     ###### Lancement de l'execution du programme
     if not Multi_File :
         filenames = [name]
@@ -168,8 +212,9 @@ def interface():
         exec_for_one_file(filename, detail, Multi_Taille, Multi_File, ordre, min_ordre, max_ordre, input_num, dir_O, path_O, fpath+name, filename_B, filename_T, name)
         
     return 1
+"""
 
-# permet de dégraisser une boucle de l'interface, execute tout pour un fichier
+"""# permet de dégraisser une boucle de l'interface, execute tout pour un fichier
 def exec_for_one_file(filename, detail, Multi_Taille, Multi_File, ordre, min_ordre, max_ordre, input_num, dir_O, path_O, cfpath, filename_B, filename_T, name):
     ## Extraction des données
     if Multi_File:
@@ -211,7 +256,9 @@ def exec_for_one_file(filename, detail, Multi_Taille, Multi_File, ordre, min_ord
                 compl = ""
             remove(join(join(path_O, dir_O), name+compl+"_data.txt"))
             remove(join(join(path_O, dir_O), name+compl+"_res.txt"))
-    
+    return 1
+"""
+"""    
     cdef int i 
     if not In.done_here(join(path_O, dir_O), name, detail):
         ### imprime les données de ce graphe
@@ -234,7 +281,6 @@ def exec_for_one_file(filename, detail, Multi_Taille, Multi_File, ordre, min_ord
                 ordre = min_ordre+i
                 detail[1] = ordre
                 (dict_isomorph, dict_stat, lst_id, lst_certif, nb_unique) = programm_1(dir_O, name, detail, matrice_adja, atom_caract, lst_combi[i])
-                #programm_2(dir_O, name, detail, matrice_adja, atom_caract, lst_id, dict_isomorph)
             
                 print(name+" taille "+str(ordre)+" fini "+str(datetime.now().time())+"\n")
             
@@ -253,13 +299,12 @@ def exec_for_one_file(filename, detail, Multi_Taille, Multi_File, ordre, min_ord
             
             detail[1] = ordre
             (dict_isomorph, dict_stat, lst_id, lst_certif, nb_unique) = programm_1(dir_O, name, detail, matrice_adja, atom_caract, lst_combi)
-            
-            #programm_2(dir_O, name, detail, matrice_adja, atom_caract, lst_id, dict_isomorph)
-            
+                        
             print(name+" fini "+str(datetime.now().time())+"\n")
 
     return 1    
-
+"""
+"""
 def programm_1 (dir_O, name, detail, matrice_adja, atom_caract, lst_combi):
     t_cerif = 0 ## test
     t_prep_c = 0 ## test
@@ -291,21 +336,57 @@ def programm_1 (dir_O, name, detail, matrice_adja, atom_caract, lst_combi):
 
     print(name+" sortie fini "+str(datetime.now().time()))
     return (dict_isomorph, dict_stat, lst_id, lst_certif, nb_unique)
+"""
 
-'''
-def programm_2 (dir_O, name, detail, matrice_adja, atom_caract, lst_id, dict_isomorph):
-    # MCIS/ Génération des données pour calculer le taux de chaleur
-    if detail[2] == 0:
-        for i in range(3):
-            detail[2] = i+1
-            Tab_sim = Simil.mcis_algo(detail, matrice_adja, atom_caract, lst_id, dict_isomorph)
-            # imprime les matrices de chaleur
-            Out.Output_sim(dir_O, name, detail, Tab_sim)
-            print(name+" mcis "+str(detail[2])+" fini "+str(datetime.now().time()))
-        detail[2] = 0
+# Recherche des fichiers des configurations
+#
+# Entrées : path d'entré et dossier de l'interface
+#
+# Sorties : liste des fichier de trad-atom, de bonds et des numéros de configurations
+
+def recherche_files_conf (path_I, dir_I):
+    files_T = {}
+    files_B = {}
+    conf_num = []
+    # demande si toutes les conf ou désigné(s)
+    question = "Quels sont les configurations étudiées?"
+    res = ct.terminal_ensemble_num(question)
+    if -1 in res:
+        #tous les duos trouvés
+        for f in extrait_files(path_I, dir_I, "bonds"):
+            part = f.split("conf")
+            part = part[1].split('.')
+            if part[0].isnumeric():
+                i = int(part[0])
+                t_name = "trad-atom_conf"+str(i)+".txt"
+                b_name = "bonds_conf"+str(i)+".txt"
+                # si le deuxième existe alors on ajoute la conf à la liste
+                if isfile(join(path_I,dir_I,t_name)):
+                    conf_num.append(i)
+                    files_T[i] = t_name
+                    files_B[i] = b_name
     else :
-        Tab_sim = Simil.mcis_algo(detail, matrice_adja, atom_caract, lst_id, dict_isomorph)
-        # imprime les matrices de chaleur
-        Out.Output_sim(dir_O, name, detail, Tab_sim)
-        print(name+" mcis fini "+str(datetime.now().time()))
-'''
+        conf_num = list(res)
+        # les duos désignés
+        # recherche chaque numéro et les ajoute aux sorties un à un
+        for i in conf_num:
+            t_name = "trad-atom_conf"+str(i)+".txt"
+            b_name = "bonds_conf"+str(i)+".txt"
+            # si les deux fichiers existent alors on les ajoute aux listes
+            if isfile(join(path_I,dir_I,t_name)) and isfile(join(path_I,dir_I,b_name)):
+                files_T[i] = t_name
+                files_B[i] = b_name
+            else :
+                conf_num.remove(i)
+    conf_num.sort()
+    return files_T, files_B, conf_num
+
+# Fonction qui extrait la liste des noms de fichier
+# contenant la partie en paramètre
+
+def extrait_files(path, dir, part_name):
+    files = []
+    for f in listdir(join(path,dir)):
+        if isfile(join(path,dir,f)) and part_name in f:
+            files.append(f)
+    return files
