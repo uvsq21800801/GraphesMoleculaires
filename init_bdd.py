@@ -16,6 +16,6 @@ color = {"name": "interfaceH2O",
 # insertion dans la bdd
 if colors.count_documents({"name":"interfaceH2O"}) == 0 :
     color_id = colors.insert_one(color).inserted_id
-print(color_id)
+    print(color_id)
 
 

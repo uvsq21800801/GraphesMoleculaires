@@ -68,7 +68,35 @@ def interface():
 
     ##### Fichiers d'informations à traiter
     # récupère le nom de l'interface et test son existance
-    interf_name = input("Quel est le nom de l'interface traité? ")
+    namefolder_check = False
+    dir_I = ''
+    cdt_folder_name = False
+    while namefolder_check == False:
+        interf_name = input("Quel est le nom de l'interface traité? ")
+        list_dir = listdir(path_I)
+        for l in list_dir:
+
+            if interf_name in l and isdir(join(path_I, l)): # folder ayant 'interf_name' dans son nom trouvé!
+                if namefolder_check == True and cdt_folder_name == False: # cas où 2 folders ont la même particule choisie par l'utilisateur
+                                                # dans ce cas, on force l'utilisateur à entrer le nom complet du dossier
+                    print('Erreur, il y à plusieurs fichiers de ce nom')
+                    while cdt_folder_name == False: #(not isdir(join(path_I, dir_I))) or dir_I == "":
+                        dir_I = input("Quel est le nom complet du dossier des fichiers d'entrés? ")
+                        if isdir(join(path_I, dir_I)):
+                            cdt_folder_name = True
+                            interf_name = dir_I
+                        else: 
+                            print("Erreur, le dossier n'existe pas")
+                        
+                namefolder_check = True
+                dir_I = l
+        if namefolder_check == False: 
+            print('erreur, aucun dossier contenant \"'+str(interf_name)+"\" dans son n'a été"
+                                                        +" trouvé dans le dossier des inputs")  
+    
+    ################################# FIXED
+
+    """ might delete later if the idea drowns
     # retrouve le dossier lié
     while not isdir(join(path_I, interf_name)) :
         dir_I = input("Quel est le nom du dossier des fichiers d'entrés? ")
@@ -79,7 +107,8 @@ def interface():
         res = ct.terminal_question_On(question, "", "Oui", True)
         if res :
             interf_name = dir_I
-    
+    """
+
     # test sur la BDD si l'interface est connu ou non
     tmp_colors = []
     # tmp_configs = []
@@ -125,8 +154,9 @@ def interface():
         # la liste des elements (index +1 pour les numéros réels)
         count = ct.terminal_input_num("Combien d'éléments ?","")
         list_color = []
-        for i in range(count):
-            element = input("Quel est le nom de l'élément "+str(i+1)+" ? ")
+        element = "temp"
+        while element != "":
+            element = input("Quel est le nom de l'élément (ne rien rentrer pour finir)? ")
             list_color.append(str(element))
         # Hydrogène ou non ?
         if "H" in list_color:
@@ -154,6 +184,7 @@ def interface():
 
     # voir dans la BDD pour les conf
     ## pour le moment retrait des cas où homonyme
+    """ # en comm parce que ne prends pas en compte le choix ou non des hydro/ du crible
     for i in sorted(conf_num):
         if configs.count_documents({"interf":ObjectId(bd_ids[0]), "num": i}) > 0 :
             conf_num.remove(i)
@@ -163,6 +194,7 @@ def interface():
     if len(conf_num)==0:
         print("Toutes les configurations sont déjà traitées")
         return 0
+    """
 
     # Taille des motifs étudiés
     question = "Quelles sont les bornes de taille des motifs à enregistrer?"
@@ -174,7 +206,7 @@ def interface():
         Multi_Taille = False
     
     # Type de génération de sous-graphes  
-    question = "Ne générons-nous que des graphes avec au moins un OW?"
+    question = "Ne générons-nous que des graphlets avec au moins un OW?"
     options[1] = ct.terminal_question_On(question, "Motifs avec OW", "non", False)
 
     ##### Création dossier de sortie

@@ -64,9 +64,9 @@ def terminal_question_choice(question, message, choices):
 def terminal_ensemble_num(question):
     ##### indices des graphes qui nous intéressent
     set_res = set()
-    error = False
     print(question)
     while len(set_res) == 0:
+        error = False
         user_input = input("Entrer un ensemble : ")
         splited = user_input.replace(' ', '').split(',')
         for part in splited :
