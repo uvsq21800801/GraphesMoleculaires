@@ -177,6 +177,8 @@ def interface():
     # recherche les fichiers liées
     files_T, files_B, conf_num = recherche_files_conf(path_I, dir_I)
     conf_num = list(conf_num)
+    #files_T = list(files_T) # Pourquoi en avoir initialement fait des sets?
+    #files_B = list(files_B)
     if len(conf_num)>1 :
         Multi_Conf = True
     else :
@@ -194,8 +196,7 @@ def interface():
     if len(conf_num)==0:
         print("Toutes les configurations sont déjà traitées")
         return 0
-    """
-
+    """ 
     # Taille des motifs étudiés
     question = "Quelles sont les bornes de taille des motifs à enregistrer?"
     min_ordre, max_ordre = ct.terminal_input_bornes_range(question, 2, 10)
@@ -208,17 +209,36 @@ def interface():
     # Type de génération de sous-graphes  
     question = "Ne générons-nous que des graphlets avec au moins un OW?"
     options[1] = ct.terminal_question_On(question, "Motifs avec OW", "non", False)
-
+    print('1')
     ##### Création dossier de sortie
     dir_O = interf_name
     ### dossier n'existe pas déjà ?
     if not isdir(join(path_O, dir_O)) :
         ### créé le dossier
         mkdir(join(path_O, dir_O))
-    
+    print('2')
+    print(str(files_T)+' '+str(files_B))
+    print("files_T "+str(files_T))
+    print("files_B "+str(files_B))
+    ##### Lancement de l'execution du programme
+    for i in conf_num:
+        print("files_B[i]"+str(files_B[i]))
+        print("files_T[i]"+str(files_T[i]))
+        exec_for_one_conf(min_ordre, max_ordre, files_T[i], files_B[i], path_I, dir_I, options)
+    print('3')
     return 1
 
+def exec_for_one_conf(min_ordre, max_ordre, filename_T, filename_B, path_I, dir_I, options):
+    filename1, filename2, lst_index, atom_caract, matrice_adja = In.data_input(options[1], dir_I, filename_T, filename_B)
+    print(atom_caract)
+    print(matrice_adja)
+    for i in range(min_ordre, max_ordre):
+        exec_for_one_size()
+    return 1
 
+def exec_for_one_size():
+
+    return 1
 """
 Pour la suite : ATTENTION!!!
 - changement des structures des options
@@ -411,6 +431,8 @@ def recherche_files_conf (path_I, dir_I):
             else :
                 conf_num.remove(i)
     conf_num.sort()
+    print(conf_num)
+    print("files_T"+str(files_T))
     return files_T, files_B, conf_num
 
 # Fonction qui extrait la liste des noms de fichier

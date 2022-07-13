@@ -23,14 +23,15 @@ def data_inputs(option):
     return filenames1, filenames2, lst_index, atom_caract, matrice_adja
 
 # recuperation des donnees d'un type de fichier
-def data_input(option, name):
+def data_input(option, dir, filename_T, filename_B):
     
-    cdef int nb_sommet = Get_nb_vertex(option, name)
+    complete_path = 'Inputs_Outputs/Place_Folder_here/'+str(dir)#+'/'+str(filename_T)
+    cdef int nb_sommet = Get_nb_vertex(option, complete_path+'/'+filename_T)
     atom_caract = np.empty((nb_sommet,), dtype='<U32')
     cdef np.ndarray[np.int32_t, ndim=1] lst_index = np.empty(nb_sommet, dtype=np.int32)
-    filename1 = Input_trad(option, name, lst_index, atom_caract)
+    filename1 = Input_trad(complete_path, option, filename_T, lst_index, atom_caract)
     matrice_adja = np.zeros((nb_sommet,nb_sommet),dtype=bool)
-    filename2 = Input_bonds(option, name, lst_index, matrice_adja)
+    filename2 = Input_bonds(complete_path, option, filename_B, lst_index, matrice_adja)
 
     ''' 
     lst_index = []
@@ -56,13 +57,13 @@ def Get_nb_vertex(option, compl_path):
         splitted = line.split()
         # test needed to exclude the first like
         if len(splitted) == 3:
-            if (option == 1 and splitted[1] != 'H') or (option == 0):
+            if (option == True and splitted[1] != 'H') or (option == False):
                 count_verticles += 1    
 
     return count_verticles
 
 # Retourne le contenu d'un fichier texte pour un nom donné
-def Input_trad(option, cfpath, li, atom_caract, filename_T):
+def Input_trad(cfpath, option, filename_T, li, atom_caract):
     # si le nom est bien représenté, on récupère les données
     cdef int i = 0
 
@@ -72,7 +73,7 @@ def Input_trad(option, cfpath, li, atom_caract, filename_T):
         for line in f1:
             splitted = line.split()
             if len(splitted) == 3:
-                if (option == 1 and splitted[1] != 'H') or (option == 0):
+                if (option == True and splitted[1] != 'H') or (option == False):
                     #li.append(splitted[0])
                     
                     li[i] = splitted[0]
@@ -87,6 +88,7 @@ def Input_trad(option, cfpath, li, atom_caract, filename_T):
     else :
         return ""
 
+# PAS A JOUR, INUTILISE
 # Retourne le contenu des fichiers textes en liste
 def Inputs_trad_all(option, li, atom_caract):
     # recuperation du fichier trad
@@ -120,7 +122,7 @@ def Inputs_trad_all(option, li, atom_caract):
 # 3. Fonctions de récupération de données de liaisons
 ###
 
-def Input_bonds(option, cfpath, li, ma, filename_B):    
+def Input_bonds(cfpath, option, filename_B, li, ma ):    
     # si le nom est bien représenté, on récupère les données
 
     if isfile(join(cfpath,filename_B)):
@@ -144,10 +146,10 @@ def Input_bonds(option, cfpath, li, ma, filename_B):
             # liaison hydrogene
             if splitted[0] == '4' and len(splitted) == 4:
                 if int(splitted[1]) in li and int(splitted[2]) in li:
-                    if option == 1 : # hydrogène présent
+                    if option == True : # hydrogène présent
                         #ajoute un 2 de l'atomes donneur vers l'accepteur
                         ma[np.where(li == int(splitted[1]))[0][0]][np.where(li == int(splitted[2]))[0][0]] = True # 2 changé en 1 pour optimiser la matrice en bool
-                    elif option == 0 and int(splitted[3]) in li:
+                    elif option == False and int(splitted[3]) in li:
                         #ajoute un 2 de l'hydrogène vers l'accepteur
                         ma[np.where(li == int(splitted[3]))[0][0]][np.where(li == int(splitted[2]))[0][0]] = True # 2 changé en 1 pour optimiser la matrice en bool
         #print(ma)
@@ -156,6 +158,7 @@ def Input_bonds(option, cfpath, li, ma, filename_B):
         #print(ma)
         return ""
 
+# PAS A JOUR, INUTILISE
 # Retourne le contenu des fichiers "bonds" texte en matrice d'adjacence
 def Inputs_bonds_all(option, li, ma):    
     # recuperation du fichier bonds
