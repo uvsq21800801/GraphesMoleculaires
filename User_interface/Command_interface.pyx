@@ -208,33 +208,108 @@ def interface():
     
     # Type de génération de sous-graphes  
     question = "Ne générons-nous que des graphlets avec au moins un OW?"
-    options[1] = ct.terminal_question_On(question, "Motifs avec OW", "non", False)
-    print('1')
+    options[1] = ct.terminal_question_On(question, "Motifs avec OW", "non", True)
     ##### Création dossier de sortie
-    dir_O = interf_name
+    #dir_O = interf_name
     ### dossier n'existe pas déjà ?
-    if not isdir(join(path_O, dir_O)) :
+    if not isdir(join(path_O, dir_I)) :
         ### créé le dossier
-        mkdir(join(path_O, dir_O))
-    print('2')
-    print(str(files_T)+' '+str(files_B))
-    print("files_T "+str(files_T))
-    print("files_B "+str(files_B))
+        mkdir(join(path_O, dir_I))
+    
     ##### Lancement de l'execution du programme
+    print(conf_num)
     for i in conf_num:
-        print("files_B[i]"+str(files_B[i]))
-        print("files_T[i]"+str(files_T[i]))
-        exec_for_one_conf(min_ordre, max_ordre, files_T[i], files_B[i], path_I, dir_I, options)
-    print('3')
+        exec_for_one_conf(min_ordre, max_ordre, files_T[i], files_B[i], path_I, 
+                        dir_I, options, path_O, Multi_Taille, i)
     return 1
 
-def exec_for_one_conf(min_ordre, max_ordre, filename_T, filename_B, path_I, dir_I, options):
+def exec_for_one_conf(min_ordre, max_ordre, filename_T, filename_B, path_I, 
+                        dir_I, options, path_O, Multi_Taille, nb_conf):  
     filename1, filename2, lst_index, atom_caract, matrice_adja = In.data_input(options[1], dir_I, filename_T, filename_B)
-    print(atom_caract)
-    print(matrice_adja)
+    
+    #if not In.done_here(join(path_O, dir_I), dir_I, options):
+    ### imprime les données de ce graphe
+    Out.Output_data(dir_I, options, lst_index, atom_caract, matrice_adja, nb_conf)
+
+    #### Exécution sur le ou les ordre(s)
+    if Multi_Taille :
+        print(dir_I+" commence "+str(datetime.now().time()))
+        '''
+        # sous_graphe connexe par methode bruteforce
+        lst_combi = Combi.gen_combi_brute_range(matrice_adja, min_ordre, max_ordre)
+        '''
+        # sous_graphes connexes par notre méthode de parcour d'un arbre de combi de la matrice d'adja
+        lst_combi = SSG.subgen(matrice_adja, min_ordre, max_ordre)
+        #lst_combi = OSG.subgen_deg_decroiss(matrice_adja, atom_caract, min_ordre, max_ordre, crible)
+        
+        print(dir_I+" combinaisons finis "+str(datetime.now().time()))
+        
+        for i in range(max_ordre - min_ordre + 1):
+            ordre = min_ordre+i
+            #options[1] = ordre ######### a voir ce que cette délétion change
+            (dict_isomorph, dict_stat, lst_id, lst_certif, nb_unique) = programm_1(dir_I, dir_I, options, matrice_adja, atom_caract, lst_combi[i], nb_conf, ordre)
+            #programm_2(dir_O, name, detail, matrice_adja, atom_caract, lst_id, dict_isomorph)
+        
+            print(dir_I+" taille "+str(ordre)+" fini "+str(datetime.now().time())+"\n")
+        
+        print(dir_I+" fini "+str(datetime.now().time())+"\n")
+    else : 
+        print(dir_I+" commence "+str(datetime.now().time()))
+        '''
+        # sous_graphe connexe par methode bruteforce
+        lst_combi = Combi.gen_combi_brute(matrice_adja, ordre)
+        '''
+        # sous_graphes connexes par notre méthode de parcour d'un arbre de combi de la matrice d'adja
+        lst_combi = SSG.subgen(matrice_adja, max_ordre, max_ordre)
+        #lst_combi = OSG.subgen_deg_decroiss(matrice_adja, atom_caract, ordre, ordre, crible)
+
+        print(dir_I+" combinaisons finis "+str(datetime.now().time()))
+        
+        #options[1] = max_ordre ######### a voir ce que cette délétion change
+        (dict_isomorph, dict_stat, lst_id, lst_certif, nb_unique) = programm_1(dir_I, dir_I, options, matrice_adja, atom_caract, lst_combi, nb_conf)
+        
+        #programm_2(dir_O, name, detail, matrice_adja, atom_caract, lst_id, dict_isomorph)
+        
+        print(dir_I+" fini "+str(datetime.now().time())+"\n")
+
+    return 1    
+    
     for i in range(min_ordre, max_ordre):
         exec_for_one_size()
     return 1
+
+def programm_1 (dir_O, name, detail, matrice_adja, atom_caract, lst_combi, nb_conf, ordre):
+    t_cerif = 0 ## test
+    t_prep_c = 0 ## test
+    t_fill = 0 ## test
+    time_temp = time.time()## test
+    (dict_isomorph, dict_stat, lst_id, lst_certif, t_cerif, t_prep_c, t_fill) = Iso.combi_iso(matrice_adja, atom_caract, lst_combi, detail[1], t_cerif, t_prep_c, t_fill)
+    ## ^ 3 last values are test
+    print('exec of the whole combi iso: '+str(time.time()-time_temp)+' seconds') ## test
+    print('exec of the dict filling: '+str(t_fill)+' seconds') ## test
+    print('exec of the prep for pynauty: '+str(t_prep_c)+' seconds') ## test
+    print('exec of the pynauty: '+str(t_cerif)+' seconds') ## test
+
+    print(name+" isomorph fini "+str(datetime.now().time()))
+                        
+    # calcul le taux de recouvrement 
+    Stat.Taux_recouvert(dict_stat)
+    # tri de lst_id par nombre d'occurence et le nombre de motif unique
+    lst_id = Stat.Tri_indice(lst_id, dict_stat)
+    nb_unique = Stat.Nombre_unique(lst_id, dict_stat)
+    
+    # imprime combinaisons
+    Out.Output_combi(dir_O, name, detail, lst_id, dict_isomorph, nb_conf, ordre)
+    # imprime les diagrammes
+    Out.Output_diagramme(dir_O, name, detail, lst_id, dict_stat, nb_conf, ordre)
+    # imprime statistique de l'ordre étudié
+    Out.Output_stat(dir_O, name, detail, lst_combi, lst_certif, lst_id, nb_unique, nb_conf, ordre)
+    # imprime les résultats
+    Out.Output_result(dir_O, name, detail, lst_certif, lst_id, dict_stat, nb_conf, ordre)
+
+    print(name+" sortie fini "+str(datetime.now().time()))
+    return (dict_isomorph, dict_stat, lst_id, lst_certif, nb_unique)
+
 
 def exec_for_one_size():
 

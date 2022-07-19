@@ -66,16 +66,15 @@ def Get_nb_vertex(option, compl_path):
 def Input_trad(cfpath, option, filename_T, li, atom_caract):
     # si le nom est bien représenté, on récupère les données
     cdef int i = 0
-
-    if isfile(join(cfpath,filename_T)):
+    if isfile(join(cfpath, filename_T)):
         # lecture du fichier bonds et transcription dans la matrice de traduction
         f1 = open(join(cfpath,filename_T), 'r').readlines()
         for line in f1:
             splitted = line.split()
             if len(splitted) == 3:
+                
                 if (option == True and splitted[1] != 'H') or (option == False):
                     #li.append(splitted[0])
-                    
                     li[i] = splitted[0]
 
                     # Liste de traduction suivant le modele '[type atome] [numero]'

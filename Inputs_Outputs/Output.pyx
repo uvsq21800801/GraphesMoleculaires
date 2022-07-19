@@ -10,19 +10,21 @@ import numpy as np
 # données de base redirigées dans nos structures
 
 
-def Output_data(dir_O, name, detail, lst_index, atom_caract, matrice_adja):
+def Output_data(dir_O, detail, lst_index, atom_caract, matrice_adja, nb_conf):
     # selon les paramètres
-    if detail[0] == 1:
-        compl = "_H"
+    if detail[0] == True:
+        compl = "_NoH"
     else:
         compl = ""
 
     if detail[3] == True:
-        compl += "_Cr" 
+        compl += "_Cr"
+
+    compl += "_conf"+str(nb_conf)
 
     # création du fichier de sortie
     fpath = "Inputs_Outputs/Place_Output_here/"+dir_O+'/'
-    filename = name+compl+"_data.txt"
+    filename = dir_O+compl+"_data.txt"
     if isfile(join(fpath, filename)):
         remove(join(fpath, filename))
     f = open(fpath+filename, 'w')
@@ -45,15 +47,17 @@ def Output_data(dir_O, name, detail, lst_index, atom_caract, matrice_adja):
 # données pour le diagramme des nombre d'occurence et taux de recouvrement
 
 
-def Output_diagramme(dir_O, name, detail, lst_id, dict_stat):
+def Output_diagramme(dir_O, name, detail, lst_id, dict_stat, nb_conf, ordre):
     # selon les paramètres
     if detail[0] == 1:
-        compl = '_'+str(detail[1])+"_H"
+        compl = '_'+str(ordre)+"_H"
     else:
-        compl = '_'+str(detail[1])
+        compl = '_'+str(ordre)
 
     if detail[3] == True:
         compl += "_Cr" 
+
+    compl += "_conf"+str(nb_conf)
 
     # création du fichier de sortie
     fpath = "Inputs_Outputs/Place_Output_here/"+dir_O+'/'
@@ -113,7 +117,7 @@ def Output_diagramme(dir_O, name, detail, lst_id, dict_stat):
 # ajoute les données supplémentaires
 
 
-def Output_stat(dir_O, name, detail, lst_combi, lst_certif, lst_id, nb_unique):
+def Output_stat(dir_O, name, detail, lst_combi, lst_certif, lst_id, nb_unique, nb_conf, ordre):
     # selon les paramètres
     if detail[0] == 1:
         compl = "_H"
@@ -123,13 +127,15 @@ def Output_stat(dir_O, name, detail, lst_combi, lst_certif, lst_id, nb_unique):
     if detail[3] == True:
         compl += "_Cr" 
     
+    compl += "_conf"+str(nb_conf)
+
     # ouverture du fichier de sortie
     fpath = "Inputs_Outputs/Place_Output_here/"+dir_O+'/'
     filename = name+compl+"_data.txt"
     if isfile(join(fpath, filename)):
         f = open(fpath+filename, 'a')
 
-        f.write("\nOrdre : "+str(detail[1])+'\n')
+        f.write("\nOrdre : "+str(ordre)+'\n')
         f.write("Nombre de sous-graphes connexes : "+str(len(lst_combi))+'\n')
         f.write("Nombre de certificats différents : "+str(len(lst_certif))+'\n')
         f.write("Nombre de motifs uniques :"+str(nb_unique)+'\n')
@@ -139,8 +145,9 @@ def Output_stat(dir_O, name, detail, lst_combi, lst_certif, lst_id, nb_unique):
 # données de résultats sous un format pouvant rentrer dans un tableaux excel
 
 # écrit le fichier [XXX]_res.txt
-def Output_result(dir_O, name, detail, lst_certif, lst_id, dict_stat):
+def Output_result(dir_O, name, detail, lst_certif, lst_id, dict_stat, nb_conf, ordre):
     # selon les paramètres
+    
     if detail[0] == 1:
         compl = "_H"
     else:
@@ -149,6 +156,8 @@ def Output_result(dir_O, name, detail, lst_certif, lst_id, dict_stat):
     if detail[3] == True:
         compl += "_Cr" 
     
+    compl += "_conf"+str(nb_conf)
+
     # création du fichier de sortie
     fpath = "Inputs_Outputs/Place_Output_here/"+dir_O+'/'
     filename = name+compl+"_res.txt"
@@ -163,10 +172,10 @@ def Output_result(dir_O, name, detail, lst_certif, lst_id, dict_stat):
         indice = lst_id[i]
         tmp1 = dict_stat.get(indice)
         if tmp1[0] > 1:
-            f.write(str(detail[1])+' '+str(indice)+' '+str(i)+' '+str(tmp1[0])+' '+str(
+            f.write(str(ordre)+' '+str(indice)+' '+str(i)+' '+str(tmp1[0])+' '+str(
                 tmp1[2])+' \''+str_liste(tmp1[1],'')+' \''+str(tmp1[3])+' \''+lst_certif[indice].hex()+'\n')
         else:
-            f.write(str(detail[1])+' '+str(indice)+' '+str(i)+' '+str(tmp1[0])+' '+str(
+            f.write(str(ordre)+' '+str(indice)+' '+str(i)+' '+str(tmp1[0])+' '+str(
                 tmp1[2])+' \''+str_liste(tmp1[1],'')+' \''+str(tmp1[3])+' \''+lst_certif[indice].hex()+'\n')
         i += 1
     f.close()
@@ -174,16 +183,18 @@ def Output_result(dir_O, name, detail, lst_certif, lst_id, dict_stat):
 # données des listes de combinaisons
 
 
-def Output_combi(dir_O, name, detail, lst_id, dict_isomorph):
+def Output_combi(dir_O, name, detail, lst_id, dict_isomorph, nb_conf, ordre):
     # selon les paramètres
     if detail[0] == 1:
-        compl = '_'+str(detail[1])+"_H"
+        compl = '_'+str(ordre)+"_H"
     else:
-        compl = '_'+str(detail[1])
+        compl = '_'+str(ordre)
     
     if detail[3] == True:
         compl += "_Cr" 
     
+    compl += "_conf"+str(nb_conf)
+
     # création du fichier de sortie
     fpath = "Inputs_Outputs/Place_Output_here/"+dir_O+'/'
     filename = name+compl+"_combi.txt"
@@ -204,7 +215,7 @@ def Output_combi(dir_O, name, detail, lst_id, dict_isomorph):
 # données de similarité de "motifs" et matrice de chaleur
 
 
-def Output_sim(dir_O, name, detail, lst_id, Tab_sim):
+def Output_sim(dir_O, name, detail, lst_id, Tab_sim, nb_conf, ordre):
     # selon les paramètres
     if detail[0] == 1:
         compl = "_H_"+str(detail[2])
@@ -214,13 +225,16 @@ def Output_sim(dir_O, name, detail, lst_id, Tab_sim):
     if detail[3] == True:
         compl += "_Cr"
     '''
+
+    compl += "_conf"+str(nb_conf)
+
     nb = 1
     # création du fichier de sortie
     fpath = "Inputs_Outputs/Place_Output_here/"+dir_O+'/'
-    filename = name+compl+"_sim_ord_"+str(detail[1])+'_'+str(nb)+".txt"
+    filename = name+compl+"_sim_ord_"+str(ordre)+'_'+str(nb)+".txt"
     while isfile(join(fpath, filename)):
         nb += 1
-        filename = name+compl+"_sim_ord_"+str(detail[1])+'_'+str(nb)+".txt"
+        filename = name+compl+"_sim_ord_"+str(ordre)+'_'+str(nb)+".txt"
     f = open(fpath+filename, 'w')
     
     #print(lst_id)
@@ -278,9 +292,9 @@ def Output_sim(dir_O, name, detail, lst_id, Tab_sim):
     titlecompl= str(nb)
     if detail[0] == 1:
         titlecompl = "H "+titlecompl
-    ax.set_title("Heatmap de motifs de "+name+" de taille "+str(detail[1])+" "+titlecompl, fontsize=20)
+    ax.set_title("Heatmap de motifs de "+name+" de taille "+str(ordre)+" "+titlecompl, fontsize=20)
     fig.tight_layout()
-    plt.savefig(fpath+name+compl+"_heatmap_ord_"+str(detail[1])+'_'+str(nb)+".png")   
+    plt.savefig(fpath+name+compl+"_heatmap_ord_"+str(ordre)+'_'+str(nb)+".png")   
     plt.clf()  
 
 # Fonctions utiles
