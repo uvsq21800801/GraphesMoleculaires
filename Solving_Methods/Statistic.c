@@ -1468,7 +1468,6 @@ static PyObject *__pyx_pw_15Solving_Methods_9Statistic_1Taux_recouvert(PyObject 
 static PyObject *__pyx_pf_15Solving_Methods_9Statistic_Taux_recouvert(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_dict_stat) {
   float __pyx_v_tot;
   float __pyx_v_cmpt;
-  float __pyx_v_occupation;
   int __pyx_v_i;
   PyObject *__pyx_v_indice = NULL;
   PyObject *__pyx_v_stat = NULL;
@@ -1731,92 +1730,28 @@ static PyObject *__pyx_pf_15Solving_Methods_9Statistic_Taux_recouvert(CYTHON_UNU
     }
     __pyx_L8:;
 
-    /* "Solving_Methods/Statistic.pyx":34
- *         # Le programme va regarder quels sommets sont au moins occups une fois par une des
- *         # occurences du motif
- *         occupation = 0             # <<<<<<<<<<<<<<
- *         for i in range(len(stat[1])):
- *             if int(stat[1][i]) > 0:
- */
-    __pyx_v_occupation = 0.0;
-
-    /* "Solving_Methods/Statistic.pyx":35
- *         # occurences du motif
- *         occupation = 0
- *         for i in range(len(stat[1])):             # <<<<<<<<<<<<<<
- *             if int(stat[1][i]) > 0:
- *                 occupation += 1
- */
-    __pyx_t_6 = __Pyx_GetItemInt(__pyx_v_stat, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 35, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_6);
-    __pyx_t_7 = PyObject_Length(__pyx_t_6); if (unlikely(__pyx_t_7 == ((Py_ssize_t)-1))) __PYX_ERR(0, 35, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    __pyx_t_8 = __pyx_t_7;
-    for (__pyx_t_9 = 0; __pyx_t_9 < __pyx_t_8; __pyx_t_9+=1) {
-      __pyx_v_i = __pyx_t_9;
-
-      /* "Solving_Methods/Statistic.pyx":36
- *         occupation = 0
- *         for i in range(len(stat[1])):
- *             if int(stat[1][i]) > 0:             # <<<<<<<<<<<<<<
- *                 occupation += 1
- *         dict_stat[indice].append(occupation/len(stat[1]))
- */
-      __pyx_t_6 = __Pyx_GetItemInt(__pyx_v_stat, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 36, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_6);
-      __pyx_t_3 = __Pyx_GetItemInt(__pyx_t_6, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 36, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_3);
-      __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-      __pyx_t_6 = __Pyx_PyNumber_Int(__pyx_t_3); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 36, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_6);
-      __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      __pyx_t_3 = PyObject_RichCompare(__pyx_t_6, __pyx_int_0, Py_GT); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 36, __pyx_L1_error)
-      __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-      __pyx_t_11 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_11 < 0)) __PYX_ERR(0, 36, __pyx_L1_error)
-      __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      if (__pyx_t_11) {
-
-        /* "Solving_Methods/Statistic.pyx":37
- *         for i in range(len(stat[1])):
- *             if int(stat[1][i]) > 0:
- *                 occupation += 1             # <<<<<<<<<<<<<<
- *         dict_stat[indice].append(occupation/len(stat[1]))
+    /* "Solving_Methods/Statistic.pyx":31
  * 
- */
-        __pyx_v_occupation = (__pyx_v_occupation + 1.0);
-
-        /* "Solving_Methods/Statistic.pyx":36
- *         occupation = 0
- *         for i in range(len(stat[1])):
- *             if int(stat[1][i]) > 0:             # <<<<<<<<<<<<<<
- *                 occupation += 1
- *         dict_stat[indice].append(occupation/len(stat[1]))
- */
-      }
-    }
-
-    /* "Solving_Methods/Statistic.pyx":38
- *             if int(stat[1][i]) > 0:
- *                 occupation += 1
- *         dict_stat[indice].append(occupation/len(stat[1]))             # <<<<<<<<<<<<<<
+ *         # taux d'occupation
+ *         dict_stat[indice].append(cmpt/len(stat[1]))             # <<<<<<<<<<<<<<
  * 
  * ###
  */
-    __pyx_t_3 = __Pyx_PyObject_GetItem(__pyx_v_dict_stat, __pyx_v_indice); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 38, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_6 = __Pyx_GetItemInt(__pyx_v_stat, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 38, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyObject_GetItem(__pyx_v_dict_stat, __pyx_v_indice); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 31, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
-    __pyx_t_7 = PyObject_Length(__pyx_t_6); if (unlikely(__pyx_t_7 == ((Py_ssize_t)-1))) __PYX_ERR(0, 38, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+    __pyx_t_3 = __Pyx_GetItemInt(__pyx_v_stat, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 31, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    __pyx_t_7 = PyObject_Length(__pyx_t_3); if (unlikely(__pyx_t_7 == ((Py_ssize_t)-1))) __PYX_ERR(0, 31, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     if (unlikely(__pyx_t_7 == 0)) {
       PyErr_SetString(PyExc_ZeroDivisionError, "float division");
-      __PYX_ERR(0, 38, __pyx_L1_error)
+      __PYX_ERR(0, 31, __pyx_L1_error)
     }
-    __pyx_t_6 = PyFloat_FromDouble((__pyx_v_occupation / __pyx_t_7)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 38, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_6);
-    __pyx_t_12 = __Pyx_PyObject_Append(__pyx_t_3, __pyx_t_6); if (unlikely(__pyx_t_12 == ((int)-1))) __PYX_ERR(0, 38, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+    __pyx_t_3 = PyFloat_FromDouble((__pyx_v_cmpt / __pyx_t_7)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 31, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    __pyx_t_12 = __Pyx_PyObject_Append(__pyx_t_6, __pyx_t_3); if (unlikely(__pyx_t_12 == ((int)-1))) __PYX_ERR(0, 31, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
     /* "Solving_Methods/Statistic.pyx":15
  *     cdef float occupation
@@ -1854,7 +1789,7 @@ static PyObject *__pyx_pf_15Solving_Methods_9Statistic_Taux_recouvert(CYTHON_UNU
   return __pyx_r;
 }
 
-/* "Solving_Methods/Statistic.pyx":45
+/* "Solving_Methods/Statistic.pyx":38
  * 
  * # Calcul le nombre de sous-graphes sans quivalent isomorphe (unique)
  * def Nombre_unique(lst_id, dict_stat):             # <<<<<<<<<<<<<<
@@ -1897,11 +1832,11 @@ static PyObject *__pyx_pw_15Solving_Methods_9Statistic_3Nombre_unique(PyObject *
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_dict_stat)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("Nombre_unique", 1, 2, 2, 1); __PYX_ERR(0, 45, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("Nombre_unique", 1, 2, 2, 1); __PYX_ERR(0, 38, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "Nombre_unique") < 0)) __PYX_ERR(0, 45, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "Nombre_unique") < 0)) __PYX_ERR(0, 38, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 2) {
       goto __pyx_L5_argtuple_error;
@@ -1914,7 +1849,7 @@ static PyObject *__pyx_pw_15Solving_Methods_9Statistic_3Nombre_unique(PyObject *
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("Nombre_unique", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 45, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("Nombre_unique", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 38, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("Solving_Methods.Statistic.Nombre_unique", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -1945,7 +1880,7 @@ static PyObject *__pyx_pf_15Solving_Methods_9Statistic_2Nombre_unique(CYTHON_UNU
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("Nombre_unique", 0);
 
-  /* "Solving_Methods/Statistic.pyx":46
+  /* "Solving_Methods/Statistic.pyx":39
  * # Calcul le nombre de sous-graphes sans quivalent isomorphe (unique)
  * def Nombre_unique(lst_id, dict_stat):
  *     cmpt = 0             # <<<<<<<<<<<<<<
@@ -1955,7 +1890,7 @@ static PyObject *__pyx_pf_15Solving_Methods_9Statistic_2Nombre_unique(CYTHON_UNU
   __Pyx_INCREF(__pyx_int_0);
   __pyx_v_cmpt = __pyx_int_0;
 
-  /* "Solving_Methods/Statistic.pyx":47
+  /* "Solving_Methods/Statistic.pyx":40
  * def Nombre_unique(lst_id, dict_stat):
  *     cmpt = 0
  *     for indice in lst_id:             # <<<<<<<<<<<<<<
@@ -1966,26 +1901,26 @@ static PyObject *__pyx_pf_15Solving_Methods_9Statistic_2Nombre_unique(CYTHON_UNU
     __pyx_t_1 = __pyx_v_lst_id; __Pyx_INCREF(__pyx_t_1); __pyx_t_2 = 0;
     __pyx_t_3 = NULL;
   } else {
-    __pyx_t_2 = -1; __pyx_t_1 = PyObject_GetIter(__pyx_v_lst_id); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 47, __pyx_L1_error)
+    __pyx_t_2 = -1; __pyx_t_1 = PyObject_GetIter(__pyx_v_lst_id); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 40, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_3 = Py_TYPE(__pyx_t_1)->tp_iternext; if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 47, __pyx_L1_error)
+    __pyx_t_3 = Py_TYPE(__pyx_t_1)->tp_iternext; if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 40, __pyx_L1_error)
   }
   for (;;) {
     if (likely(!__pyx_t_3)) {
       if (likely(PyList_CheckExact(__pyx_t_1))) {
         if (__pyx_t_2 >= PyList_GET_SIZE(__pyx_t_1)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_4 = PyList_GET_ITEM(__pyx_t_1, __pyx_t_2); __Pyx_INCREF(__pyx_t_4); __pyx_t_2++; if (unlikely(0 < 0)) __PYX_ERR(0, 47, __pyx_L1_error)
+        __pyx_t_4 = PyList_GET_ITEM(__pyx_t_1, __pyx_t_2); __Pyx_INCREF(__pyx_t_4); __pyx_t_2++; if (unlikely(0 < 0)) __PYX_ERR(0, 40, __pyx_L1_error)
         #else
-        __pyx_t_4 = PySequence_ITEM(__pyx_t_1, __pyx_t_2); __pyx_t_2++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 47, __pyx_L1_error)
+        __pyx_t_4 = PySequence_ITEM(__pyx_t_1, __pyx_t_2); __pyx_t_2++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 40, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
         #endif
       } else {
         if (__pyx_t_2 >= PyTuple_GET_SIZE(__pyx_t_1)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_1, __pyx_t_2); __Pyx_INCREF(__pyx_t_4); __pyx_t_2++; if (unlikely(0 < 0)) __PYX_ERR(0, 47, __pyx_L1_error)
+        __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_1, __pyx_t_2); __Pyx_INCREF(__pyx_t_4); __pyx_t_2++; if (unlikely(0 < 0)) __PYX_ERR(0, 40, __pyx_L1_error)
         #else
-        __pyx_t_4 = PySequence_ITEM(__pyx_t_1, __pyx_t_2); __pyx_t_2++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 47, __pyx_L1_error)
+        __pyx_t_4 = PySequence_ITEM(__pyx_t_1, __pyx_t_2); __pyx_t_2++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 40, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
         #endif
       }
@@ -1995,7 +1930,7 @@ static PyObject *__pyx_pf_15Solving_Methods_9Statistic_2Nombre_unique(CYTHON_UNU
         PyObject* exc_type = PyErr_Occurred();
         if (exc_type) {
           if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-          else __PYX_ERR(0, 47, __pyx_L1_error)
+          else __PYX_ERR(0, 40, __pyx_L1_error)
         }
         break;
       }
@@ -2004,14 +1939,14 @@ static PyObject *__pyx_pf_15Solving_Methods_9Statistic_2Nombre_unique(CYTHON_UNU
     __Pyx_XDECREF_SET(__pyx_v_indice, __pyx_t_4);
     __pyx_t_4 = 0;
 
-    /* "Solving_Methods/Statistic.pyx":48
+    /* "Solving_Methods/Statistic.pyx":41
  *     cmpt = 0
  *     for indice in lst_id:
  *         tmp = dict_stat.get(indice)             # <<<<<<<<<<<<<<
  *         if tmp[0] == 1:
  *             cmpt += 1
  */
-    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_dict_stat, __pyx_n_s_get); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 48, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_dict_stat, __pyx_n_s_get); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 41, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __pyx_t_6 = NULL;
     if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_5))) {
@@ -2025,41 +1960,41 @@ static PyObject *__pyx_pf_15Solving_Methods_9Statistic_2Nombre_unique(CYTHON_UNU
     }
     __pyx_t_4 = (__pyx_t_6) ? __Pyx_PyObject_Call2Args(__pyx_t_5, __pyx_t_6, __pyx_v_indice) : __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_v_indice);
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 48, __pyx_L1_error)
+    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 41, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_XDECREF_SET(__pyx_v_tmp, __pyx_t_4);
     __pyx_t_4 = 0;
 
-    /* "Solving_Methods/Statistic.pyx":49
+    /* "Solving_Methods/Statistic.pyx":42
  *     for indice in lst_id:
  *         tmp = dict_stat.get(indice)
  *         if tmp[0] == 1:             # <<<<<<<<<<<<<<
  *             cmpt += 1
  *     return cmpt
  */
-    __pyx_t_4 = __Pyx_GetItemInt(__pyx_v_tmp, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 49, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_GetItemInt(__pyx_v_tmp, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 42, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_5 = __Pyx_PyInt_EqObjC(__pyx_t_4, __pyx_int_1, 1, 0); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 49, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyInt_EqObjC(__pyx_t_4, __pyx_int_1, 1, 0); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 42, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_t_7 = __Pyx_PyObject_IsTrue(__pyx_t_5); if (unlikely(__pyx_t_7 < 0)) __PYX_ERR(0, 49, __pyx_L1_error)
+    __pyx_t_7 = __Pyx_PyObject_IsTrue(__pyx_t_5); if (unlikely(__pyx_t_7 < 0)) __PYX_ERR(0, 42, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     if (__pyx_t_7) {
 
-      /* "Solving_Methods/Statistic.pyx":50
+      /* "Solving_Methods/Statistic.pyx":43
  *         tmp = dict_stat.get(indice)
  *         if tmp[0] == 1:
  *             cmpt += 1             # <<<<<<<<<<<<<<
  *     return cmpt
  * 
  */
-      __pyx_t_5 = __Pyx_PyInt_AddObjC(__pyx_v_cmpt, __pyx_int_1, 1, 1, 0); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 50, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyInt_AddObjC(__pyx_v_cmpt, __pyx_int_1, 1, 1, 0); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 43, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
       __Pyx_DECREF_SET(__pyx_v_cmpt, __pyx_t_5);
       __pyx_t_5 = 0;
 
-      /* "Solving_Methods/Statistic.pyx":49
+      /* "Solving_Methods/Statistic.pyx":42
  *     for indice in lst_id:
  *         tmp = dict_stat.get(indice)
  *         if tmp[0] == 1:             # <<<<<<<<<<<<<<
@@ -2068,7 +2003,7 @@ static PyObject *__pyx_pf_15Solving_Methods_9Statistic_2Nombre_unique(CYTHON_UNU
  */
     }
 
-    /* "Solving_Methods/Statistic.pyx":47
+    /* "Solving_Methods/Statistic.pyx":40
  * def Nombre_unique(lst_id, dict_stat):
  *     cmpt = 0
  *     for indice in lst_id:             # <<<<<<<<<<<<<<
@@ -2078,7 +2013,7 @@ static PyObject *__pyx_pf_15Solving_Methods_9Statistic_2Nombre_unique(CYTHON_UNU
   }
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "Solving_Methods/Statistic.pyx":51
+  /* "Solving_Methods/Statistic.pyx":44
  *         if tmp[0] == 1:
  *             cmpt += 1
  *     return cmpt             # <<<<<<<<<<<<<<
@@ -2090,7 +2025,7 @@ static PyObject *__pyx_pf_15Solving_Methods_9Statistic_2Nombre_unique(CYTHON_UNU
   __pyx_r = __pyx_v_cmpt;
   goto __pyx_L0;
 
-  /* "Solving_Methods/Statistic.pyx":45
+  /* "Solving_Methods/Statistic.pyx":38
  * 
  * # Calcul le nombre de sous-graphes sans quivalent isomorphe (unique)
  * def Nombre_unique(lst_id, dict_stat):             # <<<<<<<<<<<<<<
@@ -2115,7 +2050,7 @@ static PyObject *__pyx_pf_15Solving_Methods_9Statistic_2Nombre_unique(CYTHON_UNU
   return __pyx_r;
 }
 
-/* "Solving_Methods/Statistic.pyx":54
+/* "Solving_Methods/Statistic.pyx":47
  * 
  * # Tri par occurrence et recouvrement croissant
  * def Tri_indice(lst_id, dict_stat):             # <<<<<<<<<<<<<<
@@ -2158,11 +2093,11 @@ static PyObject *__pyx_pw_15Solving_Methods_9Statistic_5Tri_indice(PyObject *__p
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_dict_stat)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("Tri_indice", 1, 2, 2, 1); __PYX_ERR(0, 54, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("Tri_indice", 1, 2, 2, 1); __PYX_ERR(0, 47, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "Tri_indice") < 0)) __PYX_ERR(0, 54, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "Tri_indice") < 0)) __PYX_ERR(0, 47, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 2) {
       goto __pyx_L5_argtuple_error;
@@ -2175,7 +2110,7 @@ static PyObject *__pyx_pw_15Solving_Methods_9Statistic_5Tri_indice(PyObject *__p
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("Tri_indice", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 54, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("Tri_indice", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 47, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("Solving_Methods.Statistic.Tri_indice", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -2212,31 +2147,31 @@ static PyObject *__pyx_pf_15Solving_Methods_9Statistic_4Tri_indice(CYTHON_UNUSED
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("Tri_indice", 0);
 
-  /* "Solving_Methods/Statistic.pyx":55
+  /* "Solving_Methods/Statistic.pyx":48
  * # Tri par occurrence et recouvrement croissant
  * def Tri_indice(lst_id, dict_stat):
  *     tri_indice = []             # <<<<<<<<<<<<<<
  *     # liste des couples de donne { occurrence : [[indice, taux]] }
  *     d = {}
  */
-  __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 55, __pyx_L1_error)
+  __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 48, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_tri_indice = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "Solving_Methods/Statistic.pyx":57
+  /* "Solving_Methods/Statistic.pyx":50
  *     tri_indice = []
  *     # liste des couples de donne { occurrence : [[indice, taux]] }
  *     d = {}             # <<<<<<<<<<<<<<
  *     # pour chaque indice (de certificat/ de motif)
  *     for i in lst_id:
  */
-  __pyx_t_1 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 57, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 50, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_d = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "Solving_Methods/Statistic.pyx":59
+  /* "Solving_Methods/Statistic.pyx":52
  *     d = {}
  *     # pour chaque indice (de certificat/ de motif)
  *     for i in lst_id:             # <<<<<<<<<<<<<<
@@ -2247,26 +2182,26 @@ static PyObject *__pyx_pf_15Solving_Methods_9Statistic_4Tri_indice(CYTHON_UNUSED
     __pyx_t_1 = __pyx_v_lst_id; __Pyx_INCREF(__pyx_t_1); __pyx_t_2 = 0;
     __pyx_t_3 = NULL;
   } else {
-    __pyx_t_2 = -1; __pyx_t_1 = PyObject_GetIter(__pyx_v_lst_id); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 59, __pyx_L1_error)
+    __pyx_t_2 = -1; __pyx_t_1 = PyObject_GetIter(__pyx_v_lst_id); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 52, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_3 = Py_TYPE(__pyx_t_1)->tp_iternext; if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 59, __pyx_L1_error)
+    __pyx_t_3 = Py_TYPE(__pyx_t_1)->tp_iternext; if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 52, __pyx_L1_error)
   }
   for (;;) {
     if (likely(!__pyx_t_3)) {
       if (likely(PyList_CheckExact(__pyx_t_1))) {
         if (__pyx_t_2 >= PyList_GET_SIZE(__pyx_t_1)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_4 = PyList_GET_ITEM(__pyx_t_1, __pyx_t_2); __Pyx_INCREF(__pyx_t_4); __pyx_t_2++; if (unlikely(0 < 0)) __PYX_ERR(0, 59, __pyx_L1_error)
+        __pyx_t_4 = PyList_GET_ITEM(__pyx_t_1, __pyx_t_2); __Pyx_INCREF(__pyx_t_4); __pyx_t_2++; if (unlikely(0 < 0)) __PYX_ERR(0, 52, __pyx_L1_error)
         #else
-        __pyx_t_4 = PySequence_ITEM(__pyx_t_1, __pyx_t_2); __pyx_t_2++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 59, __pyx_L1_error)
+        __pyx_t_4 = PySequence_ITEM(__pyx_t_1, __pyx_t_2); __pyx_t_2++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 52, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
         #endif
       } else {
         if (__pyx_t_2 >= PyTuple_GET_SIZE(__pyx_t_1)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_1, __pyx_t_2); __Pyx_INCREF(__pyx_t_4); __pyx_t_2++; if (unlikely(0 < 0)) __PYX_ERR(0, 59, __pyx_L1_error)
+        __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_1, __pyx_t_2); __Pyx_INCREF(__pyx_t_4); __pyx_t_2++; if (unlikely(0 < 0)) __PYX_ERR(0, 52, __pyx_L1_error)
         #else
-        __pyx_t_4 = PySequence_ITEM(__pyx_t_1, __pyx_t_2); __pyx_t_2++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 59, __pyx_L1_error)
+        __pyx_t_4 = PySequence_ITEM(__pyx_t_1, __pyx_t_2); __pyx_t_2++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 52, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
         #endif
       }
@@ -2276,7 +2211,7 @@ static PyObject *__pyx_pf_15Solving_Methods_9Statistic_4Tri_indice(CYTHON_UNUSED
         PyObject* exc_type = PyErr_Occurred();
         if (exc_type) {
           if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-          else __PYX_ERR(0, 59, __pyx_L1_error)
+          else __PYX_ERR(0, 52, __pyx_L1_error)
         }
         break;
       }
@@ -2285,14 +2220,14 @@ static PyObject *__pyx_pf_15Solving_Methods_9Statistic_4Tri_indice(CYTHON_UNUSED
     __Pyx_XDECREF_SET(__pyx_v_i, __pyx_t_4);
     __pyx_t_4 = 0;
 
-    /* "Solving_Methods/Statistic.pyx":60
+    /* "Solving_Methods/Statistic.pyx":53
  *     # pour chaque indice (de certificat/ de motif)
  *     for i in lst_id:
  *         tmp = dict_stat.get(i)             # <<<<<<<<<<<<<<
  *         if tmp[0] not in d.keys():
  *             d[tmp[0]] = [[i, tmp[2]]]
  */
-    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_dict_stat, __pyx_n_s_get); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 60, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_dict_stat, __pyx_n_s_get); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 53, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __pyx_t_6 = NULL;
     if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_5))) {
@@ -2306,39 +2241,39 @@ static PyObject *__pyx_pf_15Solving_Methods_9Statistic_4Tri_indice(CYTHON_UNUSED
     }
     __pyx_t_4 = (__pyx_t_6) ? __Pyx_PyObject_Call2Args(__pyx_t_5, __pyx_t_6, __pyx_v_i) : __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_v_i);
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 60, __pyx_L1_error)
+    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 53, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_XDECREF_SET(__pyx_v_tmp, __pyx_t_4);
     __pyx_t_4 = 0;
 
-    /* "Solving_Methods/Statistic.pyx":61
+    /* "Solving_Methods/Statistic.pyx":54
  *     for i in lst_id:
  *         tmp = dict_stat.get(i)
  *         if tmp[0] not in d.keys():             # <<<<<<<<<<<<<<
  *             d[tmp[0]] = [[i, tmp[2]]]
  *         else :
  */
-    __pyx_t_4 = __Pyx_GetItemInt(__pyx_v_tmp, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 61, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_GetItemInt(__pyx_v_tmp, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 54, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_5 = __Pyx_PyDict_Keys(__pyx_v_d); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 61, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyDict_Keys(__pyx_v_d); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 54, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_7 = (__Pyx_PySequence_ContainsTF(__pyx_t_4, __pyx_t_5, Py_NE)); if (unlikely(__pyx_t_7 < 0)) __PYX_ERR(0, 61, __pyx_L1_error)
+    __pyx_t_7 = (__Pyx_PySequence_ContainsTF(__pyx_t_4, __pyx_t_5, Py_NE)); if (unlikely(__pyx_t_7 < 0)) __PYX_ERR(0, 54, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __pyx_t_8 = (__pyx_t_7 != 0);
     if (__pyx_t_8) {
 
-      /* "Solving_Methods/Statistic.pyx":62
+      /* "Solving_Methods/Statistic.pyx":55
  *         tmp = dict_stat.get(i)
  *         if tmp[0] not in d.keys():
  *             d[tmp[0]] = [[i, tmp[2]]]             # <<<<<<<<<<<<<<
  *         else :
  *             d[tmp[0]].append([i, tmp[2]])
  */
-      __pyx_t_5 = __Pyx_GetItemInt(__pyx_v_tmp, 2, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 62, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_GetItemInt(__pyx_v_tmp, 2, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 55, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
-      __pyx_t_4 = PyList_New(2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 62, __pyx_L1_error)
+      __pyx_t_4 = PyList_New(2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 55, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_INCREF(__pyx_v_i);
       __Pyx_GIVEREF(__pyx_v_i);
@@ -2346,18 +2281,18 @@ static PyObject *__pyx_pf_15Solving_Methods_9Statistic_4Tri_indice(CYTHON_UNUSED
       __Pyx_GIVEREF(__pyx_t_5);
       PyList_SET_ITEM(__pyx_t_4, 1, __pyx_t_5);
       __pyx_t_5 = 0;
-      __pyx_t_5 = PyList_New(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 62, __pyx_L1_error)
+      __pyx_t_5 = PyList_New(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 55, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
       __Pyx_GIVEREF(__pyx_t_4);
       PyList_SET_ITEM(__pyx_t_5, 0, __pyx_t_4);
       __pyx_t_4 = 0;
-      __pyx_t_4 = __Pyx_GetItemInt(__pyx_v_tmp, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 62, __pyx_L1_error)
+      __pyx_t_4 = __Pyx_GetItemInt(__pyx_v_tmp, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 55, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
-      if (unlikely(PyDict_SetItem(__pyx_v_d, __pyx_t_4, __pyx_t_5) < 0)) __PYX_ERR(0, 62, __pyx_L1_error)
+      if (unlikely(PyDict_SetItem(__pyx_v_d, __pyx_t_4, __pyx_t_5) < 0)) __PYX_ERR(0, 55, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
 
-      /* "Solving_Methods/Statistic.pyx":61
+      /* "Solving_Methods/Statistic.pyx":54
  *     for i in lst_id:
  *         tmp = dict_stat.get(i)
  *         if tmp[0] not in d.keys():             # <<<<<<<<<<<<<<
@@ -2367,7 +2302,7 @@ static PyObject *__pyx_pf_15Solving_Methods_9Statistic_4Tri_indice(CYTHON_UNUSED
       goto __pyx_L5;
     }
 
-    /* "Solving_Methods/Statistic.pyx":64
+    /* "Solving_Methods/Statistic.pyx":57
  *             d[tmp[0]] = [[i, tmp[2]]]
  *         else :
  *             d[tmp[0]].append([i, tmp[2]])             # <<<<<<<<<<<<<<
@@ -2375,14 +2310,14 @@ static PyObject *__pyx_pf_15Solving_Methods_9Statistic_4Tri_indice(CYTHON_UNUSED
  *     # pour tous les nombres d'occurrence tris
  */
     /*else*/ {
-      __pyx_t_5 = __Pyx_GetItemInt(__pyx_v_tmp, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 64, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_GetItemInt(__pyx_v_tmp, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 57, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
-      __pyx_t_4 = __Pyx_PyDict_GetItem(__pyx_v_d, __pyx_t_5); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 64, __pyx_L1_error)
+      __pyx_t_4 = __Pyx_PyDict_GetItem(__pyx_v_d, __pyx_t_5); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 57, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-      __pyx_t_5 = __Pyx_GetItemInt(__pyx_v_tmp, 2, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 64, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_GetItemInt(__pyx_v_tmp, 2, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 57, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
-      __pyx_t_6 = PyList_New(2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 64, __pyx_L1_error)
+      __pyx_t_6 = PyList_New(2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 57, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_INCREF(__pyx_v_i);
       __Pyx_GIVEREF(__pyx_v_i);
@@ -2390,13 +2325,13 @@ static PyObject *__pyx_pf_15Solving_Methods_9Statistic_4Tri_indice(CYTHON_UNUSED
       __Pyx_GIVEREF(__pyx_t_5);
       PyList_SET_ITEM(__pyx_t_6, 1, __pyx_t_5);
       __pyx_t_5 = 0;
-      __pyx_t_9 = __Pyx_PyObject_Append(__pyx_t_4, __pyx_t_6); if (unlikely(__pyx_t_9 == ((int)-1))) __PYX_ERR(0, 64, __pyx_L1_error)
+      __pyx_t_9 = __Pyx_PyObject_Append(__pyx_t_4, __pyx_t_6); if (unlikely(__pyx_t_9 == ((int)-1))) __PYX_ERR(0, 57, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     }
     __pyx_L5:;
 
-    /* "Solving_Methods/Statistic.pyx":59
+    /* "Solving_Methods/Statistic.pyx":52
  *     d = {}
  *     # pour chaque indice (de certificat/ de motif)
  *     for i in lst_id:             # <<<<<<<<<<<<<<
@@ -2406,69 +2341,69 @@ static PyObject *__pyx_pf_15Solving_Methods_9Statistic_4Tri_indice(CYTHON_UNUSED
   }
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "Solving_Methods/Statistic.pyx":67
+  /* "Solving_Methods/Statistic.pyx":60
  * 
  *     # pour tous les nombres d'occurrence tris
  *     for k in sorted(d.keys()) :             # <<<<<<<<<<<<<<
  *         # rcupre la liste des couples [indice, taux]
  *         tmp = d.get(k)
  */
-  __pyx_t_6 = __Pyx_PyDict_Keys(__pyx_v_d); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 67, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyDict_Keys(__pyx_v_d); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 60, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_4 = PySequence_List(__pyx_t_6); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 67, __pyx_L1_error)
+  __pyx_t_4 = PySequence_List(__pyx_t_6); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 60, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   __pyx_t_1 = ((PyObject*)__pyx_t_4);
   __pyx_t_4 = 0;
-  __pyx_t_9 = PyList_Sort(__pyx_t_1); if (unlikely(__pyx_t_9 == ((int)-1))) __PYX_ERR(0, 67, __pyx_L1_error)
+  __pyx_t_9 = PyList_Sort(__pyx_t_1); if (unlikely(__pyx_t_9 == ((int)-1))) __PYX_ERR(0, 60, __pyx_L1_error)
   if (unlikely(__pyx_t_1 == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
-    __PYX_ERR(0, 67, __pyx_L1_error)
+    __PYX_ERR(0, 60, __pyx_L1_error)
   }
   __pyx_t_4 = __pyx_t_1; __Pyx_INCREF(__pyx_t_4); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   for (;;) {
     if (__pyx_t_2 >= PyList_GET_SIZE(__pyx_t_4)) break;
     #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-    __pyx_t_1 = PyList_GET_ITEM(__pyx_t_4, __pyx_t_2); __Pyx_INCREF(__pyx_t_1); __pyx_t_2++; if (unlikely(0 < 0)) __PYX_ERR(0, 67, __pyx_L1_error)
+    __pyx_t_1 = PyList_GET_ITEM(__pyx_t_4, __pyx_t_2); __Pyx_INCREF(__pyx_t_1); __pyx_t_2++; if (unlikely(0 < 0)) __PYX_ERR(0, 60, __pyx_L1_error)
     #else
-    __pyx_t_1 = PySequence_ITEM(__pyx_t_4, __pyx_t_2); __pyx_t_2++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 67, __pyx_L1_error)
+    __pyx_t_1 = PySequence_ITEM(__pyx_t_4, __pyx_t_2); __pyx_t_2++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 60, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     #endif
     __Pyx_XDECREF_SET(__pyx_v_k, __pyx_t_1);
     __pyx_t_1 = 0;
 
-    /* "Solving_Methods/Statistic.pyx":69
+    /* "Solving_Methods/Statistic.pyx":62
  *     for k in sorted(d.keys()) :
  *         # rcupre la liste des couples [indice, taux]
  *         tmp = d.get(k)             # <<<<<<<<<<<<<<
  *         # pour tous les couples tris selon le taux
  *         for l in sorted(tmp, key=second):
  */
-    __pyx_t_1 = __Pyx_PyDict_GetItemDefault(__pyx_v_d, __pyx_v_k, Py_None); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 69, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyDict_GetItemDefault(__pyx_v_d, __pyx_v_k, Py_None); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 62, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_XDECREF_SET(__pyx_v_tmp, __pyx_t_1);
     __pyx_t_1 = 0;
 
-    /* "Solving_Methods/Statistic.pyx":71
+    /* "Solving_Methods/Statistic.pyx":64
  *         tmp = d.get(k)
  *         # pour tous les couples tris selon le taux
  *         for l in sorted(tmp, key=second):             # <<<<<<<<<<<<<<
  *             tri_indice.append(l[0])
  * 
  */
-    __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 71, __pyx_L1_error)
+    __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 64, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_INCREF(__pyx_v_tmp);
     __Pyx_GIVEREF(__pyx_v_tmp);
     PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_v_tmp);
-    __pyx_t_6 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 71, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 64, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
-    __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_n_s_second); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 71, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_n_s_second); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 64, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
-    if (PyDict_SetItem(__pyx_t_6, __pyx_n_s_key, __pyx_t_5) < 0) __PYX_ERR(0, 71, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_t_6, __pyx_n_s_key, __pyx_t_5) < 0) __PYX_ERR(0, 64, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    __pyx_t_5 = __Pyx_PyObject_Call(__pyx_builtin_sorted, __pyx_t_1, __pyx_t_6); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 71, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyObject_Call(__pyx_builtin_sorted, __pyx_t_1, __pyx_t_6); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 64, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
@@ -2476,9 +2411,9 @@ static PyObject *__pyx_pf_15Solving_Methods_9Statistic_4Tri_indice(CYTHON_UNUSED
       __pyx_t_6 = __pyx_t_5; __Pyx_INCREF(__pyx_t_6); __pyx_t_10 = 0;
       __pyx_t_3 = NULL;
     } else {
-      __pyx_t_10 = -1; __pyx_t_6 = PyObject_GetIter(__pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 71, __pyx_L1_error)
+      __pyx_t_10 = -1; __pyx_t_6 = PyObject_GetIter(__pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 64, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
-      __pyx_t_3 = Py_TYPE(__pyx_t_6)->tp_iternext; if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 71, __pyx_L1_error)
+      __pyx_t_3 = Py_TYPE(__pyx_t_6)->tp_iternext; if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 64, __pyx_L1_error)
     }
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     for (;;) {
@@ -2486,17 +2421,17 @@ static PyObject *__pyx_pf_15Solving_Methods_9Statistic_4Tri_indice(CYTHON_UNUSED
         if (likely(PyList_CheckExact(__pyx_t_6))) {
           if (__pyx_t_10 >= PyList_GET_SIZE(__pyx_t_6)) break;
           #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-          __pyx_t_5 = PyList_GET_ITEM(__pyx_t_6, __pyx_t_10); __Pyx_INCREF(__pyx_t_5); __pyx_t_10++; if (unlikely(0 < 0)) __PYX_ERR(0, 71, __pyx_L1_error)
+          __pyx_t_5 = PyList_GET_ITEM(__pyx_t_6, __pyx_t_10); __Pyx_INCREF(__pyx_t_5); __pyx_t_10++; if (unlikely(0 < 0)) __PYX_ERR(0, 64, __pyx_L1_error)
           #else
-          __pyx_t_5 = PySequence_ITEM(__pyx_t_6, __pyx_t_10); __pyx_t_10++; if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 71, __pyx_L1_error)
+          __pyx_t_5 = PySequence_ITEM(__pyx_t_6, __pyx_t_10); __pyx_t_10++; if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 64, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_5);
           #endif
         } else {
           if (__pyx_t_10 >= PyTuple_GET_SIZE(__pyx_t_6)) break;
           #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-          __pyx_t_5 = PyTuple_GET_ITEM(__pyx_t_6, __pyx_t_10); __Pyx_INCREF(__pyx_t_5); __pyx_t_10++; if (unlikely(0 < 0)) __PYX_ERR(0, 71, __pyx_L1_error)
+          __pyx_t_5 = PyTuple_GET_ITEM(__pyx_t_6, __pyx_t_10); __Pyx_INCREF(__pyx_t_5); __pyx_t_10++; if (unlikely(0 < 0)) __PYX_ERR(0, 64, __pyx_L1_error)
           #else
-          __pyx_t_5 = PySequence_ITEM(__pyx_t_6, __pyx_t_10); __pyx_t_10++; if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 71, __pyx_L1_error)
+          __pyx_t_5 = PySequence_ITEM(__pyx_t_6, __pyx_t_10); __pyx_t_10++; if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 64, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_5);
           #endif
         }
@@ -2506,7 +2441,7 @@ static PyObject *__pyx_pf_15Solving_Methods_9Statistic_4Tri_indice(CYTHON_UNUSED
           PyObject* exc_type = PyErr_Occurred();
           if (exc_type) {
             if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-            else __PYX_ERR(0, 71, __pyx_L1_error)
+            else __PYX_ERR(0, 64, __pyx_L1_error)
           }
           break;
         }
@@ -2515,19 +2450,19 @@ static PyObject *__pyx_pf_15Solving_Methods_9Statistic_4Tri_indice(CYTHON_UNUSED
       __Pyx_XDECREF_SET(__pyx_v_l, __pyx_t_5);
       __pyx_t_5 = 0;
 
-      /* "Solving_Methods/Statistic.pyx":72
+      /* "Solving_Methods/Statistic.pyx":65
  *         # pour tous les couples tris selon le taux
  *         for l in sorted(tmp, key=second):
  *             tri_indice.append(l[0])             # <<<<<<<<<<<<<<
  * 
  *     return tri_indice
  */
-      __pyx_t_5 = __Pyx_GetItemInt(__pyx_v_l, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 72, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_GetItemInt(__pyx_v_l, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 65, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
-      __pyx_t_9 = __Pyx_PyList_Append(__pyx_v_tri_indice, __pyx_t_5); if (unlikely(__pyx_t_9 == ((int)-1))) __PYX_ERR(0, 72, __pyx_L1_error)
+      __pyx_t_9 = __Pyx_PyList_Append(__pyx_v_tri_indice, __pyx_t_5); if (unlikely(__pyx_t_9 == ((int)-1))) __PYX_ERR(0, 65, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
 
-      /* "Solving_Methods/Statistic.pyx":71
+      /* "Solving_Methods/Statistic.pyx":64
  *         tmp = d.get(k)
  *         # pour tous les couples tris selon le taux
  *         for l in sorted(tmp, key=second):             # <<<<<<<<<<<<<<
@@ -2537,7 +2472,7 @@ static PyObject *__pyx_pf_15Solving_Methods_9Statistic_4Tri_indice(CYTHON_UNUSED
     }
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-    /* "Solving_Methods/Statistic.pyx":67
+    /* "Solving_Methods/Statistic.pyx":60
  * 
  *     # pour tous les nombres d'occurrence tris
  *     for k in sorted(d.keys()) :             # <<<<<<<<<<<<<<
@@ -2547,7 +2482,7 @@ static PyObject *__pyx_pf_15Solving_Methods_9Statistic_4Tri_indice(CYTHON_UNUSED
   }
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-  /* "Solving_Methods/Statistic.pyx":74
+  /* "Solving_Methods/Statistic.pyx":67
  *             tri_indice.append(l[0])
  * 
  *     return tri_indice             # <<<<<<<<<<<<<<
@@ -2559,7 +2494,7 @@ static PyObject *__pyx_pf_15Solving_Methods_9Statistic_4Tri_indice(CYTHON_UNUSED
   __pyx_r = __pyx_v_tri_indice;
   goto __pyx_L0;
 
-  /* "Solving_Methods/Statistic.pyx":54
+  /* "Solving_Methods/Statistic.pyx":47
  * 
  * # Tri par occurrence et recouvrement croissant
  * def Tri_indice(lst_id, dict_stat):             # <<<<<<<<<<<<<<
@@ -2587,7 +2522,7 @@ static PyObject *__pyx_pf_15Solving_Methods_9Statistic_4Tri_indice(CYTHON_UNUSED
   return __pyx_r;
 }
 
-/* "Solving_Methods/Statistic.pyx":77
+/* "Solving_Methods/Statistic.pyx":70
  * 
  * # retourne le second terme d'un tableau
  * def second(tab):             # <<<<<<<<<<<<<<
@@ -2617,19 +2552,19 @@ static PyObject *__pyx_pf_15Solving_Methods_9Statistic_6second(CYTHON_UNUSED PyO
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("second", 0);
 
-  /* "Solving_Methods/Statistic.pyx":78
+  /* "Solving_Methods/Statistic.pyx":71
  * # retourne le second terme d'un tableau
  * def second(tab):
  *     return tab[1]             # <<<<<<<<<<<<<<
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_tab, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 78, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_tab, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 71, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "Solving_Methods/Statistic.pyx":77
+  /* "Solving_Methods/Statistic.pyx":70
  * 
  * # retourne le second terme d'un tableau
  * def second(tab):             # <<<<<<<<<<<<<<
@@ -2730,7 +2665,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
 };
 static CYTHON_SMALL_CODE int __Pyx_InitCachedBuiltins(void) {
   __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 20, __pyx_L1_error)
-  __pyx_builtin_sorted = __Pyx_GetBuiltinName(__pyx_n_s_sorted); if (!__pyx_builtin_sorted) __PYX_ERR(0, 71, __pyx_L1_error)
+  __pyx_builtin_sorted = __Pyx_GetBuiltinName(__pyx_n_s_sorted); if (!__pyx_builtin_sorted) __PYX_ERR(0, 64, __pyx_L1_error)
   return 0;
   __pyx_L1_error:;
   return -1;
@@ -2752,40 +2687,40 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_GIVEREF(__pyx_tuple_);
   __pyx_codeobj__2 = (PyObject*)__Pyx_PyCode_New(1, 0, 7, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple_, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Solving_Methods_Statistic_pyx, __pyx_n_s_Taux_recouvert, 9, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__2)) __PYX_ERR(0, 9, __pyx_L1_error)
 
-  /* "Solving_Methods/Statistic.pyx":45
+  /* "Solving_Methods/Statistic.pyx":38
  * 
  * # Calcul le nombre de sous-graphes sans quivalent isomorphe (unique)
  * def Nombre_unique(lst_id, dict_stat):             # <<<<<<<<<<<<<<
  *     cmpt = 0
  *     for indice in lst_id:
  */
-  __pyx_tuple__3 = PyTuple_Pack(5, __pyx_n_s_lst_id, __pyx_n_s_dict_stat, __pyx_n_s_cmpt, __pyx_n_s_indice, __pyx_n_s_tmp); if (unlikely(!__pyx_tuple__3)) __PYX_ERR(0, 45, __pyx_L1_error)
+  __pyx_tuple__3 = PyTuple_Pack(5, __pyx_n_s_lst_id, __pyx_n_s_dict_stat, __pyx_n_s_cmpt, __pyx_n_s_indice, __pyx_n_s_tmp); if (unlikely(!__pyx_tuple__3)) __PYX_ERR(0, 38, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__3);
   __Pyx_GIVEREF(__pyx_tuple__3);
-  __pyx_codeobj__4 = (PyObject*)__Pyx_PyCode_New(2, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__3, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Solving_Methods_Statistic_pyx, __pyx_n_s_Nombre_unique, 45, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__4)) __PYX_ERR(0, 45, __pyx_L1_error)
+  __pyx_codeobj__4 = (PyObject*)__Pyx_PyCode_New(2, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__3, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Solving_Methods_Statistic_pyx, __pyx_n_s_Nombre_unique, 38, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__4)) __PYX_ERR(0, 38, __pyx_L1_error)
 
-  /* "Solving_Methods/Statistic.pyx":54
+  /* "Solving_Methods/Statistic.pyx":47
  * 
  * # Tri par occurrence et recouvrement croissant
  * def Tri_indice(lst_id, dict_stat):             # <<<<<<<<<<<<<<
  *     tri_indice = []
  *     # liste des couples de donne { occurrence : [[indice, taux]] }
  */
-  __pyx_tuple__5 = PyTuple_Pack(8, __pyx_n_s_lst_id, __pyx_n_s_dict_stat, __pyx_n_s_tri_indice, __pyx_n_s_d, __pyx_n_s_i, __pyx_n_s_tmp, __pyx_n_s_k, __pyx_n_s_l); if (unlikely(!__pyx_tuple__5)) __PYX_ERR(0, 54, __pyx_L1_error)
+  __pyx_tuple__5 = PyTuple_Pack(8, __pyx_n_s_lst_id, __pyx_n_s_dict_stat, __pyx_n_s_tri_indice, __pyx_n_s_d, __pyx_n_s_i, __pyx_n_s_tmp, __pyx_n_s_k, __pyx_n_s_l); if (unlikely(!__pyx_tuple__5)) __PYX_ERR(0, 47, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__5);
   __Pyx_GIVEREF(__pyx_tuple__5);
-  __pyx_codeobj__6 = (PyObject*)__Pyx_PyCode_New(2, 0, 8, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__5, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Solving_Methods_Statistic_pyx, __pyx_n_s_Tri_indice, 54, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__6)) __PYX_ERR(0, 54, __pyx_L1_error)
+  __pyx_codeobj__6 = (PyObject*)__Pyx_PyCode_New(2, 0, 8, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__5, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Solving_Methods_Statistic_pyx, __pyx_n_s_Tri_indice, 47, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__6)) __PYX_ERR(0, 47, __pyx_L1_error)
 
-  /* "Solving_Methods/Statistic.pyx":77
+  /* "Solving_Methods/Statistic.pyx":70
  * 
  * # retourne le second terme d'un tableau
  * def second(tab):             # <<<<<<<<<<<<<<
  *     return tab[1]
  */
-  __pyx_tuple__7 = PyTuple_Pack(1, __pyx_n_s_tab); if (unlikely(!__pyx_tuple__7)) __PYX_ERR(0, 77, __pyx_L1_error)
+  __pyx_tuple__7 = PyTuple_Pack(1, __pyx_n_s_tab); if (unlikely(!__pyx_tuple__7)) __PYX_ERR(0, 70, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__7);
   __Pyx_GIVEREF(__pyx_tuple__7);
-  __pyx_codeobj__8 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__7, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Solving_Methods_Statistic_pyx, __pyx_n_s_second, 77, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__8)) __PYX_ERR(0, 77, __pyx_L1_error)
+  __pyx_codeobj__8 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__7, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Solving_Methods_Statistic_pyx, __pyx_n_s_second, 70, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__8)) __PYX_ERR(0, 70, __pyx_L1_error)
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
@@ -3090,39 +3025,39 @@ if (!__Pyx_RefNanny) {
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_Taux_recouvert, __pyx_t_1) < 0) __PYX_ERR(0, 9, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "Solving_Methods/Statistic.pyx":45
+  /* "Solving_Methods/Statistic.pyx":38
  * 
  * # Calcul le nombre de sous-graphes sans quivalent isomorphe (unique)
  * def Nombre_unique(lst_id, dict_stat):             # <<<<<<<<<<<<<<
  *     cmpt = 0
  *     for indice in lst_id:
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_15Solving_Methods_9Statistic_3Nombre_unique, NULL, __pyx_n_s_Solving_Methods_Statistic); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 45, __pyx_L1_error)
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_15Solving_Methods_9Statistic_3Nombre_unique, NULL, __pyx_n_s_Solving_Methods_Statistic); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 38, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_Nombre_unique, __pyx_t_1) < 0) __PYX_ERR(0, 45, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_Nombre_unique, __pyx_t_1) < 0) __PYX_ERR(0, 38, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "Solving_Methods/Statistic.pyx":54
+  /* "Solving_Methods/Statistic.pyx":47
  * 
  * # Tri par occurrence et recouvrement croissant
  * def Tri_indice(lst_id, dict_stat):             # <<<<<<<<<<<<<<
  *     tri_indice = []
  *     # liste des couples de donne { occurrence : [[indice, taux]] }
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_15Solving_Methods_9Statistic_5Tri_indice, NULL, __pyx_n_s_Solving_Methods_Statistic); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 54, __pyx_L1_error)
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_15Solving_Methods_9Statistic_5Tri_indice, NULL, __pyx_n_s_Solving_Methods_Statistic); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 47, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_Tri_indice, __pyx_t_1) < 0) __PYX_ERR(0, 54, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_Tri_indice, __pyx_t_1) < 0) __PYX_ERR(0, 47, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "Solving_Methods/Statistic.pyx":77
+  /* "Solving_Methods/Statistic.pyx":70
  * 
  * # retourne le second terme d'un tableau
  * def second(tab):             # <<<<<<<<<<<<<<
  *     return tab[1]
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_15Solving_Methods_9Statistic_7second, NULL, __pyx_n_s_Solving_Methods_Statistic); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 77, __pyx_L1_error)
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_15Solving_Methods_9Statistic_7second, NULL, __pyx_n_s_Solving_Methods_Statistic); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 70, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_second, __pyx_t_1) < 0) __PYX_ERR(0, 77, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_second, __pyx_t_1) < 0) __PYX_ERR(0, 70, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
   /* "Solving_Methods/Statistic.pyx":1

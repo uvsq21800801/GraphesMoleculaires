@@ -28,15 +28,8 @@ def Taux_recouvert(dict_stat):
             dict_stat[indice].append(0)
         
         # taux d'occupation
-       
-        # Le programme va regarder quels sommets sont au moins occupés une fois par une des
-        # occurences du motif
-        occupation = 0
-        for i in range(len(stat[1])):
-            if int(stat[1][i]) > 0:
-                occupation += 1
-        dict_stat[indice].append(occupation/len(stat[1]))
-         
+        dict_stat[indice].append(cmpt/len(stat[1]))
+
 ###
 # 2. Fonctions utiles
 ###

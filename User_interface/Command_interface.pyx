@@ -120,10 +120,9 @@ def interface():
         bd_ids[0] =  str(res["_id"])
         # info déjà lié à l'interface ?
         tmp_colors = list(res["colors"])
-        # tmp_configs = list(res["configs"])
     else :
         # créer l'interface
-        bd_ids[0] = str(interfs.insert_one({"name":interf_name, "colors":list(), "configs": list()}).inserted_id)
+        bd_ids[0] = str(interfs.insert_one({"name":interf_name, "colors":list()}).inserted_id)
     if len(tmp_colors)>0:
         colors_names = []
         for _id in tmp_colors:
@@ -221,11 +220,11 @@ def interface():
     print(conf_num)
     for i in conf_num:
         exec_for_one_conf(min_ordre, max_ordre, files_T[i], files_B[i], path_I, 
-                        dir_I, options, path_O, Multi_Taille, i, bd_ids, motifs)
+                        dir_I, options, path_O, Multi_Taille, i, bd_ids, list_color, motifs)
     return 1
 
 def exec_for_one_conf(min_ordre, max_ordre, filename_T, filename_B, path_I, 
-                        dir_I, options, path_O, Multi_Taille, nb_conf, bd_ids, motifs):  
+                        dir_I, options, path_O, Multi_Taille, nb_conf, bd_ids, lst_col, motifs):  
     filename1, filename2, lst_index, atom_caract, matrice_adja = In.data_input(options[1], dir_I, filename_T, filename_B)
     
     #if not In.done_here(join(path_O, dir_I), dir_I, options):
@@ -249,7 +248,7 @@ def exec_for_one_conf(min_ordre, max_ordre, filename_T, filename_B, path_I,
             ordre = min_ordre+i
             #options[1] = ordre ######### a voir ce que cette délétion change
             (dict_isomorph, dict_stat, lst_id, lst_certif, nb_unique) = programm_1(dir_I, dir_I, 
-                    options, matrice_adja, atom_caract, lst_combi[i], nb_conf, ordre, bd_ids, motifs)
+                    options, matrice_adja, atom_caract, lst_col, lst_combi[i], nb_conf, ordre, bd_ids, motifs)
             #programm_2(dir_O, name, detail, matrice_adja, atom_caract, lst_id, dict_isomorph)
 
             print(dir_I+" taille "+str(ordre)+" fini "+str(datetime.now().time())+"\n")
@@ -269,7 +268,7 @@ def exec_for_one_conf(min_ordre, max_ordre, filename_T, filename_B, path_I,
         
         #options[1] = max_ordre ######### a voir ce que cette délétion change
         (dict_isomorph, dict_stat, lst_id, lst_certif, nb_unique) = programm_1(dir_I, dir_I,
-                     options, matrice_adja, atom_caract, lst_combi, nb_conf, bd_ids, motifs)
+                     options, matrice_adja, atom_caract, lst_col, lst_combi, nb_conf, max_ordre, bd_ids, motifs)
         
         #programm_2(dir_O, name, detail, matrice_adja, atom_caract, lst_id, dict_isomorph)
         
@@ -281,12 +280,12 @@ def exec_for_one_conf(min_ordre, max_ordre, filename_T, filename_B, path_I,
         exec_for_one_size()
     return 1
 
-def programm_1 (dir_O, name, detail, matrice_adja, atom_caract, lst_combi, nb_conf, ordre, bd_ids, motifs):
+def programm_1 (dir_O, name, detail, matrice_adja, atom_caract, lst_col, lst_combi, nb_conf, ordre, bd_ids, motifs):
     t_cerif = 0 ## test
     t_prep_c = 0 ## test
     t_fill = 0 ## test
     time_temp = time.time()## test
-    (dict_isomorph, dict_stat, lst_id, lst_certif, t_cerif, t_prep_c, t_fill) = Iso.combi_iso(matrice_adja, atom_caract, lst_combi, detail[1], t_cerif, t_prep_c, t_fill)
+    (dict_isomorph, dict_stat, lst_id, lst_certif, t_cerif, t_prep_c, t_fill) = Iso.combi_iso(matrice_adja, atom_caract, lst_col, lst_combi, detail[1], t_cerif, t_prep_c, t_fill)
     ## ^ 3 last values are test
     print('exec of the whole combi iso: '+str(time.time()-time_temp)+' seconds') ## test
     print('exec of the dict filling: '+str(t_fill)+' seconds') ## test
@@ -302,8 +301,8 @@ def programm_1 (dir_O, name, detail, matrice_adja, atom_caract, lst_combi, nb_co
     nb_unique = Stat.Nombre_unique(lst_id, dict_stat)
 
     # insère les combinaisons dans la bdd
-    # def insert_motifs(bd_ids, lst_index, dict_isomorph, coloration, signature, nb_sommets, liaison_H, crible):
-    bdd_insert.insert_motifs(motifs, lst_id, dict_isomorph, bd_ids[1], "A faire", ordre, detail[0], "n'existe pas")    
+    # def insert_motifs(collection_motif, bd_ids, matrice_adja, atom_caract, lst_index, dict_isomorph, dict_stat, coloration, lst_certif, nb_sommets, liaison_H, crible):
+    bdd_insert.insert_motifs(motifs, bd_ids[1], matrice_adja, atom_caract, lst_id, dict_isomorph, dict_stat, lst_certif, ordre, detail[0], "n'existe pas")    
     
     # imprime combinaisons
     Out.Output_combi(dir_O, name, detail, lst_id, dict_isomorph, nb_conf, ordre)
@@ -437,39 +436,6 @@ def exec_for_one_file(filename, detail, Multi_Taille, Multi_File, ordre, min_ord
             print(name+" fini "+str(datetime.now().time())+"\n")
 
     return 1    
-"""
-"""
-def programm_1 (dir_O, name, detail, matrice_adja, atom_caract, lst_combi):
-    t_cerif = 0 ## test
-    t_prep_c = 0 ## test
-    t_fill = 0 ## test
-    time_temp = time.time()## test
-    (dict_isomorph, dict_stat, lst_id, lst_certif, t_cerif, t_prep_c, t_fill) = Iso.combi_iso(matrice_adja, atom_caract, lst_combi, detail[1], t_cerif, t_prep_c, t_fill)
-    ## ^ 3 last values are test
-    print('exec of the whole combi iso: '+str(time.time()-time_temp)+' seconds') ## test
-    print('exec of the dict filling: '+str(t_fill)+' seconds') ## test
-    print('exec of the prep for pynauty: '+str(t_prep_c)+' seconds') ## test
-    print('exec of the pynauty: '+str(t_cerif)+' seconds') ## test
-
-    print(name+" isomorph fini "+str(datetime.now().time()))
-                        
-    # calcul le taux de recouvrement 
-    Stat.Taux_recouvert(dict_stat)
-    # tri de lst_id par nombre d'occurence et le nombre de motif unique
-    lst_id = Stat.Tri_indice(lst_id, dict_stat)
-    nb_unique = Stat.Nombre_unique(lst_id, dict_stat)
-    
-    # imprime combinaisons
-    Out.Output_combi(dir_O, name, detail, lst_id, dict_isomorph)
-    # imprime les diagrammes
-    Out.Output_diagramme(dir_O, name, detail, lst_id, dict_stat)
-    # imprime statistique de l'ordre étudié
-    Out.Output_stat(dir_O, name, detail, lst_combi, lst_certif, lst_id, nb_unique)
-    # imprime les résultats
-    Out.Output_result(dir_O, name, detail, lst_certif, lst_id, dict_stat)
-
-    print(name+" sortie fini "+str(datetime.now().time()))
-    return (dict_isomorph, dict_stat, lst_id, lst_certif, nb_unique)
 """
 
 # Recherche des fichiers des configurations

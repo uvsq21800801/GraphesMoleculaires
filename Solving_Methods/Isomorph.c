@@ -1099,13 +1099,6 @@ static int __Pyx_ParseOptionalKeywords(PyObject *kwds, PyObject **argnames[],\
     PyObject *kwds2, PyObject *values[], Py_ssize_t num_pos_args,\
     const char* function_name);
 
-/* PyCFunctionFastCall.proto */
-#if CYTHON_FAST_PYCCALL
-static CYTHON_INLINE PyObject *__Pyx_PyCFunction_FastCall(PyObject *func, PyObject **args, Py_ssize_t nargs);
-#else
-#define __Pyx_PyCFunction_FastCall(func, args, nargs)  (assert(0), NULL)
-#endif
-
 /* PyFunctionFastCall.proto */
 #if CYTHON_FAST_PYCALL
 #define __Pyx_PyFunction_FastCall(func, args, nargs)\
@@ -1137,16 +1130,12 @@ static PyObject *__Pyx_PyFunction_FastCallDict(PyObject *func, PyObject **args, 
 #endif // CYTHON_FAST_PYCALL
 #endif
 
-/* PyObjectCall2Args.proto */
-static CYTHON_UNUSED PyObject* __Pyx_PyObject_Call2Args(PyObject* function, PyObject* arg1, PyObject* arg2);
-
-/* PyObjectCallMethO.proto */
-#if CYTHON_COMPILING_IN_CPYTHON
-static CYTHON_INLINE PyObject* __Pyx_PyObject_CallMethO(PyObject *func, PyObject *arg);
+/* PyCFunctionFastCall.proto */
+#if CYTHON_FAST_PYCCALL
+static CYTHON_INLINE PyObject *__Pyx_PyCFunction_FastCall(PyObject *func, PyObject **args, Py_ssize_t nargs);
+#else
+#define __Pyx_PyCFunction_FastCall(func, args, nargs)  (assert(0), NULL)
 #endif
-
-/* PyObjectCallOneArg.proto */
-static CYTHON_INLINE PyObject* __Pyx_PyObject_CallOneArg(PyObject *func, PyObject *arg);
 
 /* RaiseTooManyValuesToUnpack.proto */
 static CYTHON_INLINE void __Pyx_RaiseTooManyValuesError(Py_ssize_t expected);
@@ -1160,12 +1149,20 @@ static CYTHON_INLINE int __Pyx_IterFinish(void);
 /* UnpackItemEndCheck.proto */
 static int __Pyx_IternextUnpackEndCheck(PyObject *retval, Py_ssize_t expected);
 
+/* PyObjectCallMethO.proto */
+#if CYTHON_COMPILING_IN_CPYTHON
+static CYTHON_INLINE PyObject* __Pyx_PyObject_CallMethO(PyObject *func, PyObject *arg);
+#endif
+
 /* PyObjectCallNoArg.proto */
 #if CYTHON_COMPILING_IN_CPYTHON
 static CYTHON_INLINE PyObject* __Pyx_PyObject_CallNoArg(PyObject *func);
 #else
 #define __Pyx_PyObject_CallNoArg(func) __Pyx_PyObject_Call(func, __pyx_empty_tuple, NULL)
 #endif
+
+/* PyObjectCallOneArg.proto */
+static CYTHON_INLINE PyObject* __Pyx_PyObject_CallOneArg(PyObject *func, PyObject *arg);
 
 /* PySequenceContains.proto */
 static CYTHON_INLINE int __Pyx_PySequence_ContainsTF(PyObject* item, PyObject* seq, int eq) {
@@ -1207,6 +1204,9 @@ static CYTHON_INLINE PyObject* __Pyx_CallUnboundCMethod1(__Pyx_CachedCFunction* 
 #define __Pyx_CallUnboundCMethod1(cfunc, self, arg)  __Pyx__CallUnboundCMethod1(cfunc, self, arg)
 #endif
 
+/* PyObjectCall2Args.proto */
+static CYTHON_UNUSED PyObject* __Pyx_PyObject_Call2Args(PyObject* function, PyObject* arg1, PyObject* arg2);
+
 /* PyObjectGetMethod.proto */
 static int __Pyx_PyObject_GetMethod(PyObject *obj, PyObject *name, PyObject **method);
 
@@ -1237,12 +1237,6 @@ static CYTHON_INLINE PyObject *__Pyx_CallUnboundCMethod2(__Pyx_CachedCFunction *
 #else
 #define __Pyx_CallUnboundCMethod2(cfunc, self, arg1, arg2)  __Pyx__CallUnboundCMethod2(cfunc, self, arg1, arg2)
 #endif
-
-/* PyDictContains.proto */
-static CYTHON_INLINE int __Pyx_PyDict_ContainsTF(PyObject* item, PyObject* dict, int eq) {
-    int result = PyDict_Contains(dict, item);
-    return unlikely(result < 0) ? result : (result == (eq == Py_EQ));
-}
 
 /* PyIntCompare.proto */
 static CYTHON_INLINE PyObject* __Pyx_PyInt_NeObjC(PyObject *op1, PyObject *op2, long intval, long inplace);
@@ -1333,13 +1327,6 @@ static void __Pyx_AddTraceback(const char *funcname, int c_line,
 #define __Pyx_HAS_GCC_DIAGNOSTIC
 #endif
 
-/* Print.proto */
-static int __Pyx_Print(PyObject*, PyObject *, int);
-#if CYTHON_COMPILING_IN_PYPY || PY_MAJOR_VERSION >= 3
-static PyObject* __pyx_print = 0;
-static PyObject* __pyx_print_kwargs = 0;
-#endif
-
 /* CIntFromPy.proto */
 static CYTHON_INLINE int __Pyx_PyInt_As_int(PyObject *);
 
@@ -1351,9 +1338,6 @@ static CYTHON_INLINE PyObject* __Pyx_PyInt_From_long(long value);
 
 /* CIntFromPy.proto */
 static CYTHON_INLINE long __Pyx_PyInt_As_long(PyObject *);
-
-/* PrintOne.proto */
-static int __Pyx_PrintOne(PyObject* stream, PyObject *o);
 
 /* FastTypeChecks.proto */
 #if CYTHON_COMPILING_IN_CPYTHON
@@ -1385,27 +1369,22 @@ int __pyx_module_is_main_Solving_Methods__Isomorph = 0;
 
 /* Implementation of 'Solving_Methods.Isomorph' */
 static PyObject *__pyx_builtin_range;
-static const char __pyx_k_[] = "";
+static const char __pyx_k_[] = "*";
 static const char __pyx_k_g[] = "g";
 static const char __pyx_k_i[] = "i";
 static const char __pyx_k_j[] = "j";
 static const char __pyx_k_r[] = "r";
-static const char __pyx_k__2[] = "*";
 static const char __pyx_k_cf[] = "cf";
 static const char __pyx_k_np[] = "np";
 static const char __pyx_k_nx[] = "nx";
-static const char __pyx_k_end[] = "end";
 static const char __pyx_k_get[] = "get";
 static const char __pyx_k_ref[] = "ref";
 static const char __pyx_k_tmp[] = "tmp";
 static const char __pyx_k_comb[] = "comb";
 static const char __pyx_k_copy[] = "copy";
-static const char __pyx_k_enum[] = "enum";
-static const char __pyx_k_file[] = "file";
 static const char __pyx_k_main[] = "__main__";
 static const char __pyx_k_math[] = "math";
 static const char __pyx_k_name[] = "__name__";
-static const char __pyx_k_temp[] = "temp";
 static const char __pyx_k_test[] = "__test__";
 static const char __pyx_k_time[] = "time";
 static const char __pyx_k_Graph[] = "Graph";
@@ -1414,39 +1393,29 @@ static const char __pyx_k_dtype[] = "dtype";
 static const char __pyx_k_index[] = "index";
 static const char __pyx_k_numpy[] = "numpy";
 static const char __pyx_k_ordre[] = "ordre";
-static const char __pyx_k_print[] = "print";
 static const char __pyx_k_range[] = "range";
 static const char __pyx_k_split[] = "split";
 static const char __pyx_k_zeros[] = "zeros";
 static const char __pyx_k_append[] = "append";
 static const char __pyx_k_certif[] = "certif";
-static const char __pyx_k_dict_c[] = "dict_c";
 static const char __pyx_k_import[] = "__import__";
 static const char __pyx_k_indice[] = "indice";
 static const char __pyx_k_lst_id[] = "lst_id";
-static const char __pyx_k_nv_nom[] = "nv_nom";
 static const char __pyx_k_t_fill[] = "t_fill";
 static const char __pyx_k_taille[] = "taille";
-static const char __pyx_k_combi_2[] = "combi: ";
+static const char __pyx_k_lst_col[] = "lst_col";
 static const char __pyx_k_pynauty[] = "pynauty";
 static const char __pyx_k_t_cerif[] = "t_cerif";
 static const char __pyx_k_binascii[] = "binascii";
 static const char __pyx_k_directed[] = "directed";
-static const char __pyx_k_init_col[] = "init_col";
 static const char __pyx_k_interize[] = "interize";
 static const char __pyx_k_networkx[] = "networkx";
-static const char __pyx_k_sommet_n[] = "sommet_n";
-static const char __pyx_k_splitted[] = "splitted";
 static const char __pyx_k_t_prep_c[] = "t_prep_c";
 static const char __pyx_k_combi_int[] = "combi_int";
 static const char __pyx_k_combi_iso[] = "combi_iso";
 static const char __pyx_k_dict_stat[] = "dict_stat";
-static const char __pyx_k_list_adja[] = "list_adja";
-static const char __pyx_k_list_sets[] = "list_sets";
 static const char __pyx_k_lst_combi[] = "lst_combi";
 static const char __pyx_k_combi_bool[] = "combi_bool";
-static const char __pyx_k_couleur_nb[] = "couleur_nb";
-static const char __pyx_k_listconnex[] = "listconnex";
 static const char __pyx_k_lst_certif[] = "lst_certif";
 static const char __pyx_k_nb_couleur[] = "nb_couleur";
 static const char __pyx_k_setdefault[] = "setdefault";
@@ -1458,25 +1427,19 @@ static const char __pyx_k_list_connex[] = "list_connex";
 static const char __pyx_k_listes_arcs[] = "listes_arcs";
 static const char __pyx_k_temp_prep_t[] = "temp_prep_t";
 static const char __pyx_k_temp_t_cert[] = "temp_t_cert";
-static const char __pyx_k_dict_couleur[] = "dict_couleur";
 static const char __pyx_k_matrice_adja[] = "matrice_adja";
 static const char __pyx_k_temp_couleur[] = "temp_couleur";
 static const char __pyx_k_dict_isomorph[] = "dict_isomorph";
 static const char __pyx_k_adjacency_dict[] = "adjacency_dict";
-static const char __pyx_k_connect_vertex[] = "connect_vertex";
-static const char __pyx_k_list_by_colors[] = "list_by_colors";
 static const char __pyx_k_combi_to_certif[] = "combi_to_certif";
 static const char __pyx_k_cline_in_traceback[] = "cline_in_traceback";
 static const char __pyx_k_num_prochain_sommet[] = "num_prochain_sommet";
-static const char __pyx_k_set_vertex_coloring[] = "set_vertex_coloring";
-static const char __pyx_k_combi_to_certif_broken[] = "combi_to_certif_broken";
 static const char __pyx_k_Solving_Methods_Isomorph[] = "Solving_Methods.Isomorph";
 static const char __pyx_k_Solving_Methods_Isomorph_pyx[] = "Solving_Methods/Isomorph.pyx";
-static PyObject *__pyx_kp_s_;
+static PyObject *__pyx_n_s_;
 static PyObject *__pyx_n_s_Graph;
 static PyObject *__pyx_n_s_Solving_Methods_Isomorph;
 static PyObject *__pyx_kp_s_Solving_Methods_Isomorph_pyx;
-static PyObject *__pyx_n_s__2;
 static PyObject *__pyx_n_s_adjacency_dict;
 static PyObject *__pyx_n_s_append;
 static PyObject *__pyx_n_s_atom_caract;
@@ -1487,41 +1450,28 @@ static PyObject *__pyx_n_s_cf;
 static PyObject *__pyx_n_s_cline_in_traceback;
 static PyObject *__pyx_n_s_comb;
 static PyObject *__pyx_n_s_combi;
-static PyObject *__pyx_kp_s_combi_2;
 static PyObject *__pyx_n_s_combi_bool;
 static PyObject *__pyx_n_s_combi_int;
 static PyObject *__pyx_n_s_combi_iso;
 static PyObject *__pyx_n_s_combi_to_certif;
-static PyObject *__pyx_n_s_combi_to_certif_broken;
-static PyObject *__pyx_n_s_connect_vertex;
 static PyObject *__pyx_n_s_copy;
-static PyObject *__pyx_n_s_couleur_nb;
-static PyObject *__pyx_n_s_dict_c;
 static PyObject *__pyx_n_s_dict_connex;
-static PyObject *__pyx_n_s_dict_couleur;
 static PyObject *__pyx_n_s_dict_isomorph;
 static PyObject *__pyx_n_s_dict_stat;
 static PyObject *__pyx_n_s_directed;
 static PyObject *__pyx_n_s_dtype;
-static PyObject *__pyx_n_s_end;
-static PyObject *__pyx_n_s_enum;
-static PyObject *__pyx_n_s_file;
 static PyObject *__pyx_n_s_g;
 static PyObject *__pyx_n_s_get;
 static PyObject *__pyx_n_s_i;
 static PyObject *__pyx_n_s_import;
 static PyObject *__pyx_n_s_index;
 static PyObject *__pyx_n_s_indice;
-static PyObject *__pyx_n_s_init_col;
 static PyObject *__pyx_n_s_interize;
 static PyObject *__pyx_n_s_j;
-static PyObject *__pyx_n_s_list_adja;
-static PyObject *__pyx_n_s_list_by_colors;
 static PyObject *__pyx_n_s_list_connex;
-static PyObject *__pyx_n_s_list_sets;
-static PyObject *__pyx_n_s_listconnex;
 static PyObject *__pyx_n_s_listes_arcs;
 static PyObject *__pyx_n_s_lst_certif;
+static PyObject *__pyx_n_s_lst_col;
 static PyObject *__pyx_n_s_lst_combi;
 static PyObject *__pyx_n_s_lst_id;
 static PyObject *__pyx_n_s_main;
@@ -1533,24 +1483,18 @@ static PyObject *__pyx_n_s_networkx;
 static PyObject *__pyx_n_s_np;
 static PyObject *__pyx_n_s_num_prochain_sommet;
 static PyObject *__pyx_n_s_numpy;
-static PyObject *__pyx_n_s_nv_nom;
 static PyObject *__pyx_n_s_nx;
 static PyObject *__pyx_n_s_ordre;
-static PyObject *__pyx_n_s_print;
 static PyObject *__pyx_n_s_pynauty;
 static PyObject *__pyx_n_s_r;
 static PyObject *__pyx_n_s_range;
 static PyObject *__pyx_n_s_ref;
-static PyObject *__pyx_n_s_set_vertex_coloring;
 static PyObject *__pyx_n_s_setdefault;
-static PyObject *__pyx_n_s_sommet_n;
 static PyObject *__pyx_n_s_split;
-static PyObject *__pyx_n_s_splitted;
 static PyObject *__pyx_n_s_t_cerif;
 static PyObject *__pyx_n_s_t_fill;
 static PyObject *__pyx_n_s_t_prep_c;
 static PyObject *__pyx_n_s_taille;
-static PyObject *__pyx_n_s_temp;
 static PyObject *__pyx_n_s_temp_couleur;
 static PyObject *__pyx_n_s_temp_prep_t;
 static PyObject *__pyx_n_s_temp_t_cert;
@@ -1560,25 +1504,19 @@ static PyObject *__pyx_n_s_time_begin;
 static PyObject *__pyx_n_s_tmp;
 static PyObject *__pyx_n_s_zeros;
 static PyObject *__pyx_pf_15Solving_Methods_8Isomorph_interize(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_combi_bool); /* proto */
-static PyObject *__pyx_pf_15Solving_Methods_8Isomorph_2combi_iso(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_matrice_adja, PyObject *__pyx_v_atom_caract, PyObject *__pyx_v_lst_combi, PyObject *__pyx_v_ordre, PyObject *__pyx_v_t_cerif, PyObject *__pyx_v_t_prep_c, PyObject *__pyx_v_t_fill); /* proto */
-static PyObject *__pyx_pf_15Solving_Methods_8Isomorph_4init_col(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_atom_caract); /* proto */
-static PyObject *__pyx_pf_15Solving_Methods_8Isomorph_6combi_to_certif(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_combi, PyObject *__pyx_v_matrice_adja, PyObject *__pyx_v_atom_caract, PyObject *__pyx_v_dict_c, PyObject *__pyx_v_t_cerif, PyObject *__pyx_v_t_prep_c); /* proto */
-static PyObject *__pyx_pf_15Solving_Methods_8Isomorph_8combi_to_certif_broken(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_combi, PyObject *__pyx_v_matrice_adja, PyObject *__pyx_v_atom_caract, PyObject *__pyx_v_dict_c); /* proto */
+static PyObject *__pyx_pf_15Solving_Methods_8Isomorph_2combi_iso(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_matrice_adja, PyObject *__pyx_v_atom_caract, PyObject *__pyx_v_lst_col, PyObject *__pyx_v_lst_combi, PyObject *__pyx_v_ordre, PyObject *__pyx_v_t_cerif, PyObject *__pyx_v_t_prep_c, PyObject *__pyx_v_t_fill); /* proto */
+static PyObject *__pyx_pf_15Solving_Methods_8Isomorph_4combi_to_certif(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_combi, PyObject *__pyx_v_matrice_adja, PyObject *__pyx_v_atom_caract, PyObject *__pyx_v_lst_col, PyObject *__pyx_v_t_cerif, PyObject *__pyx_v_t_prep_c); /* proto */
 static __Pyx_CachedCFunction __pyx_umethod_PyDict_Type_get = {0, &__pyx_n_s_get, 0, 0, 0};
 static __Pyx_CachedCFunction __pyx_umethod_PyDict_Type_setdefault = {0, &__pyx_n_s_setdefault, 0, 0, 0};
 static __Pyx_CachedCFunction __pyx_umethod_PyList_Type_index = {0, &__pyx_n_s_index, 0, 0, 0};
 static PyObject *__pyx_int_0;
 static PyObject *__pyx_int_1;
-static PyObject *__pyx_tuple__3;
-static PyObject *__pyx_tuple__5;
-static PyObject *__pyx_tuple__7;
-static PyObject *__pyx_tuple__9;
-static PyObject *__pyx_tuple__11;
-static PyObject *__pyx_codeobj__4;
-static PyObject *__pyx_codeobj__6;
-static PyObject *__pyx_codeobj__8;
-static PyObject *__pyx_codeobj__10;
-static PyObject *__pyx_codeobj__12;
+static PyObject *__pyx_tuple__2;
+static PyObject *__pyx_tuple__4;
+static PyObject *__pyx_tuple__6;
+static PyObject *__pyx_codeobj__3;
+static PyObject *__pyx_codeobj__5;
+static PyObject *__pyx_codeobj__7;
 /* Late includes */
 
 /* "Solving_Methods/Isomorph.pyx":10
@@ -1744,7 +1682,7 @@ static PyObject *__pyx_pf_15Solving_Methods_8Isomorph_interize(CYTHON_UNUSED PyO
 /* "Solving_Methods/Isomorph.pyx":26
  * ####
  * 
- * def combi_iso(matrice_adja, atom_caract, lst_combi, ordre, t_cerif, t_prep_c, t_fill):## 3 last values are test             # <<<<<<<<<<<<<<
+ * def combi_iso(matrice_adja, atom_caract, lst_col, lst_combi, ordre, t_cerif, t_prep_c, t_fill):## 3 last values are test             # <<<<<<<<<<<<<<
  *     ## Structures de stockage :
  *     # Listes:
  */
@@ -1755,6 +1693,7 @@ static PyMethodDef __pyx_mdef_15Solving_Methods_8Isomorph_3combi_iso = {"combi_i
 static PyObject *__pyx_pw_15Solving_Methods_8Isomorph_3combi_iso(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_matrice_adja = 0;
   PyObject *__pyx_v_atom_caract = 0;
+  PyObject *__pyx_v_lst_col = 0;
   PyObject *__pyx_v_lst_combi = 0;
   PyObject *__pyx_v_ordre = 0;
   PyObject *__pyx_v_t_cerif = 0;
@@ -1767,12 +1706,14 @@ static PyObject *__pyx_pw_15Solving_Methods_8Isomorph_3combi_iso(PyObject *__pyx
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("combi_iso (wrapper)", 0);
   {
-    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_matrice_adja,&__pyx_n_s_atom_caract,&__pyx_n_s_lst_combi,&__pyx_n_s_ordre,&__pyx_n_s_t_cerif,&__pyx_n_s_t_prep_c,&__pyx_n_s_t_fill,0};
-    PyObject* values[7] = {0,0,0,0,0,0,0};
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_matrice_adja,&__pyx_n_s_atom_caract,&__pyx_n_s_lst_col,&__pyx_n_s_lst_combi,&__pyx_n_s_ordre,&__pyx_n_s_t_cerif,&__pyx_n_s_t_prep_c,&__pyx_n_s_t_fill,0};
+    PyObject* values[8] = {0,0,0,0,0,0,0,0};
     if (unlikely(__pyx_kwds)) {
       Py_ssize_t kw_args;
       const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
       switch (pos_args) {
+        case  8: values[7] = PyTuple_GET_ITEM(__pyx_args, 7);
+        CYTHON_FALLTHROUGH;
         case  7: values[6] = PyTuple_GET_ITEM(__pyx_args, 6);
         CYTHON_FALLTHROUGH;
         case  6: values[5] = PyTuple_GET_ITEM(__pyx_args, 5);
@@ -1799,43 +1740,49 @@ static PyObject *__pyx_pw_15Solving_Methods_8Isomorph_3combi_iso(PyObject *__pyx
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_atom_caract)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("combi_iso", 1, 7, 7, 1); __PYX_ERR(0, 26, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("combi_iso", 1, 8, 8, 1); __PYX_ERR(0, 26, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
-        if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_lst_combi)) != 0)) kw_args--;
+        if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_lst_col)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("combi_iso", 1, 7, 7, 2); __PYX_ERR(0, 26, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("combi_iso", 1, 8, 8, 2); __PYX_ERR(0, 26, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  3:
-        if (likely((values[3] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_ordre)) != 0)) kw_args--;
+        if (likely((values[3] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_lst_combi)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("combi_iso", 1, 7, 7, 3); __PYX_ERR(0, 26, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("combi_iso", 1, 8, 8, 3); __PYX_ERR(0, 26, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  4:
-        if (likely((values[4] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_t_cerif)) != 0)) kw_args--;
+        if (likely((values[4] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_ordre)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("combi_iso", 1, 7, 7, 4); __PYX_ERR(0, 26, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("combi_iso", 1, 8, 8, 4); __PYX_ERR(0, 26, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  5:
-        if (likely((values[5] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_t_prep_c)) != 0)) kw_args--;
+        if (likely((values[5] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_t_cerif)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("combi_iso", 1, 7, 7, 5); __PYX_ERR(0, 26, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("combi_iso", 1, 8, 8, 5); __PYX_ERR(0, 26, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  6:
-        if (likely((values[6] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_t_fill)) != 0)) kw_args--;
+        if (likely((values[6] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_t_prep_c)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("combi_iso", 1, 7, 7, 6); __PYX_ERR(0, 26, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("combi_iso", 1, 8, 8, 6); __PYX_ERR(0, 26, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case  7:
+        if (likely((values[7] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_t_fill)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("combi_iso", 1, 8, 8, 7); __PYX_ERR(0, 26, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
         if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "combi_iso") < 0)) __PYX_ERR(0, 26, __pyx_L3_error)
       }
-    } else if (PyTuple_GET_SIZE(__pyx_args) != 7) {
+    } else if (PyTuple_GET_SIZE(__pyx_args) != 8) {
       goto __pyx_L5_argtuple_error;
     } else {
       values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
@@ -1845,37 +1792,37 @@ static PyObject *__pyx_pw_15Solving_Methods_8Isomorph_3combi_iso(PyObject *__pyx
       values[4] = PyTuple_GET_ITEM(__pyx_args, 4);
       values[5] = PyTuple_GET_ITEM(__pyx_args, 5);
       values[6] = PyTuple_GET_ITEM(__pyx_args, 6);
+      values[7] = PyTuple_GET_ITEM(__pyx_args, 7);
     }
     __pyx_v_matrice_adja = values[0];
     __pyx_v_atom_caract = values[1];
-    __pyx_v_lst_combi = values[2];
-    __pyx_v_ordre = values[3];
-    __pyx_v_t_cerif = values[4];
-    __pyx_v_t_prep_c = values[5];
-    __pyx_v_t_fill = values[6];
+    __pyx_v_lst_col = values[2];
+    __pyx_v_lst_combi = values[3];
+    __pyx_v_ordre = values[4];
+    __pyx_v_t_cerif = values[5];
+    __pyx_v_t_prep_c = values[6];
+    __pyx_v_t_fill = values[7];
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("combi_iso", 1, 7, 7, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 26, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("combi_iso", 1, 8, 8, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 26, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("Solving_Methods.Isomorph.combi_iso", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_15Solving_Methods_8Isomorph_2combi_iso(__pyx_self, __pyx_v_matrice_adja, __pyx_v_atom_caract, __pyx_v_lst_combi, __pyx_v_ordre, __pyx_v_t_cerif, __pyx_v_t_prep_c, __pyx_v_t_fill);
+  __pyx_r = __pyx_pf_15Solving_Methods_8Isomorph_2combi_iso(__pyx_self, __pyx_v_matrice_adja, __pyx_v_atom_caract, __pyx_v_lst_col, __pyx_v_lst_combi, __pyx_v_ordre, __pyx_v_t_cerif, __pyx_v_t_prep_c, __pyx_v_t_fill);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_15Solving_Methods_8Isomorph_2combi_iso(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_matrice_adja, PyObject *__pyx_v_atom_caract, PyObject *__pyx_v_lst_combi, PyObject *__pyx_v_ordre, PyObject *__pyx_v_t_cerif, PyObject *__pyx_v_t_prep_c, PyObject *__pyx_v_t_fill) {
+static PyObject *__pyx_pf_15Solving_Methods_8Isomorph_2combi_iso(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_matrice_adja, PyObject *__pyx_v_atom_caract, PyObject *__pyx_v_lst_col, PyObject *__pyx_v_lst_combi, PyObject *__pyx_v_ordre, PyObject *__pyx_v_t_cerif, PyObject *__pyx_v_t_prep_c, PyObject *__pyx_v_t_fill) {
   PyObject *__pyx_v_lst_certif = NULL;
   PyObject *__pyx_v_lst_id = NULL;
   PyObject *__pyx_v_dict_isomorph = NULL;
   PyObject *__pyx_v_dict_stat = NULL;
-  PyObject *__pyx_v_dict_couleur = NULL;
-  CYTHON_UNUSED PyObject *__pyx_v_couleur_nb = NULL;
   CYTHON_UNUSED PyObject *__pyx_v_taille = NULL;
   int __pyx_v_i;
   PyObject *__pyx_v_combi = NULL;
@@ -1886,15 +1833,15 @@ static PyObject *__pyx_pf_15Solving_Methods_8Isomorph_2combi_iso(CYTHON_UNUSED P
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
-  PyObject *__pyx_t_2 = NULL;
-  PyObject *__pyx_t_3 = NULL;
+  Py_ssize_t __pyx_t_2;
+  PyObject *(*__pyx_t_3)(PyObject *);
   PyObject *__pyx_t_4 = NULL;
-  PyObject *(*__pyx_t_5)(PyObject *);
-  Py_ssize_t __pyx_t_6;
-  PyObject *(*__pyx_t_7)(PyObject *);
-  int __pyx_t_8;
+  PyObject *__pyx_t_5 = NULL;
+  PyObject *__pyx_t_6 = NULL;
+  int __pyx_t_7;
+  PyObject *__pyx_t_8 = NULL;
   PyObject *__pyx_t_9 = NULL;
-  PyObject *__pyx_t_10 = NULL;
+  PyObject *(*__pyx_t_10)(PyObject *);
   int __pyx_t_11;
   int __pyx_t_12;
   int __pyx_t_13;
@@ -1949,91 +1896,16 @@ static PyObject *__pyx_pf_15Solving_Methods_8Isomorph_2combi_iso(CYTHON_UNUSED P
   /* "Solving_Methods/Isomorph.pyx":37
  *     # les deux lments mis dans ce tableau sont:
  *     #     {le nb d'occurence, {nb de fois ou le sommet 1 est couvert, nb de fois ou le sommet 2 est couvert, ...}}
- *     dict_stat = {}     #= {identifiant: [nb_occurrence,  occurrence_sommet, taux_recouvrement, recouvrement, taux_occupation]}             # <<<<<<<<<<<<<<
+ *     dict_stat = {}     #= {identifiant: [nb_occurrence,  occurrence_sommet, taux_recouvrement, taux_occupation]}             # <<<<<<<<<<<<<<
  * 
- *     # initialisation du dictionnaire des couleurs
+ * 
  */
   __pyx_t_1 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 37, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_dict_stat = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "Solving_Methods/Isomorph.pyx":40
- * 
- *     # initialisation du dictionnaire des couleurs
- *     (dict_couleur, couleur_nb) = init_col(atom_caract)             # <<<<<<<<<<<<<<
- * 
- *     # initialisation le parametres lis  l'ordre du graphe et des sous-graphes
- */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_init_col); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 40, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = NULL;
-  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
-    __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_2);
-    if (likely(__pyx_t_3)) {
-      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
-      __Pyx_INCREF(__pyx_t_3);
-      __Pyx_INCREF(function);
-      __Pyx_DECREF_SET(__pyx_t_2, function);
-    }
-  }
-  __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_3, __pyx_v_atom_caract) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_v_atom_caract);
-  __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 40, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if ((likely(PyTuple_CheckExact(__pyx_t_1))) || (PyList_CheckExact(__pyx_t_1))) {
-    PyObject* sequence = __pyx_t_1;
-    Py_ssize_t size = __Pyx_PySequence_SIZE(sequence);
-    if (unlikely(size != 2)) {
-      if (size > 2) __Pyx_RaiseTooManyValuesError(2);
-      else if (size >= 0) __Pyx_RaiseNeedMoreValuesError(size);
-      __PYX_ERR(0, 40, __pyx_L1_error)
-    }
-    #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-    if (likely(PyTuple_CheckExact(sequence))) {
-      __pyx_t_2 = PyTuple_GET_ITEM(sequence, 0); 
-      __pyx_t_3 = PyTuple_GET_ITEM(sequence, 1); 
-    } else {
-      __pyx_t_2 = PyList_GET_ITEM(sequence, 0); 
-      __pyx_t_3 = PyList_GET_ITEM(sequence, 1); 
-    }
-    __Pyx_INCREF(__pyx_t_2);
-    __Pyx_INCREF(__pyx_t_3);
-    #else
-    __pyx_t_2 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 40, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_3 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 40, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    #endif
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  } else {
-    Py_ssize_t index = -1;
-    __pyx_t_4 = PyObject_GetIter(__pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 40, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __pyx_t_5 = Py_TYPE(__pyx_t_4)->tp_iternext;
-    index = 0; __pyx_t_2 = __pyx_t_5(__pyx_t_4); if (unlikely(!__pyx_t_2)) goto __pyx_L3_unpacking_failed;
-    __Pyx_GOTREF(__pyx_t_2);
-    index = 1; __pyx_t_3 = __pyx_t_5(__pyx_t_4); if (unlikely(!__pyx_t_3)) goto __pyx_L3_unpacking_failed;
-    __Pyx_GOTREF(__pyx_t_3);
-    if (__Pyx_IternextUnpackEndCheck(__pyx_t_5(__pyx_t_4), 2) < 0) __PYX_ERR(0, 40, __pyx_L1_error)
-    __pyx_t_5 = NULL;
-    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    goto __pyx_L4_unpacking_done;
-    __pyx_L3_unpacking_failed:;
-    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_t_5 = NULL;
-    if (__Pyx_IterFinish() == 0) __Pyx_RaiseNeedMoreValuesError(index);
-    __PYX_ERR(0, 40, __pyx_L1_error)
-    __pyx_L4_unpacking_done:;
-  }
-  __pyx_v_dict_couleur = __pyx_t_2;
-  __pyx_t_2 = 0;
-  __pyx_v_couleur_nb = __pyx_t_3;
-  __pyx_t_3 = 0;
-
-  /* "Solving_Methods/Isomorph.pyx":43
+  /* "Solving_Methods/Isomorph.pyx":41
  * 
  *     # initialisation le parametres lis  l'ordre du graphe et des sous-graphes
  *     taille = ordre             # <<<<<<<<<<<<<<
@@ -2043,366 +1915,366 @@ static PyObject *__pyx_pf_15Solving_Methods_8Isomorph_2combi_iso(CYTHON_UNUSED P
   __Pyx_INCREF(__pyx_v_ordre);
   __pyx_v_taille = __pyx_v_ordre;
 
-  /* "Solving_Methods/Isomorph.pyx":48
+  /* "Solving_Methods/Isomorph.pyx":46
  *     cdef int i
  * 
  *     for combi in lst_combi:             # <<<<<<<<<<<<<<
  *         # calcule du certificat de la combinaison
- *         (certif, t_cerif, t_prep_c) = combi_to_certif(combi, matrice_adja, atom_caract, dict_couleur, t_cerif, t_prep_c)
+ *         (certif, t_cerif, t_prep_c) = combi_to_certif(combi, matrice_adja, atom_caract, lst_col, t_cerif, t_prep_c)
  */
   if (likely(PyList_CheckExact(__pyx_v_lst_combi)) || PyTuple_CheckExact(__pyx_v_lst_combi)) {
-    __pyx_t_1 = __pyx_v_lst_combi; __Pyx_INCREF(__pyx_t_1); __pyx_t_6 = 0;
-    __pyx_t_7 = NULL;
+    __pyx_t_1 = __pyx_v_lst_combi; __Pyx_INCREF(__pyx_t_1); __pyx_t_2 = 0;
+    __pyx_t_3 = NULL;
   } else {
-    __pyx_t_6 = -1; __pyx_t_1 = PyObject_GetIter(__pyx_v_lst_combi); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 48, __pyx_L1_error)
+    __pyx_t_2 = -1; __pyx_t_1 = PyObject_GetIter(__pyx_v_lst_combi); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 46, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_7 = Py_TYPE(__pyx_t_1)->tp_iternext; if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 48, __pyx_L1_error)
+    __pyx_t_3 = Py_TYPE(__pyx_t_1)->tp_iternext; if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 46, __pyx_L1_error)
   }
   for (;;) {
-    if (likely(!__pyx_t_7)) {
+    if (likely(!__pyx_t_3)) {
       if (likely(PyList_CheckExact(__pyx_t_1))) {
-        if (__pyx_t_6 >= PyList_GET_SIZE(__pyx_t_1)) break;
+        if (__pyx_t_2 >= PyList_GET_SIZE(__pyx_t_1)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_3 = PyList_GET_ITEM(__pyx_t_1, __pyx_t_6); __Pyx_INCREF(__pyx_t_3); __pyx_t_6++; if (unlikely(0 < 0)) __PYX_ERR(0, 48, __pyx_L1_error)
+        __pyx_t_4 = PyList_GET_ITEM(__pyx_t_1, __pyx_t_2); __Pyx_INCREF(__pyx_t_4); __pyx_t_2++; if (unlikely(0 < 0)) __PYX_ERR(0, 46, __pyx_L1_error)
         #else
-        __pyx_t_3 = PySequence_ITEM(__pyx_t_1, __pyx_t_6); __pyx_t_6++; if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 48, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_3);
+        __pyx_t_4 = PySequence_ITEM(__pyx_t_1, __pyx_t_2); __pyx_t_2++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 46, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_4);
         #endif
       } else {
-        if (__pyx_t_6 >= PyTuple_GET_SIZE(__pyx_t_1)) break;
+        if (__pyx_t_2 >= PyTuple_GET_SIZE(__pyx_t_1)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_3 = PyTuple_GET_ITEM(__pyx_t_1, __pyx_t_6); __Pyx_INCREF(__pyx_t_3); __pyx_t_6++; if (unlikely(0 < 0)) __PYX_ERR(0, 48, __pyx_L1_error)
+        __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_1, __pyx_t_2); __Pyx_INCREF(__pyx_t_4); __pyx_t_2++; if (unlikely(0 < 0)) __PYX_ERR(0, 46, __pyx_L1_error)
         #else
-        __pyx_t_3 = PySequence_ITEM(__pyx_t_1, __pyx_t_6); __pyx_t_6++; if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 48, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_3);
+        __pyx_t_4 = PySequence_ITEM(__pyx_t_1, __pyx_t_2); __pyx_t_2++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 46, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_4);
         #endif
       }
     } else {
-      __pyx_t_3 = __pyx_t_7(__pyx_t_1);
-      if (unlikely(!__pyx_t_3)) {
+      __pyx_t_4 = __pyx_t_3(__pyx_t_1);
+      if (unlikely(!__pyx_t_4)) {
         PyObject* exc_type = PyErr_Occurred();
         if (exc_type) {
           if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-          else __PYX_ERR(0, 48, __pyx_L1_error)
+          else __PYX_ERR(0, 46, __pyx_L1_error)
         }
         break;
       }
-      __Pyx_GOTREF(__pyx_t_3);
+      __Pyx_GOTREF(__pyx_t_4);
     }
-    __Pyx_XDECREF_SET(__pyx_v_combi, __pyx_t_3);
-    __pyx_t_3 = 0;
+    __Pyx_XDECREF_SET(__pyx_v_combi, __pyx_t_4);
+    __pyx_t_4 = 0;
 
-    /* "Solving_Methods/Isomorph.pyx":50
+    /* "Solving_Methods/Isomorph.pyx":48
  *     for combi in lst_combi:
  *         # calcule du certificat de la combinaison
- *         (certif, t_cerif, t_prep_c) = combi_to_certif(combi, matrice_adja, atom_caract, dict_couleur, t_cerif, t_prep_c)             # <<<<<<<<<<<<<<
+ *         (certif, t_cerif, t_prep_c) = combi_to_certif(combi, matrice_adja, atom_caract, lst_col, t_cerif, t_prep_c)             # <<<<<<<<<<<<<<
  *         ## ^ 2 last values are test
  *         time_begin = time.time()
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_combi_to_certif); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 50, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_4 = NULL;
-    __pyx_t_8 = 0;
-    if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
-      __pyx_t_4 = PyMethod_GET_SELF(__pyx_t_2);
-      if (likely(__pyx_t_4)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
-        __Pyx_INCREF(__pyx_t_4);
+    __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_n_s_combi_to_certif); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 48, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_5);
+    __pyx_t_6 = NULL;
+    __pyx_t_7 = 0;
+    if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_5))) {
+      __pyx_t_6 = PyMethod_GET_SELF(__pyx_t_5);
+      if (likely(__pyx_t_6)) {
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_5);
+        __Pyx_INCREF(__pyx_t_6);
         __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_2, function);
-        __pyx_t_8 = 1;
+        __Pyx_DECREF_SET(__pyx_t_5, function);
+        __pyx_t_7 = 1;
       }
     }
     #if CYTHON_FAST_PYCALL
-    if (PyFunction_Check(__pyx_t_2)) {
-      PyObject *__pyx_temp[7] = {__pyx_t_4, __pyx_v_combi, __pyx_v_matrice_adja, __pyx_v_atom_caract, __pyx_v_dict_couleur, __pyx_v_t_cerif, __pyx_v_t_prep_c};
-      __pyx_t_3 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_8, 6+__pyx_t_8); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 50, __pyx_L1_error)
-      __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-      __Pyx_GOTREF(__pyx_t_3);
+    if (PyFunction_Check(__pyx_t_5)) {
+      PyObject *__pyx_temp[7] = {__pyx_t_6, __pyx_v_combi, __pyx_v_matrice_adja, __pyx_v_atom_caract, __pyx_v_lst_col, __pyx_v_t_cerif, __pyx_v_t_prep_c};
+      __pyx_t_4 = __Pyx_PyFunction_FastCall(__pyx_t_5, __pyx_temp+1-__pyx_t_7, 6+__pyx_t_7); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 48, __pyx_L1_error)
+      __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
+      __Pyx_GOTREF(__pyx_t_4);
     } else
     #endif
     #if CYTHON_FAST_PYCCALL
-    if (__Pyx_PyFastCFunction_Check(__pyx_t_2)) {
-      PyObject *__pyx_temp[7] = {__pyx_t_4, __pyx_v_combi, __pyx_v_matrice_adja, __pyx_v_atom_caract, __pyx_v_dict_couleur, __pyx_v_t_cerif, __pyx_v_t_prep_c};
-      __pyx_t_3 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_8, 6+__pyx_t_8); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 50, __pyx_L1_error)
-      __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-      __Pyx_GOTREF(__pyx_t_3);
+    if (__Pyx_PyFastCFunction_Check(__pyx_t_5)) {
+      PyObject *__pyx_temp[7] = {__pyx_t_6, __pyx_v_combi, __pyx_v_matrice_adja, __pyx_v_atom_caract, __pyx_v_lst_col, __pyx_v_t_cerif, __pyx_v_t_prep_c};
+      __pyx_t_4 = __Pyx_PyCFunction_FastCall(__pyx_t_5, __pyx_temp+1-__pyx_t_7, 6+__pyx_t_7); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 48, __pyx_L1_error)
+      __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
+      __Pyx_GOTREF(__pyx_t_4);
     } else
     #endif
     {
-      __pyx_t_9 = PyTuple_New(6+__pyx_t_8); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 50, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_9);
-      if (__pyx_t_4) {
-        __Pyx_GIVEREF(__pyx_t_4); PyTuple_SET_ITEM(__pyx_t_9, 0, __pyx_t_4); __pyx_t_4 = NULL;
+      __pyx_t_8 = PyTuple_New(6+__pyx_t_7); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 48, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_8);
+      if (__pyx_t_6) {
+        __Pyx_GIVEREF(__pyx_t_6); PyTuple_SET_ITEM(__pyx_t_8, 0, __pyx_t_6); __pyx_t_6 = NULL;
       }
       __Pyx_INCREF(__pyx_v_combi);
       __Pyx_GIVEREF(__pyx_v_combi);
-      PyTuple_SET_ITEM(__pyx_t_9, 0+__pyx_t_8, __pyx_v_combi);
+      PyTuple_SET_ITEM(__pyx_t_8, 0+__pyx_t_7, __pyx_v_combi);
       __Pyx_INCREF(__pyx_v_matrice_adja);
       __Pyx_GIVEREF(__pyx_v_matrice_adja);
-      PyTuple_SET_ITEM(__pyx_t_9, 1+__pyx_t_8, __pyx_v_matrice_adja);
+      PyTuple_SET_ITEM(__pyx_t_8, 1+__pyx_t_7, __pyx_v_matrice_adja);
       __Pyx_INCREF(__pyx_v_atom_caract);
       __Pyx_GIVEREF(__pyx_v_atom_caract);
-      PyTuple_SET_ITEM(__pyx_t_9, 2+__pyx_t_8, __pyx_v_atom_caract);
-      __Pyx_INCREF(__pyx_v_dict_couleur);
-      __Pyx_GIVEREF(__pyx_v_dict_couleur);
-      PyTuple_SET_ITEM(__pyx_t_9, 3+__pyx_t_8, __pyx_v_dict_couleur);
+      PyTuple_SET_ITEM(__pyx_t_8, 2+__pyx_t_7, __pyx_v_atom_caract);
+      __Pyx_INCREF(__pyx_v_lst_col);
+      __Pyx_GIVEREF(__pyx_v_lst_col);
+      PyTuple_SET_ITEM(__pyx_t_8, 3+__pyx_t_7, __pyx_v_lst_col);
       __Pyx_INCREF(__pyx_v_t_cerif);
       __Pyx_GIVEREF(__pyx_v_t_cerif);
-      PyTuple_SET_ITEM(__pyx_t_9, 4+__pyx_t_8, __pyx_v_t_cerif);
+      PyTuple_SET_ITEM(__pyx_t_8, 4+__pyx_t_7, __pyx_v_t_cerif);
       __Pyx_INCREF(__pyx_v_t_prep_c);
       __Pyx_GIVEREF(__pyx_v_t_prep_c);
-      PyTuple_SET_ITEM(__pyx_t_9, 5+__pyx_t_8, __pyx_v_t_prep_c);
-      __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_9, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 50, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_3);
-      __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+      PyTuple_SET_ITEM(__pyx_t_8, 5+__pyx_t_7, __pyx_v_t_prep_c);
+      __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_5, __pyx_t_8, NULL); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 48, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_4);
+      __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
     }
-    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if ((likely(PyTuple_CheckExact(__pyx_t_3))) || (PyList_CheckExact(__pyx_t_3))) {
-      PyObject* sequence = __pyx_t_3;
+    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+    if ((likely(PyTuple_CheckExact(__pyx_t_4))) || (PyList_CheckExact(__pyx_t_4))) {
+      PyObject* sequence = __pyx_t_4;
       Py_ssize_t size = __Pyx_PySequence_SIZE(sequence);
       if (unlikely(size != 3)) {
         if (size > 3) __Pyx_RaiseTooManyValuesError(3);
         else if (size >= 0) __Pyx_RaiseNeedMoreValuesError(size);
-        __PYX_ERR(0, 50, __pyx_L1_error)
+        __PYX_ERR(0, 48, __pyx_L1_error)
       }
       #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
       if (likely(PyTuple_CheckExact(sequence))) {
-        __pyx_t_2 = PyTuple_GET_ITEM(sequence, 0); 
-        __pyx_t_9 = PyTuple_GET_ITEM(sequence, 1); 
-        __pyx_t_4 = PyTuple_GET_ITEM(sequence, 2); 
+        __pyx_t_5 = PyTuple_GET_ITEM(sequence, 0); 
+        __pyx_t_8 = PyTuple_GET_ITEM(sequence, 1); 
+        __pyx_t_6 = PyTuple_GET_ITEM(sequence, 2); 
       } else {
-        __pyx_t_2 = PyList_GET_ITEM(sequence, 0); 
-        __pyx_t_9 = PyList_GET_ITEM(sequence, 1); 
-        __pyx_t_4 = PyList_GET_ITEM(sequence, 2); 
+        __pyx_t_5 = PyList_GET_ITEM(sequence, 0); 
+        __pyx_t_8 = PyList_GET_ITEM(sequence, 1); 
+        __pyx_t_6 = PyList_GET_ITEM(sequence, 2); 
       }
-      __Pyx_INCREF(__pyx_t_2);
-      __Pyx_INCREF(__pyx_t_9);
-      __Pyx_INCREF(__pyx_t_4);
+      __Pyx_INCREF(__pyx_t_5);
+      __Pyx_INCREF(__pyx_t_8);
+      __Pyx_INCREF(__pyx_t_6);
       #else
-      __pyx_t_2 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 50, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_2);
-      __pyx_t_9 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 50, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_9);
-      __pyx_t_4 = PySequence_ITEM(sequence, 2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 50, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_4);
+      __pyx_t_5 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 48, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_5);
+      __pyx_t_8 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 48, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_8);
+      __pyx_t_6 = PySequence_ITEM(sequence, 2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 48, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_6);
       #endif
-      __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+      __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     } else {
       Py_ssize_t index = -1;
-      __pyx_t_10 = PyObject_GetIter(__pyx_t_3); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 50, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_10);
-      __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      __pyx_t_5 = Py_TYPE(__pyx_t_10)->tp_iternext;
-      index = 0; __pyx_t_2 = __pyx_t_5(__pyx_t_10); if (unlikely(!__pyx_t_2)) goto __pyx_L7_unpacking_failed;
-      __Pyx_GOTREF(__pyx_t_2);
-      index = 1; __pyx_t_9 = __pyx_t_5(__pyx_t_10); if (unlikely(!__pyx_t_9)) goto __pyx_L7_unpacking_failed;
+      __pyx_t_9 = PyObject_GetIter(__pyx_t_4); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 48, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_9);
-      index = 2; __pyx_t_4 = __pyx_t_5(__pyx_t_10); if (unlikely(!__pyx_t_4)) goto __pyx_L7_unpacking_failed;
-      __Pyx_GOTREF(__pyx_t_4);
-      if (__Pyx_IternextUnpackEndCheck(__pyx_t_5(__pyx_t_10), 3) < 0) __PYX_ERR(0, 50, __pyx_L1_error)
-      __pyx_t_5 = NULL;
-      __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-      goto __pyx_L8_unpacking_done;
-      __pyx_L7_unpacking_failed:;
-      __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-      __pyx_t_5 = NULL;
+      __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+      __pyx_t_10 = Py_TYPE(__pyx_t_9)->tp_iternext;
+      index = 0; __pyx_t_5 = __pyx_t_10(__pyx_t_9); if (unlikely(!__pyx_t_5)) goto __pyx_L5_unpacking_failed;
+      __Pyx_GOTREF(__pyx_t_5);
+      index = 1; __pyx_t_8 = __pyx_t_10(__pyx_t_9); if (unlikely(!__pyx_t_8)) goto __pyx_L5_unpacking_failed;
+      __Pyx_GOTREF(__pyx_t_8);
+      index = 2; __pyx_t_6 = __pyx_t_10(__pyx_t_9); if (unlikely(!__pyx_t_6)) goto __pyx_L5_unpacking_failed;
+      __Pyx_GOTREF(__pyx_t_6);
+      if (__Pyx_IternextUnpackEndCheck(__pyx_t_10(__pyx_t_9), 3) < 0) __PYX_ERR(0, 48, __pyx_L1_error)
+      __pyx_t_10 = NULL;
+      __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+      goto __pyx_L6_unpacking_done;
+      __pyx_L5_unpacking_failed:;
+      __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+      __pyx_t_10 = NULL;
       if (__Pyx_IterFinish() == 0) __Pyx_RaiseNeedMoreValuesError(index);
-      __PYX_ERR(0, 50, __pyx_L1_error)
-      __pyx_L8_unpacking_done:;
+      __PYX_ERR(0, 48, __pyx_L1_error)
+      __pyx_L6_unpacking_done:;
     }
-    __Pyx_XDECREF_SET(__pyx_v_certif, __pyx_t_2);
-    __pyx_t_2 = 0;
-    __Pyx_DECREF_SET(__pyx_v_t_cerif, __pyx_t_9);
-    __pyx_t_9 = 0;
-    __Pyx_DECREF_SET(__pyx_v_t_prep_c, __pyx_t_4);
-    __pyx_t_4 = 0;
+    __Pyx_XDECREF_SET(__pyx_v_certif, __pyx_t_5);
+    __pyx_t_5 = 0;
+    __Pyx_DECREF_SET(__pyx_v_t_cerif, __pyx_t_8);
+    __pyx_t_8 = 0;
+    __Pyx_DECREF_SET(__pyx_v_t_prep_c, __pyx_t_6);
+    __pyx_t_6 = 0;
 
-    /* "Solving_Methods/Isomorph.pyx":52
- *         (certif, t_cerif, t_prep_c) = combi_to_certif(combi, matrice_adja, atom_caract, dict_couleur, t_cerif, t_prep_c)
+    /* "Solving_Methods/Isomorph.pyx":50
+ *         (certif, t_cerif, t_prep_c) = combi_to_certif(combi, matrice_adja, atom_caract, lst_col, t_cerif, t_prep_c)
  *         ## ^ 2 last values are test
  *         time_begin = time.time()             # <<<<<<<<<<<<<<
  *         if certif not in lst_certif:
  *             lst_certif.append(certif)
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_time); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 52, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_time); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 52, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_9);
-    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_t_4 = NULL;
-    if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_9))) {
-      __pyx_t_4 = PyMethod_GET_SELF(__pyx_t_9);
-      if (likely(__pyx_t_4)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_9);
-        __Pyx_INCREF(__pyx_t_4);
+    __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_time); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 50, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_6);
+    __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_n_s_time); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 50, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_8);
+    __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+    __pyx_t_6 = NULL;
+    if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_8))) {
+      __pyx_t_6 = PyMethod_GET_SELF(__pyx_t_8);
+      if (likely(__pyx_t_6)) {
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_8);
+        __Pyx_INCREF(__pyx_t_6);
         __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_9, function);
+        __Pyx_DECREF_SET(__pyx_t_8, function);
       }
     }
-    __pyx_t_3 = (__pyx_t_4) ? __Pyx_PyObject_CallOneArg(__pyx_t_9, __pyx_t_4) : __Pyx_PyObject_CallNoArg(__pyx_t_9);
-    __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 52, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-    __Pyx_XDECREF_SET(__pyx_v_time_begin, __pyx_t_3);
-    __pyx_t_3 = 0;
+    __pyx_t_4 = (__pyx_t_6) ? __Pyx_PyObject_CallOneArg(__pyx_t_8, __pyx_t_6) : __Pyx_PyObject_CallNoArg(__pyx_t_8);
+    __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
+    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 50, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_4);
+    __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+    __Pyx_XDECREF_SET(__pyx_v_time_begin, __pyx_t_4);
+    __pyx_t_4 = 0;
 
-    /* "Solving_Methods/Isomorph.pyx":53
+    /* "Solving_Methods/Isomorph.pyx":51
  *         ## ^ 2 last values are test
  *         time_begin = time.time()
  *         if certif not in lst_certif:             # <<<<<<<<<<<<<<
  *             lst_certif.append(certif)
  *             indice = lst_certif.index(certif)
  */
-    __pyx_t_11 = (__Pyx_PySequence_ContainsTF(__pyx_v_certif, __pyx_v_lst_certif, Py_NE)); if (unlikely(__pyx_t_11 < 0)) __PYX_ERR(0, 53, __pyx_L1_error)
+    __pyx_t_11 = (__Pyx_PySequence_ContainsTF(__pyx_v_certif, __pyx_v_lst_certif, Py_NE)); if (unlikely(__pyx_t_11 < 0)) __PYX_ERR(0, 51, __pyx_L1_error)
     __pyx_t_12 = (__pyx_t_11 != 0);
     if (__pyx_t_12) {
 
-      /* "Solving_Methods/Isomorph.pyx":54
+      /* "Solving_Methods/Isomorph.pyx":52
  *         time_begin = time.time()
  *         if certif not in lst_certif:
  *             lst_certif.append(certif)             # <<<<<<<<<<<<<<
  *             indice = lst_certif.index(certif)
  *             dict_isomorph[indice] = [interize(combi.copy())]
  */
-      __pyx_t_13 = __Pyx_PyList_Append(__pyx_v_lst_certif, __pyx_v_certif); if (unlikely(__pyx_t_13 == ((int)-1))) __PYX_ERR(0, 54, __pyx_L1_error)
+      __pyx_t_13 = __Pyx_PyList_Append(__pyx_v_lst_certif, __pyx_v_certif); if (unlikely(__pyx_t_13 == ((int)-1))) __PYX_ERR(0, 52, __pyx_L1_error)
 
-      /* "Solving_Methods/Isomorph.pyx":55
+      /* "Solving_Methods/Isomorph.pyx":53
  *         if certif not in lst_certif:
  *             lst_certif.append(certif)
  *             indice = lst_certif.index(certif)             # <<<<<<<<<<<<<<
  *             dict_isomorph[indice] = [interize(combi.copy())]
  *             dict_stat[indice] = [1,interize(combi.copy())]
  */
-      __pyx_t_3 = __Pyx_CallUnboundCMethod1(&__pyx_umethod_PyList_Type_index, __pyx_v_lst_certif, __pyx_v_certif); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 55, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_3);
-      __Pyx_XDECREF_SET(__pyx_v_indice, __pyx_t_3);
-      __pyx_t_3 = 0;
+      __pyx_t_4 = __Pyx_CallUnboundCMethod1(&__pyx_umethod_PyList_Type_index, __pyx_v_lst_certif, __pyx_v_certif); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 53, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_4);
+      __Pyx_XDECREF_SET(__pyx_v_indice, __pyx_t_4);
+      __pyx_t_4 = 0;
 
-      /* "Solving_Methods/Isomorph.pyx":56
+      /* "Solving_Methods/Isomorph.pyx":54
  *             lst_certif.append(certif)
  *             indice = lst_certif.index(certif)
  *             dict_isomorph[indice] = [interize(combi.copy())]             # <<<<<<<<<<<<<<
  *             dict_stat[indice] = [1,interize(combi.copy())]
  *             lst_id.append(indice)
  */
-      __Pyx_GetModuleGlobalName(__pyx_t_9, __pyx_n_s_interize); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 56, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_9);
-      __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_combi, __pyx_n_s_copy); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 56, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_2);
-      __pyx_t_10 = NULL;
-      if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
-        __pyx_t_10 = PyMethod_GET_SELF(__pyx_t_2);
-        if (likely(__pyx_t_10)) {
-          PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
-          __Pyx_INCREF(__pyx_t_10);
+      __Pyx_GetModuleGlobalName(__pyx_t_8, __pyx_n_s_interize); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 54, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_8);
+      __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_combi, __pyx_n_s_copy); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 54, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_5);
+      __pyx_t_9 = NULL;
+      if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_5))) {
+        __pyx_t_9 = PyMethod_GET_SELF(__pyx_t_5);
+        if (likely(__pyx_t_9)) {
+          PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_5);
+          __Pyx_INCREF(__pyx_t_9);
           __Pyx_INCREF(function);
-          __Pyx_DECREF_SET(__pyx_t_2, function);
+          __Pyx_DECREF_SET(__pyx_t_5, function);
         }
       }
-      __pyx_t_4 = (__pyx_t_10) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_10) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
-      __Pyx_XDECREF(__pyx_t_10); __pyx_t_10 = 0;
-      if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 56, __pyx_L1_error)
+      __pyx_t_6 = (__pyx_t_9) ? __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_t_9) : __Pyx_PyObject_CallNoArg(__pyx_t_5);
+      __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
+      if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 54, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_6);
+      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+      __pyx_t_5 = NULL;
+      if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_8))) {
+        __pyx_t_5 = PyMethod_GET_SELF(__pyx_t_8);
+        if (likely(__pyx_t_5)) {
+          PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_8);
+          __Pyx_INCREF(__pyx_t_5);
+          __Pyx_INCREF(function);
+          __Pyx_DECREF_SET(__pyx_t_8, function);
+        }
+      }
+      __pyx_t_4 = (__pyx_t_5) ? __Pyx_PyObject_Call2Args(__pyx_t_8, __pyx_t_5, __pyx_t_6) : __Pyx_PyObject_CallOneArg(__pyx_t_8, __pyx_t_6);
+      __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
+      __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+      if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 54, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
-      __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-      __pyx_t_2 = NULL;
-      if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_9))) {
-        __pyx_t_2 = PyMethod_GET_SELF(__pyx_t_9);
-        if (likely(__pyx_t_2)) {
-          PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_9);
-          __Pyx_INCREF(__pyx_t_2);
-          __Pyx_INCREF(function);
-          __Pyx_DECREF_SET(__pyx_t_9, function);
-        }
-      }
-      __pyx_t_3 = (__pyx_t_2) ? __Pyx_PyObject_Call2Args(__pyx_t_9, __pyx_t_2, __pyx_t_4) : __Pyx_PyObject_CallOneArg(__pyx_t_9, __pyx_t_4);
-      __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-      __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-      if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 56, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_3);
-      __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-      __pyx_t_9 = PyList_New(1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 56, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_9);
-      __Pyx_GIVEREF(__pyx_t_3);
-      PyList_SET_ITEM(__pyx_t_9, 0, __pyx_t_3);
-      __pyx_t_3 = 0;
-      if (unlikely(PyDict_SetItem(__pyx_v_dict_isomorph, __pyx_v_indice, __pyx_t_9) < 0)) __PYX_ERR(0, 56, __pyx_L1_error)
-      __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+      __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+      __pyx_t_8 = PyList_New(1); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 54, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_8);
+      __Pyx_GIVEREF(__pyx_t_4);
+      PyList_SET_ITEM(__pyx_t_8, 0, __pyx_t_4);
+      __pyx_t_4 = 0;
+      if (unlikely(PyDict_SetItem(__pyx_v_dict_isomorph, __pyx_v_indice, __pyx_t_8) < 0)) __PYX_ERR(0, 54, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
 
-      /* "Solving_Methods/Isomorph.pyx":57
+      /* "Solving_Methods/Isomorph.pyx":55
  *             indice = lst_certif.index(certif)
  *             dict_isomorph[indice] = [interize(combi.copy())]
  *             dict_stat[indice] = [1,interize(combi.copy())]             # <<<<<<<<<<<<<<
  *             lst_id.append(indice)
  *         else:
  */
-      __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_interize); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 57, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_combi, __pyx_n_s_copy); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 57, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_2);
-      __pyx_t_10 = NULL;
-      if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
-        __pyx_t_10 = PyMethod_GET_SELF(__pyx_t_2);
-        if (likely(__pyx_t_10)) {
-          PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
-          __Pyx_INCREF(__pyx_t_10);
-          __Pyx_INCREF(function);
-          __Pyx_DECREF_SET(__pyx_t_2, function);
-        }
-      }
-      __pyx_t_4 = (__pyx_t_10) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_10) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
-      __Pyx_XDECREF(__pyx_t_10); __pyx_t_10 = 0;
-      if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 57, __pyx_L1_error)
+      __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_interize); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 55, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
-      __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-      __pyx_t_2 = NULL;
-      if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_3))) {
-        __pyx_t_2 = PyMethod_GET_SELF(__pyx_t_3);
-        if (likely(__pyx_t_2)) {
-          PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
-          __Pyx_INCREF(__pyx_t_2);
+      __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_combi, __pyx_n_s_copy); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 55, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_5);
+      __pyx_t_9 = NULL;
+      if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_5))) {
+        __pyx_t_9 = PyMethod_GET_SELF(__pyx_t_5);
+        if (likely(__pyx_t_9)) {
+          PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_5);
+          __Pyx_INCREF(__pyx_t_9);
           __Pyx_INCREF(function);
-          __Pyx_DECREF_SET(__pyx_t_3, function);
+          __Pyx_DECREF_SET(__pyx_t_5, function);
         }
       }
-      __pyx_t_9 = (__pyx_t_2) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_2, __pyx_t_4) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_4);
-      __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
+      __pyx_t_6 = (__pyx_t_9) ? __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_t_9) : __Pyx_PyObject_CallNoArg(__pyx_t_5);
+      __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
+      if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 55, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_6);
+      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+      __pyx_t_5 = NULL;
+      if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_4))) {
+        __pyx_t_5 = PyMethod_GET_SELF(__pyx_t_4);
+        if (likely(__pyx_t_5)) {
+          PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_4);
+          __Pyx_INCREF(__pyx_t_5);
+          __Pyx_INCREF(function);
+          __Pyx_DECREF_SET(__pyx_t_4, function);
+        }
+      }
+      __pyx_t_8 = (__pyx_t_5) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_5, __pyx_t_6) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_6);
+      __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
+      __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+      if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 55, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_8);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-      if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 57, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_9);
-      __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      __pyx_t_3 = PyList_New(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 57, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_3);
+      __pyx_t_4 = PyList_New(2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 55, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_4);
       __Pyx_INCREF(__pyx_int_1);
       __Pyx_GIVEREF(__pyx_int_1);
-      PyList_SET_ITEM(__pyx_t_3, 0, __pyx_int_1);
-      __Pyx_GIVEREF(__pyx_t_9);
-      PyList_SET_ITEM(__pyx_t_3, 1, __pyx_t_9);
-      __pyx_t_9 = 0;
-      if (unlikely(PyDict_SetItem(__pyx_v_dict_stat, __pyx_v_indice, __pyx_t_3) < 0)) __PYX_ERR(0, 57, __pyx_L1_error)
-      __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+      PyList_SET_ITEM(__pyx_t_4, 0, __pyx_int_1);
+      __Pyx_GIVEREF(__pyx_t_8);
+      PyList_SET_ITEM(__pyx_t_4, 1, __pyx_t_8);
+      __pyx_t_8 = 0;
+      if (unlikely(PyDict_SetItem(__pyx_v_dict_stat, __pyx_v_indice, __pyx_t_4) < 0)) __PYX_ERR(0, 55, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-      /* "Solving_Methods/Isomorph.pyx":58
+      /* "Solving_Methods/Isomorph.pyx":56
  *             dict_isomorph[indice] = [interize(combi.copy())]
  *             dict_stat[indice] = [1,interize(combi.copy())]
  *             lst_id.append(indice)             # <<<<<<<<<<<<<<
  *         else:
  *             indice = lst_certif.index(certif)
  */
-      __pyx_t_13 = __Pyx_PyList_Append(__pyx_v_lst_id, __pyx_v_indice); if (unlikely(__pyx_t_13 == ((int)-1))) __PYX_ERR(0, 58, __pyx_L1_error)
+      __pyx_t_13 = __Pyx_PyList_Append(__pyx_v_lst_id, __pyx_v_indice); if (unlikely(__pyx_t_13 == ((int)-1))) __PYX_ERR(0, 56, __pyx_L1_error)
 
-      /* "Solving_Methods/Isomorph.pyx":53
+      /* "Solving_Methods/Isomorph.pyx":51
  *         ## ^ 2 last values are test
  *         time_begin = time.time()
  *         if certif not in lst_certif:             # <<<<<<<<<<<<<<
  *             lst_certif.append(certif)
  *             indice = lst_certif.index(certif)
  */
-      goto __pyx_L9;
+      goto __pyx_L7;
     }
 
-    /* "Solving_Methods/Isomorph.pyx":60
+    /* "Solving_Methods/Isomorph.pyx":58
  *             lst_id.append(indice)
  *         else:
  *             indice = lst_certif.index(certif)             # <<<<<<<<<<<<<<
@@ -2410,118 +2282,118 @@ static PyObject *__pyx_pf_15Solving_Methods_8Isomorph_2combi_iso(CYTHON_UNUSED P
  *             tmp = dict_stat.get(indice)
  */
     /*else*/ {
-      __pyx_t_3 = __Pyx_CallUnboundCMethod1(&__pyx_umethod_PyList_Type_index, __pyx_v_lst_certif, __pyx_v_certif); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 60, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_3);
-      __Pyx_XDECREF_SET(__pyx_v_indice, __pyx_t_3);
-      __pyx_t_3 = 0;
+      __pyx_t_4 = __Pyx_CallUnboundCMethod1(&__pyx_umethod_PyList_Type_index, __pyx_v_lst_certif, __pyx_v_certif); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 58, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_4);
+      __Pyx_XDECREF_SET(__pyx_v_indice, __pyx_t_4);
+      __pyx_t_4 = 0;
 
-      /* "Solving_Methods/Isomorph.pyx":61
+      /* "Solving_Methods/Isomorph.pyx":59
  *         else:
  *             indice = lst_certif.index(certif)
  *             dict_isomorph[indice].append(interize(combi.copy()))             # <<<<<<<<<<<<<<
  *             tmp = dict_stat.get(indice)
  *             for i in range(len(combi)):
  */
-      __pyx_t_3 = __Pyx_PyDict_GetItem(__pyx_v_dict_isomorph, __pyx_v_indice); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 61, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_3);
-      __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_interize); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 61, __pyx_L1_error)
+      __pyx_t_4 = __Pyx_PyDict_GetItem(__pyx_v_dict_isomorph, __pyx_v_indice); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 59, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
-      __pyx_t_10 = __Pyx_PyObject_GetAttrStr(__pyx_v_combi, __pyx_n_s_copy); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 61, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_10);
+      __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_interize); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 59, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_6);
+      __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_v_combi, __pyx_n_s_copy); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 59, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_9);
       __pyx_t_14 = NULL;
-      if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_10))) {
-        __pyx_t_14 = PyMethod_GET_SELF(__pyx_t_10);
+      if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_9))) {
+        __pyx_t_14 = PyMethod_GET_SELF(__pyx_t_9);
         if (likely(__pyx_t_14)) {
-          PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_10);
+          PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_9);
           __Pyx_INCREF(__pyx_t_14);
           __Pyx_INCREF(function);
-          __Pyx_DECREF_SET(__pyx_t_10, function);
+          __Pyx_DECREF_SET(__pyx_t_9, function);
         }
       }
-      __pyx_t_2 = (__pyx_t_14) ? __Pyx_PyObject_CallOneArg(__pyx_t_10, __pyx_t_14) : __Pyx_PyObject_CallNoArg(__pyx_t_10);
+      __pyx_t_5 = (__pyx_t_14) ? __Pyx_PyObject_CallOneArg(__pyx_t_9, __pyx_t_14) : __Pyx_PyObject_CallNoArg(__pyx_t_9);
       __Pyx_XDECREF(__pyx_t_14); __pyx_t_14 = 0;
-      if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 61, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_2);
-      __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-      __pyx_t_10 = NULL;
-      if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_4))) {
-        __pyx_t_10 = PyMethod_GET_SELF(__pyx_t_4);
-        if (likely(__pyx_t_10)) {
-          PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_4);
-          __Pyx_INCREF(__pyx_t_10);
+      if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 59, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_5);
+      __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+      __pyx_t_9 = NULL;
+      if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_6))) {
+        __pyx_t_9 = PyMethod_GET_SELF(__pyx_t_6);
+        if (likely(__pyx_t_9)) {
+          PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_6);
+          __Pyx_INCREF(__pyx_t_9);
           __Pyx_INCREF(function);
-          __Pyx_DECREF_SET(__pyx_t_4, function);
+          __Pyx_DECREF_SET(__pyx_t_6, function);
         }
       }
-      __pyx_t_9 = (__pyx_t_10) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_10, __pyx_t_2) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_2);
-      __Pyx_XDECREF(__pyx_t_10); __pyx_t_10 = 0;
-      __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-      if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 61, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_9);
+      __pyx_t_8 = (__pyx_t_9) ? __Pyx_PyObject_Call2Args(__pyx_t_6, __pyx_t_9, __pyx_t_5) : __Pyx_PyObject_CallOneArg(__pyx_t_6, __pyx_t_5);
+      __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
+      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+      if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 59, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_8);
+      __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+      __pyx_t_13 = __Pyx_PyObject_Append(__pyx_t_4, __pyx_t_8); if (unlikely(__pyx_t_13 == ((int)-1))) __PYX_ERR(0, 59, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-      __pyx_t_13 = __Pyx_PyObject_Append(__pyx_t_3, __pyx_t_9); if (unlikely(__pyx_t_13 == ((int)-1))) __PYX_ERR(0, 61, __pyx_L1_error)
-      __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+      __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
 
-      /* "Solving_Methods/Isomorph.pyx":62
+      /* "Solving_Methods/Isomorph.pyx":60
  *             indice = lst_certif.index(certif)
  *             dict_isomorph[indice].append(interize(combi.copy()))
  *             tmp = dict_stat.get(indice)             # <<<<<<<<<<<<<<
  *             for i in range(len(combi)):
  *                 if combi[i] == True:
  */
-      __pyx_t_9 = __Pyx_PyDict_GetItemDefault(__pyx_v_dict_stat, __pyx_v_indice, Py_None); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 62, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_9);
-      __Pyx_XDECREF_SET(__pyx_v_tmp, __pyx_t_9);
-      __pyx_t_9 = 0;
+      __pyx_t_8 = __Pyx_PyDict_GetItemDefault(__pyx_v_dict_stat, __pyx_v_indice, Py_None); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 60, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_8);
+      __Pyx_XDECREF_SET(__pyx_v_tmp, __pyx_t_8);
+      __pyx_t_8 = 0;
 
-      /* "Solving_Methods/Isomorph.pyx":63
+      /* "Solving_Methods/Isomorph.pyx":61
  *             dict_isomorph[indice].append(interize(combi.copy()))
  *             tmp = dict_stat.get(indice)
  *             for i in range(len(combi)):             # <<<<<<<<<<<<<<
  *                 if combi[i] == True:
  *                     tmp[1][i] += 1
  */
-      __pyx_t_15 = PyObject_Length(__pyx_v_combi); if (unlikely(__pyx_t_15 == ((Py_ssize_t)-1))) __PYX_ERR(0, 63, __pyx_L1_error)
+      __pyx_t_15 = PyObject_Length(__pyx_v_combi); if (unlikely(__pyx_t_15 == ((Py_ssize_t)-1))) __PYX_ERR(0, 61, __pyx_L1_error)
       __pyx_t_16 = __pyx_t_15;
-      for (__pyx_t_8 = 0; __pyx_t_8 < __pyx_t_16; __pyx_t_8+=1) {
-        __pyx_v_i = __pyx_t_8;
+      for (__pyx_t_7 = 0; __pyx_t_7 < __pyx_t_16; __pyx_t_7+=1) {
+        __pyx_v_i = __pyx_t_7;
 
-        /* "Solving_Methods/Isomorph.pyx":64
+        /* "Solving_Methods/Isomorph.pyx":62
  *             tmp = dict_stat.get(indice)
  *             for i in range(len(combi)):
  *                 if combi[i] == True:             # <<<<<<<<<<<<<<
  *                     tmp[1][i] += 1
  *             dict_stat[indice] = [tmp[0]+1 , tmp[1].copy()]
  */
-        __pyx_t_9 = __Pyx_GetItemInt(__pyx_v_combi, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 64, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_9);
-        __pyx_t_3 = PyObject_RichCompare(__pyx_t_9, Py_True, Py_EQ); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 64, __pyx_L1_error)
-        __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-        __pyx_t_12 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_12 < 0)) __PYX_ERR(0, 64, __pyx_L1_error)
-        __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+        __pyx_t_8 = __Pyx_GetItemInt(__pyx_v_combi, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 62, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_8);
+        __pyx_t_4 = PyObject_RichCompare(__pyx_t_8, Py_True, Py_EQ); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 62, __pyx_L1_error)
+        __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+        __pyx_t_12 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_12 < 0)) __PYX_ERR(0, 62, __pyx_L1_error)
+        __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
         if (__pyx_t_12) {
 
-          /* "Solving_Methods/Isomorph.pyx":65
+          /* "Solving_Methods/Isomorph.pyx":63
  *             for i in range(len(combi)):
  *                 if combi[i] == True:
  *                     tmp[1][i] += 1             # <<<<<<<<<<<<<<
  *             dict_stat[indice] = [tmp[0]+1 , tmp[1].copy()]
  *         t_fill += time.time()-time_begin
  */
-          __pyx_t_3 = __Pyx_GetItemInt(__pyx_v_tmp, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 65, __pyx_L1_error)
-          __Pyx_GOTREF(__pyx_t_3);
-          __pyx_t_17 = __pyx_v_i;
-          __pyx_t_9 = __Pyx_GetItemInt(__pyx_t_3, __pyx_t_17, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 65, __pyx_L1_error)
-          __Pyx_GOTREF(__pyx_t_9);
-          __pyx_t_4 = __Pyx_PyInt_AddObjC(__pyx_t_9, __pyx_int_1, 1, 1, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 65, __pyx_L1_error)
+          __pyx_t_4 = __Pyx_GetItemInt(__pyx_v_tmp, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 63, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_4);
-          __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-          if (unlikely(__Pyx_SetItemInt(__pyx_t_3, __pyx_t_17, __pyx_t_4, int, 1, __Pyx_PyInt_From_int, 0, 1, 1) < 0)) __PYX_ERR(0, 65, __pyx_L1_error)
+          __pyx_t_17 = __pyx_v_i;
+          __pyx_t_8 = __Pyx_GetItemInt(__pyx_t_4, __pyx_t_17, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 63, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_8);
+          __pyx_t_6 = __Pyx_PyInt_AddObjC(__pyx_t_8, __pyx_int_1, 1, 1, 0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 63, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_6);
+          __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+          if (unlikely(__Pyx_SetItemInt(__pyx_t_4, __pyx_t_17, __pyx_t_6, int, 1, __Pyx_PyInt_From_int, 0, 1, 1) < 0)) __PYX_ERR(0, 63, __pyx_L1_error)
+          __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
           __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-          __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-          /* "Solving_Methods/Isomorph.pyx":64
+          /* "Solving_Methods/Isomorph.pyx":62
  *             tmp = dict_stat.get(indice)
  *             for i in range(len(combi)):
  *                 if combi[i] == True:             # <<<<<<<<<<<<<<
@@ -2531,98 +2403,98 @@ static PyObject *__pyx_pf_15Solving_Methods_8Isomorph_2combi_iso(CYTHON_UNUSED P
         }
       }
 
-      /* "Solving_Methods/Isomorph.pyx":66
+      /* "Solving_Methods/Isomorph.pyx":64
  *                 if combi[i] == True:
  *                     tmp[1][i] += 1
  *             dict_stat[indice] = [tmp[0]+1 , tmp[1].copy()]             # <<<<<<<<<<<<<<
  *         t_fill += time.time()-time_begin
  * 
  */
-      __pyx_t_3 = __Pyx_GetItemInt(__pyx_v_tmp, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 66, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_4 = __Pyx_PyInt_AddObjC(__pyx_t_3, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 66, __pyx_L1_error)
+      __pyx_t_4 = __Pyx_GetItemInt(__pyx_v_tmp, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 64, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
-      __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      __pyx_t_9 = __Pyx_GetItemInt(__pyx_v_tmp, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 66, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_9);
-      __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_9, __pyx_n_s_copy); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 66, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_2);
-      __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-      __pyx_t_9 = NULL;
-      if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
-        __pyx_t_9 = PyMethod_GET_SELF(__pyx_t_2);
-        if (likely(__pyx_t_9)) {
-          PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
-          __Pyx_INCREF(__pyx_t_9);
+      __pyx_t_6 = __Pyx_PyInt_AddObjC(__pyx_t_4, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 64, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_6);
+      __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+      __pyx_t_8 = __Pyx_GetItemInt(__pyx_v_tmp, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 64, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_8);
+      __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_8, __pyx_n_s_copy); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 64, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_5);
+      __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+      __pyx_t_8 = NULL;
+      if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_5))) {
+        __pyx_t_8 = PyMethod_GET_SELF(__pyx_t_5);
+        if (likely(__pyx_t_8)) {
+          PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_5);
+          __Pyx_INCREF(__pyx_t_8);
           __Pyx_INCREF(function);
-          __Pyx_DECREF_SET(__pyx_t_2, function);
+          __Pyx_DECREF_SET(__pyx_t_5, function);
         }
       }
-      __pyx_t_3 = (__pyx_t_9) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_9) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
-      __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
-      if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 66, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_3);
-      __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-      __pyx_t_2 = PyList_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 66, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_2);
+      __pyx_t_4 = (__pyx_t_8) ? __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_t_8) : __Pyx_PyObject_CallNoArg(__pyx_t_5);
+      __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
+      if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 64, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_4);
+      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+      __pyx_t_5 = PyList_New(2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 64, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_5);
+      __Pyx_GIVEREF(__pyx_t_6);
+      PyList_SET_ITEM(__pyx_t_5, 0, __pyx_t_6);
       __Pyx_GIVEREF(__pyx_t_4);
-      PyList_SET_ITEM(__pyx_t_2, 0, __pyx_t_4);
-      __Pyx_GIVEREF(__pyx_t_3);
-      PyList_SET_ITEM(__pyx_t_2, 1, __pyx_t_3);
+      PyList_SET_ITEM(__pyx_t_5, 1, __pyx_t_4);
+      __pyx_t_6 = 0;
       __pyx_t_4 = 0;
-      __pyx_t_3 = 0;
-      if (unlikely(PyDict_SetItem(__pyx_v_dict_stat, __pyx_v_indice, __pyx_t_2) < 0)) __PYX_ERR(0, 66, __pyx_L1_error)
-      __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+      if (unlikely(PyDict_SetItem(__pyx_v_dict_stat, __pyx_v_indice, __pyx_t_5) < 0)) __PYX_ERR(0, 64, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     }
-    __pyx_L9:;
+    __pyx_L7:;
 
-    /* "Solving_Methods/Isomorph.pyx":67
+    /* "Solving_Methods/Isomorph.pyx":65
  *                     tmp[1][i] += 1
  *             dict_stat[indice] = [tmp[0]+1 , tmp[1].copy()]
  *         t_fill += time.time()-time_begin             # <<<<<<<<<<<<<<
  * 
  *     return dict_isomorph, dict_stat, lst_id, lst_certif, t_cerif, t_prep_c, t_fill ## 3 last values are test
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_time); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 67, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_time); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 67, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_time); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 65, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_t_3 = NULL;
-    if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_4))) {
-      __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_4);
-      if (likely(__pyx_t_3)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_4);
-        __Pyx_INCREF(__pyx_t_3);
+    __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_time); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 65, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_6);
+    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+    __pyx_t_4 = NULL;
+    if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_6))) {
+      __pyx_t_4 = PyMethod_GET_SELF(__pyx_t_6);
+      if (likely(__pyx_t_4)) {
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_6);
+        __Pyx_INCREF(__pyx_t_4);
         __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_4, function);
+        __Pyx_DECREF_SET(__pyx_t_6, function);
       }
     }
-    __pyx_t_2 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_4);
-    __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 67, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_t_4 = PyNumber_Subtract(__pyx_t_2, __pyx_v_time_begin); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 67, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_2 = PyNumber_InPlaceAdd(__pyx_v_t_fill, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 67, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __Pyx_DECREF_SET(__pyx_v_t_fill, __pyx_t_2);
-    __pyx_t_2 = 0;
+    __pyx_t_5 = (__pyx_t_4) ? __Pyx_PyObject_CallOneArg(__pyx_t_6, __pyx_t_4) : __Pyx_PyObject_CallNoArg(__pyx_t_6);
+    __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
+    if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 65, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_5);
+    __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+    __pyx_t_6 = PyNumber_Subtract(__pyx_t_5, __pyx_v_time_begin); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 65, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_6);
+    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+    __pyx_t_5 = PyNumber_InPlaceAdd(__pyx_v_t_fill, __pyx_t_6); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 65, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_5);
+    __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+    __Pyx_DECREF_SET(__pyx_v_t_fill, __pyx_t_5);
+    __pyx_t_5 = 0;
 
-    /* "Solving_Methods/Isomorph.pyx":48
+    /* "Solving_Methods/Isomorph.pyx":46
  *     cdef int i
  * 
  *     for combi in lst_combi:             # <<<<<<<<<<<<<<
  *         # calcule du certificat de la combinaison
- *         (certif, t_cerif, t_prep_c) = combi_to_certif(combi, matrice_adja, atom_caract, dict_couleur, t_cerif, t_prep_c)
+ *         (certif, t_cerif, t_prep_c) = combi_to_certif(combi, matrice_adja, atom_caract, lst_col, t_cerif, t_prep_c)
  */
   }
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "Solving_Methods/Isomorph.pyx":69
+  /* "Solving_Methods/Isomorph.pyx":67
  *         t_fill += time.time()-time_begin
  * 
  *     return dict_isomorph, dict_stat, lst_id, lst_certif, t_cerif, t_prep_c, t_fill ## 3 last values are test             # <<<<<<<<<<<<<<
@@ -2630,7 +2502,7 @@ static PyObject *__pyx_pf_15Solving_Methods_8Isomorph_2combi_iso(CYTHON_UNUSED P
  * ###
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyTuple_New(7); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 69, __pyx_L1_error)
+  __pyx_t_1 = PyTuple_New(7); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 67, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_INCREF(__pyx_v_dict_isomorph);
   __Pyx_GIVEREF(__pyx_v_dict_isomorph);
@@ -2660,7 +2532,7 @@ static PyObject *__pyx_pf_15Solving_Methods_8Isomorph_2combi_iso(CYTHON_UNUSED P
   /* "Solving_Methods/Isomorph.pyx":26
  * ####
  * 
- * def combi_iso(matrice_adja, atom_caract, lst_combi, ordre, t_cerif, t_prep_c, t_fill):## 3 last values are test             # <<<<<<<<<<<<<<
+ * def combi_iso(matrice_adja, atom_caract, lst_col, lst_combi, ordre, t_cerif, t_prep_c, t_fill):## 3 last values are test             # <<<<<<<<<<<<<<
  *     ## Structures de stockage :
  *     # Listes:
  */
@@ -2668,11 +2540,11 @@ static PyObject *__pyx_pf_15Solving_Methods_8Isomorph_2combi_iso(CYTHON_UNUSED P
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_3);
   __Pyx_XDECREF(__pyx_t_4);
+  __Pyx_XDECREF(__pyx_t_5);
+  __Pyx_XDECREF(__pyx_t_6);
+  __Pyx_XDECREF(__pyx_t_8);
   __Pyx_XDECREF(__pyx_t_9);
-  __Pyx_XDECREF(__pyx_t_10);
   __Pyx_XDECREF(__pyx_t_14);
   __Pyx_AddTraceback("Solving_Methods.Isomorph.combi_iso", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
@@ -2681,8 +2553,6 @@ static PyObject *__pyx_pf_15Solving_Methods_8Isomorph_2combi_iso(CYTHON_UNUSED P
   __Pyx_XDECREF(__pyx_v_lst_id);
   __Pyx_XDECREF(__pyx_v_dict_isomorph);
   __Pyx_XDECREF(__pyx_v_dict_stat);
-  __Pyx_XDECREF(__pyx_v_dict_couleur);
-  __Pyx_XDECREF(__pyx_v_couleur_nb);
   __Pyx_XDECREF(__pyx_v_taille);
   __Pyx_XDECREF(__pyx_v_combi);
   __Pyx_XDECREF(__pyx_v_certif);
@@ -2697,265 +2567,22 @@ static PyObject *__pyx_pf_15Solving_Methods_8Isomorph_2combi_iso(CYTHON_UNUSED P
   return __pyx_r;
 }
 
-/* "Solving_Methods/Isomorph.pyx":76
- * 
- * # Initialisation des couleurs
- * def init_col(atom_caract):             # <<<<<<<<<<<<<<
- *     couleur_nb = 0
- *     dict_couleur = {}
- */
-
-/* Python wrapper */
-static PyObject *__pyx_pw_15Solving_Methods_8Isomorph_5init_col(PyObject *__pyx_self, PyObject *__pyx_v_atom_caract); /*proto*/
-static PyMethodDef __pyx_mdef_15Solving_Methods_8Isomorph_5init_col = {"init_col", (PyCFunction)__pyx_pw_15Solving_Methods_8Isomorph_5init_col, METH_O, 0};
-static PyObject *__pyx_pw_15Solving_Methods_8Isomorph_5init_col(PyObject *__pyx_self, PyObject *__pyx_v_atom_caract) {
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("init_col (wrapper)", 0);
-  __pyx_r = __pyx_pf_15Solving_Methods_8Isomorph_4init_col(__pyx_self, ((PyObject *)__pyx_v_atom_caract));
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_15Solving_Methods_8Isomorph_4init_col(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_atom_caract) {
-  PyObject *__pyx_v_couleur_nb = NULL;
-  PyObject *__pyx_v_dict_couleur = NULL;
-  PyObject *__pyx_v_i = NULL;
-  PyObject *__pyx_v_splitted = NULL;
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  Py_ssize_t __pyx_t_2;
-  PyObject *(*__pyx_t_3)(PyObject *);
-  PyObject *__pyx_t_4 = NULL;
-  PyObject *__pyx_t_5 = NULL;
-  PyObject *__pyx_t_6 = NULL;
-  int __pyx_t_7;
-  int __pyx_t_8;
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("init_col", 0);
-
-  /* "Solving_Methods/Isomorph.pyx":77
- * # Initialisation des couleurs
- * def init_col(atom_caract):
- *     couleur_nb = 0             # <<<<<<<<<<<<<<
- *     dict_couleur = {}
- *     for i in atom_caract:
- */
-  __Pyx_INCREF(__pyx_int_0);
-  __pyx_v_couleur_nb = __pyx_int_0;
-
-  /* "Solving_Methods/Isomorph.pyx":78
- * def init_col(atom_caract):
- *     couleur_nb = 0
- *     dict_couleur = {}             # <<<<<<<<<<<<<<
- *     for i in atom_caract:
- *         splitted = i.split()
- */
-  __pyx_t_1 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 78, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_v_dict_couleur = ((PyObject*)__pyx_t_1);
-  __pyx_t_1 = 0;
-
-  /* "Solving_Methods/Isomorph.pyx":79
- *     couleur_nb = 0
- *     dict_couleur = {}
- *     for i in atom_caract:             # <<<<<<<<<<<<<<
- *         splitted = i.split()
- *         if splitted[0] not in dict_couleur:
- */
-  if (likely(PyList_CheckExact(__pyx_v_atom_caract)) || PyTuple_CheckExact(__pyx_v_atom_caract)) {
-    __pyx_t_1 = __pyx_v_atom_caract; __Pyx_INCREF(__pyx_t_1); __pyx_t_2 = 0;
-    __pyx_t_3 = NULL;
-  } else {
-    __pyx_t_2 = -1; __pyx_t_1 = PyObject_GetIter(__pyx_v_atom_caract); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 79, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_3 = Py_TYPE(__pyx_t_1)->tp_iternext; if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 79, __pyx_L1_error)
-  }
-  for (;;) {
-    if (likely(!__pyx_t_3)) {
-      if (likely(PyList_CheckExact(__pyx_t_1))) {
-        if (__pyx_t_2 >= PyList_GET_SIZE(__pyx_t_1)) break;
-        #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_4 = PyList_GET_ITEM(__pyx_t_1, __pyx_t_2); __Pyx_INCREF(__pyx_t_4); __pyx_t_2++; if (unlikely(0 < 0)) __PYX_ERR(0, 79, __pyx_L1_error)
-        #else
-        __pyx_t_4 = PySequence_ITEM(__pyx_t_1, __pyx_t_2); __pyx_t_2++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 79, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_4);
-        #endif
-      } else {
-        if (__pyx_t_2 >= PyTuple_GET_SIZE(__pyx_t_1)) break;
-        #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_1, __pyx_t_2); __Pyx_INCREF(__pyx_t_4); __pyx_t_2++; if (unlikely(0 < 0)) __PYX_ERR(0, 79, __pyx_L1_error)
-        #else
-        __pyx_t_4 = PySequence_ITEM(__pyx_t_1, __pyx_t_2); __pyx_t_2++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 79, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_4);
-        #endif
-      }
-    } else {
-      __pyx_t_4 = __pyx_t_3(__pyx_t_1);
-      if (unlikely(!__pyx_t_4)) {
-        PyObject* exc_type = PyErr_Occurred();
-        if (exc_type) {
-          if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-          else __PYX_ERR(0, 79, __pyx_L1_error)
-        }
-        break;
-      }
-      __Pyx_GOTREF(__pyx_t_4);
-    }
-    __Pyx_XDECREF_SET(__pyx_v_i, __pyx_t_4);
-    __pyx_t_4 = 0;
-
-    /* "Solving_Methods/Isomorph.pyx":80
- *     dict_couleur = {}
- *     for i in atom_caract:
- *         splitted = i.split()             # <<<<<<<<<<<<<<
- *         if splitted[0] not in dict_couleur:
- *             dict_couleur[splitted[0]] = couleur_nb
- */
-    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_i, __pyx_n_s_split); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 80, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_6 = NULL;
-    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_5))) {
-      __pyx_t_6 = PyMethod_GET_SELF(__pyx_t_5);
-      if (likely(__pyx_t_6)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_5);
-        __Pyx_INCREF(__pyx_t_6);
-        __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_5, function);
-      }
-    }
-    __pyx_t_4 = (__pyx_t_6) ? __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_t_6) : __Pyx_PyObject_CallNoArg(__pyx_t_5);
-    __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 80, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    __Pyx_XDECREF_SET(__pyx_v_splitted, __pyx_t_4);
-    __pyx_t_4 = 0;
-
-    /* "Solving_Methods/Isomorph.pyx":81
- *     for i in atom_caract:
- *         splitted = i.split()
- *         if splitted[0] not in dict_couleur:             # <<<<<<<<<<<<<<
- *             dict_couleur[splitted[0]] = couleur_nb
- *             couleur_nb += 1
- */
-    __pyx_t_4 = __Pyx_GetItemInt(__pyx_v_splitted, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 81, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_7 = (__Pyx_PyDict_ContainsTF(__pyx_t_4, __pyx_v_dict_couleur, Py_NE)); if (unlikely(__pyx_t_7 < 0)) __PYX_ERR(0, 81, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_t_8 = (__pyx_t_7 != 0);
-    if (__pyx_t_8) {
-
-      /* "Solving_Methods/Isomorph.pyx":82
- *         splitted = i.split()
- *         if splitted[0] not in dict_couleur:
- *             dict_couleur[splitted[0]] = couleur_nb             # <<<<<<<<<<<<<<
- *             couleur_nb += 1
- *     return dict_couleur, couleur_nb
- */
-      __pyx_t_4 = __Pyx_GetItemInt(__pyx_v_splitted, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 82, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_4);
-      if (unlikely(PyDict_SetItem(__pyx_v_dict_couleur, __pyx_t_4, __pyx_v_couleur_nb) < 0)) __PYX_ERR(0, 82, __pyx_L1_error)
-      __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-
-      /* "Solving_Methods/Isomorph.pyx":83
- *         if splitted[0] not in dict_couleur:
- *             dict_couleur[splitted[0]] = couleur_nb
- *             couleur_nb += 1             # <<<<<<<<<<<<<<
- *     return dict_couleur, couleur_nb
- * 
- */
-      __pyx_t_4 = __Pyx_PyInt_AddObjC(__pyx_v_couleur_nb, __pyx_int_1, 1, 1, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 83, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_4);
-      __Pyx_DECREF_SET(__pyx_v_couleur_nb, __pyx_t_4);
-      __pyx_t_4 = 0;
-
-      /* "Solving_Methods/Isomorph.pyx":81
- *     for i in atom_caract:
- *         splitted = i.split()
- *         if splitted[0] not in dict_couleur:             # <<<<<<<<<<<<<<
- *             dict_couleur[splitted[0]] = couleur_nb
- *             couleur_nb += 1
- */
-    }
-
-    /* "Solving_Methods/Isomorph.pyx":79
- *     couleur_nb = 0
- *     dict_couleur = {}
- *     for i in atom_caract:             # <<<<<<<<<<<<<<
- *         splitted = i.split()
- *         if splitted[0] not in dict_couleur:
- */
-  }
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-
-  /* "Solving_Methods/Isomorph.pyx":84
- *             dict_couleur[splitted[0]] = couleur_nb
- *             couleur_nb += 1
- *     return dict_couleur, couleur_nb             # <<<<<<<<<<<<<<
- * 
- * # Fonction qui gnre une signature canonique  partir d'un graphe color
- */
-  __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyTuple_New(2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 84, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_INCREF(__pyx_v_dict_couleur);
-  __Pyx_GIVEREF(__pyx_v_dict_couleur);
-  PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_v_dict_couleur);
-  __Pyx_INCREF(__pyx_v_couleur_nb);
-  __Pyx_GIVEREF(__pyx_v_couleur_nb);
-  PyTuple_SET_ITEM(__pyx_t_1, 1, __pyx_v_couleur_nb);
-  __pyx_r = __pyx_t_1;
-  __pyx_t_1 = 0;
-  goto __pyx_L0;
-
-  /* "Solving_Methods/Isomorph.pyx":76
- * 
- * # Initialisation des couleurs
- * def init_col(atom_caract):             # <<<<<<<<<<<<<<
- *     couleur_nb = 0
- *     dict_couleur = {}
- */
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_4);
-  __Pyx_XDECREF(__pyx_t_5);
-  __Pyx_XDECREF(__pyx_t_6);
-  __Pyx_AddTraceback("Solving_Methods.Isomorph.init_col", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
-  __pyx_L0:;
-  __Pyx_XDECREF(__pyx_v_couleur_nb);
-  __Pyx_XDECREF(__pyx_v_dict_couleur);
-  __Pyx_XDECREF(__pyx_v_i);
-  __Pyx_XDECREF(__pyx_v_splitted);
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "Solving_Methods/Isomorph.pyx":90
+/* "Solving_Methods/Isomorph.pyx":77
  * # La coloration se fera en ajoutant n arrtes  un sommet ayant la couleur
  * # numro n.
- * def combi_to_certif(combi, matrice_adja, atom_caract, dict_c, t_cerif, t_prep_c):## 2 last values are test             # <<<<<<<<<<<<<<
+ * def combi_to_certif(combi, matrice_adja, atom_caract, lst_col, t_cerif, t_prep_c):## 2 last values are test             # <<<<<<<<<<<<<<
  *     ###### Initialisations ######
  *     # cration d'une liste permettant de renommer les sommets
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_15Solving_Methods_8Isomorph_7combi_to_certif(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_15Solving_Methods_8Isomorph_7combi_to_certif = {"combi_to_certif", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_15Solving_Methods_8Isomorph_7combi_to_certif, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_15Solving_Methods_8Isomorph_7combi_to_certif(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_15Solving_Methods_8Isomorph_5combi_to_certif(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_15Solving_Methods_8Isomorph_5combi_to_certif = {"combi_to_certif", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_15Solving_Methods_8Isomorph_5combi_to_certif, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_15Solving_Methods_8Isomorph_5combi_to_certif(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_combi = 0;
   PyObject *__pyx_v_matrice_adja = 0;
   PyObject *__pyx_v_atom_caract = 0;
-  PyObject *__pyx_v_dict_c = 0;
+  PyObject *__pyx_v_lst_col = 0;
   PyObject *__pyx_v_t_cerif = 0;
   PyObject *__pyx_v_t_prep_c = 0;
   int __pyx_lineno = 0;
@@ -2965,7 +2592,7 @@ static PyObject *__pyx_pw_15Solving_Methods_8Isomorph_7combi_to_certif(PyObject 
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("combi_to_certif (wrapper)", 0);
   {
-    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_combi,&__pyx_n_s_matrice_adja,&__pyx_n_s_atom_caract,&__pyx_n_s_dict_c,&__pyx_n_s_t_cerif,&__pyx_n_s_t_prep_c,0};
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_combi,&__pyx_n_s_matrice_adja,&__pyx_n_s_atom_caract,&__pyx_n_s_lst_col,&__pyx_n_s_t_cerif,&__pyx_n_s_t_prep_c,0};
     PyObject* values[6] = {0,0,0,0,0,0};
     if (unlikely(__pyx_kwds)) {
       Py_ssize_t kw_args;
@@ -2995,35 +2622,35 @@ static PyObject *__pyx_pw_15Solving_Methods_8Isomorph_7combi_to_certif(PyObject 
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_matrice_adja)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("combi_to_certif", 1, 6, 6, 1); __PYX_ERR(0, 90, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("combi_to_certif", 1, 6, 6, 1); __PYX_ERR(0, 77, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_atom_caract)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("combi_to_certif", 1, 6, 6, 2); __PYX_ERR(0, 90, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("combi_to_certif", 1, 6, 6, 2); __PYX_ERR(0, 77, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  3:
-        if (likely((values[3] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_dict_c)) != 0)) kw_args--;
+        if (likely((values[3] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_lst_col)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("combi_to_certif", 1, 6, 6, 3); __PYX_ERR(0, 90, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("combi_to_certif", 1, 6, 6, 3); __PYX_ERR(0, 77, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  4:
         if (likely((values[4] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_t_cerif)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("combi_to_certif", 1, 6, 6, 4); __PYX_ERR(0, 90, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("combi_to_certif", 1, 6, 6, 4); __PYX_ERR(0, 77, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  5:
         if (likely((values[5] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_t_prep_c)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("combi_to_certif", 1, 6, 6, 5); __PYX_ERR(0, 90, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("combi_to_certif", 1, 6, 6, 5); __PYX_ERR(0, 77, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "combi_to_certif") < 0)) __PYX_ERR(0, 90, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "combi_to_certif") < 0)) __PYX_ERR(0, 77, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 6) {
       goto __pyx_L5_argtuple_error;
@@ -3038,30 +2665,29 @@ static PyObject *__pyx_pw_15Solving_Methods_8Isomorph_7combi_to_certif(PyObject 
     __pyx_v_combi = values[0];
     __pyx_v_matrice_adja = values[1];
     __pyx_v_atom_caract = values[2];
-    __pyx_v_dict_c = values[3];
+    __pyx_v_lst_col = values[3];
     __pyx_v_t_cerif = values[4];
     __pyx_v_t_prep_c = values[5];
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("combi_to_certif", 1, 6, 6, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 90, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("combi_to_certif", 1, 6, 6, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 77, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("Solving_Methods.Isomorph.combi_to_certif", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_15Solving_Methods_8Isomorph_6combi_to_certif(__pyx_self, __pyx_v_combi, __pyx_v_matrice_adja, __pyx_v_atom_caract, __pyx_v_dict_c, __pyx_v_t_cerif, __pyx_v_t_prep_c);
+  __pyx_r = __pyx_pf_15Solving_Methods_8Isomorph_4combi_to_certif(__pyx_self, __pyx_v_combi, __pyx_v_matrice_adja, __pyx_v_atom_caract, __pyx_v_lst_col, __pyx_v_t_cerif, __pyx_v_t_prep_c);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_15Solving_Methods_8Isomorph_6combi_to_certif(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_combi, PyObject *__pyx_v_matrice_adja, PyObject *__pyx_v_atom_caract, PyObject *__pyx_v_dict_c, PyObject *__pyx_v_t_cerif, PyObject *__pyx_v_t_prep_c) {
+static PyObject *__pyx_pf_15Solving_Methods_8Isomorph_4combi_to_certif(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_combi, PyObject *__pyx_v_matrice_adja, PyObject *__pyx_v_atom_caract, PyObject *__pyx_v_lst_col, PyObject *__pyx_v_t_cerif, PyObject *__pyx_v_t_prep_c) {
   PyObject *__pyx_v_temp_prep_t = NULL;
   PyObject *__pyx_v_ref = NULL;
   int __pyx_v_i;
-  PyObject *__pyx_v_g = NULL;
   PyObject *__pyx_v_listes_arcs = NULL;
   PyObject *__pyx_v_dict_connex = NULL;
   PyObject *__pyx_v_num_prochain_sommet = NULL;
@@ -3070,6 +2696,7 @@ static PyObject *__pyx_pf_15Solving_Methods_8Isomorph_6combi_to_certif(CYTHON_UN
   PyObject *__pyx_v_list_connex = NULL;
   PyObject *__pyx_v_temp_couleur = NULL;
   PyObject *__pyx_v_nb_couleur = NULL;
+  PyObject *__pyx_v_g = NULL;
   PyObject *__pyx_v_temp_t_cert = NULL;
   PyObject *__pyx_v_cf = NULL;
   PyObject *__pyx_r = NULL;
@@ -3082,9 +2709,9 @@ static PyObject *__pyx_pf_15Solving_Methods_8Isomorph_6combi_to_certif(CYTHON_UN
   int __pyx_t_6;
   int __pyx_t_7;
   int __pyx_t_8;
-  PyObject *__pyx_t_9 = NULL;
-  Py_ssize_t __pyx_t_10;
-  int __pyx_t_11;
+  Py_ssize_t __pyx_t_9;
+  int __pyx_t_10;
+  PyObject *__pyx_t_11 = NULL;
   PyObject *__pyx_t_12 = NULL;
   long __pyx_t_13;
   long __pyx_t_14;
@@ -3095,16 +2722,16 @@ static PyObject *__pyx_pf_15Solving_Methods_8Isomorph_6combi_to_certif(CYTHON_UN
   __Pyx_INCREF(__pyx_v_t_cerif);
   __Pyx_INCREF(__pyx_v_t_prep_c);
 
-  /* "Solving_Methods/Isomorph.pyx":95
+  /* "Solving_Methods/Isomorph.pyx":82
  *     # en fonction des sommets non-concerns
  * 
  *     temp_prep_t = time.time()             # <<<<<<<<<<<<<<
  * 
  *     # liste [] de la taille de la combinaison contenant dans chaque case,
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_time); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 95, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_time); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 82, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_time); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 95, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_time); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 82, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_t_2 = NULL;
@@ -3119,65 +2746,65 @@ static PyObject *__pyx_pf_15Solving_Methods_8Isomorph_6combi_to_certif(CYTHON_UN
   }
   __pyx_t_1 = (__pyx_t_2) ? __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_2) : __Pyx_PyObject_CallNoArg(__pyx_t_3);
   __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 95, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 82, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_v_temp_prep_t = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "Solving_Methods/Isomorph.pyx":99
+  /* "Solving_Methods/Isomorph.pyx":86
  *     # liste [] de la taille de la combinaison contenant dans chaque case,
  *     # l'indice de l'lment dans la matrice d'adjacence
  *     ref = []             # <<<<<<<<<<<<<<
  *     cdef int i
  *     for i in range(len(combi)):
  */
-  __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 99, __pyx_L1_error)
+  __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 86, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_ref = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "Solving_Methods/Isomorph.pyx":101
+  /* "Solving_Methods/Isomorph.pyx":88
  *     ref = []
  *     cdef int i
  *     for i in range(len(combi)):             # <<<<<<<<<<<<<<
  *         if combi[i] != 0:
  *             ref.append(i)
  */
-  __pyx_t_4 = PyObject_Length(__pyx_v_combi); if (unlikely(__pyx_t_4 == ((Py_ssize_t)-1))) __PYX_ERR(0, 101, __pyx_L1_error)
+  __pyx_t_4 = PyObject_Length(__pyx_v_combi); if (unlikely(__pyx_t_4 == ((Py_ssize_t)-1))) __PYX_ERR(0, 88, __pyx_L1_error)
   __pyx_t_5 = __pyx_t_4;
   for (__pyx_t_6 = 0; __pyx_t_6 < __pyx_t_5; __pyx_t_6+=1) {
     __pyx_v_i = __pyx_t_6;
 
-    /* "Solving_Methods/Isomorph.pyx":102
+    /* "Solving_Methods/Isomorph.pyx":89
  *     cdef int i
  *     for i in range(len(combi)):
  *         if combi[i] != 0:             # <<<<<<<<<<<<<<
  *             ref.append(i)
  * 
  */
-    __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_combi, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 102, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_combi, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 89, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_3 = __Pyx_PyInt_NeObjC(__pyx_t_1, __pyx_int_0, 0, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 102, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyInt_NeObjC(__pyx_t_1, __pyx_int_0, 0, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 89, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __pyx_t_7 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_7 < 0)) __PYX_ERR(0, 102, __pyx_L1_error)
+    __pyx_t_7 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_7 < 0)) __PYX_ERR(0, 89, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     if (__pyx_t_7) {
 
-      /* "Solving_Methods/Isomorph.pyx":103
+      /* "Solving_Methods/Isomorph.pyx":90
  *     for i in range(len(combi)):
  *         if combi[i] != 0:
  *             ref.append(i)             # <<<<<<<<<<<<<<
  * 
  *     # cration d'un graphe PyNauty
  */
-      __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_i); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 103, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_i); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 90, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_8 = __Pyx_PyList_Append(__pyx_v_ref, __pyx_t_3); if (unlikely(__pyx_t_8 == ((int)-1))) __PYX_ERR(0, 103, __pyx_L1_error)
+      __pyx_t_8 = __Pyx_PyList_Append(__pyx_v_ref, __pyx_t_3); if (unlikely(__pyx_t_8 == ((int)-1))) __PYX_ERR(0, 90, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-      /* "Solving_Methods/Isomorph.pyx":102
+      /* "Solving_Methods/Isomorph.pyx":89
  *     cdef int i
  *     for i in range(len(combi)):
  *         if combi[i] != 0:             # <<<<<<<<<<<<<<
@@ -3187,188 +2814,160 @@ static PyObject *__pyx_pf_15Solving_Methods_8Isomorph_6combi_to_certif(CYTHON_UN
     }
   }
 
-  /* "Solving_Methods/Isomorph.pyx":106
- * 
- *     # cration d'un graphe PyNauty
- *     g = Graph(len(ref), directed=True)             # <<<<<<<<<<<<<<
- *     '''faudra probablement le mettre  la fin aprs'''
- * 
- */
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_Graph); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 106, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = PyList_GET_SIZE(__pyx_v_ref); if (unlikely(__pyx_t_4 == ((Py_ssize_t)-1))) __PYX_ERR(0, 106, __pyx_L1_error)
-  __pyx_t_1 = PyInt_FromSsize_t(__pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 106, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 106, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_GIVEREF(__pyx_t_1);
-  PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_1);
-  __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 106, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_directed, Py_True) < 0) __PYX_ERR(0, 106, __pyx_L1_error)
-  __pyx_t_9 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_2, __pyx_t_1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 106, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_9);
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_v_g = __pyx_t_9;
-  __pyx_t_9 = 0;
-
-  /* "Solving_Methods/Isomorph.pyx":112
+  /* "Solving_Methods/Isomorph.pyx":99
  *     # dans lesquels ils interviennent
  *     # sous la forme: [queue de l'arc][liste des ttes de l'arc]
  *     listes_arcs =  []             # <<<<<<<<<<<<<<
  *     for i in range(len(ref)):
  *         listes_arcs.append([])
  */
-  __pyx_t_9 = PyList_New(0); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 112, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_9);
-  __pyx_v_listes_arcs = ((PyObject*)__pyx_t_9);
-  __pyx_t_9 = 0;
+  __pyx_t_3 = PyList_New(0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 99, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_v_listes_arcs = ((PyObject*)__pyx_t_3);
+  __pyx_t_3 = 0;
 
-  /* "Solving_Methods/Isomorph.pyx":113
+  /* "Solving_Methods/Isomorph.pyx":100
  *     # sous la forme: [queue de l'arc][liste des ttes de l'arc]
  *     listes_arcs =  []
  *     for i in range(len(ref)):             # <<<<<<<<<<<<<<
  *         listes_arcs.append([])
  * 
  */
-  __pyx_t_4 = PyList_GET_SIZE(__pyx_v_ref); if (unlikely(__pyx_t_4 == ((Py_ssize_t)-1))) __PYX_ERR(0, 113, __pyx_L1_error)
+  __pyx_t_4 = PyList_GET_SIZE(__pyx_v_ref); if (unlikely(__pyx_t_4 == ((Py_ssize_t)-1))) __PYX_ERR(0, 100, __pyx_L1_error)
   __pyx_t_5 = __pyx_t_4;
   for (__pyx_t_6 = 0; __pyx_t_6 < __pyx_t_5; __pyx_t_6+=1) {
     __pyx_v_i = __pyx_t_6;
 
-    /* "Solving_Methods/Isomorph.pyx":114
+    /* "Solving_Methods/Isomorph.pyx":101
  *     listes_arcs =  []
  *     for i in range(len(ref)):
  *         listes_arcs.append([])             # <<<<<<<<<<<<<<
  * 
  *     # de plus pour chaque sommet initial, on a ajouter n arcs pointant vers
  */
-    __pyx_t_9 = PyList_New(0); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 114, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_9);
-    __pyx_t_8 = __Pyx_PyList_Append(__pyx_v_listes_arcs, __pyx_t_9); if (unlikely(__pyx_t_8 == ((int)-1))) __PYX_ERR(0, 114, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+    __pyx_t_3 = PyList_New(0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 101, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    __pyx_t_8 = __Pyx_PyList_Append(__pyx_v_listes_arcs, __pyx_t_3); if (unlikely(__pyx_t_8 == ((int)-1))) __PYX_ERR(0, 101, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   }
 
-  /* "Solving_Methods/Isomorph.pyx":121
+  /* "Solving_Methods/Isomorph.pyx":108
  *     # signature de PyNauty. (De plus, parait-il, rduire le problme de cette
  *     # faon serait moins couteux)
  *     dict_connex = {}             # <<<<<<<<<<<<<<
  *     num_prochain_sommet = len(ref)
  *     cdef int j
  */
-  __pyx_t_9 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 121, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_9);
-  __pyx_v_dict_connex = ((PyObject*)__pyx_t_9);
-  __pyx_t_9 = 0;
+  __pyx_t_3 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 108, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_v_dict_connex = ((PyObject*)__pyx_t_3);
+  __pyx_t_3 = 0;
 
-  /* "Solving_Methods/Isomorph.pyx":122
+  /* "Solving_Methods/Isomorph.pyx":109
  *     # faon serait moins couteux)
  *     dict_connex = {}
  *     num_prochain_sommet = len(ref)             # <<<<<<<<<<<<<<
  *     cdef int j
  *     for r in ref:
  */
-  __pyx_t_4 = PyList_GET_SIZE(__pyx_v_ref); if (unlikely(__pyx_t_4 == ((Py_ssize_t)-1))) __PYX_ERR(0, 122, __pyx_L1_error)
-  __pyx_t_9 = PyInt_FromSsize_t(__pyx_t_4); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 122, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_9);
-  __pyx_v_num_prochain_sommet = __pyx_t_9;
-  __pyx_t_9 = 0;
+  __pyx_t_4 = PyList_GET_SIZE(__pyx_v_ref); if (unlikely(__pyx_t_4 == ((Py_ssize_t)-1))) __PYX_ERR(0, 109, __pyx_L1_error)
+  __pyx_t_3 = PyInt_FromSsize_t(__pyx_t_4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 109, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_v_num_prochain_sommet = __pyx_t_3;
+  __pyx_t_3 = 0;
 
-  /* "Solving_Methods/Isomorph.pyx":124
+  /* "Solving_Methods/Isomorph.pyx":111
  *     num_prochain_sommet = len(ref)
  *     cdef int j
  *     for r in ref:             # <<<<<<<<<<<<<<
  * 
  *         # boucle dans la matrice d'adjacence pour trouver tous les sommets sur
  */
-  __pyx_t_9 = __pyx_v_ref; __Pyx_INCREF(__pyx_t_9); __pyx_t_4 = 0;
+  __pyx_t_3 = __pyx_v_ref; __Pyx_INCREF(__pyx_t_3); __pyx_t_4 = 0;
   for (;;) {
-    if (__pyx_t_4 >= PyList_GET_SIZE(__pyx_t_9)) break;
+    if (__pyx_t_4 >= PyList_GET_SIZE(__pyx_t_3)) break;
     #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-    __pyx_t_1 = PyList_GET_ITEM(__pyx_t_9, __pyx_t_4); __Pyx_INCREF(__pyx_t_1); __pyx_t_4++; if (unlikely(0 < 0)) __PYX_ERR(0, 124, __pyx_L1_error)
+    __pyx_t_1 = PyList_GET_ITEM(__pyx_t_3, __pyx_t_4); __Pyx_INCREF(__pyx_t_1); __pyx_t_4++; if (unlikely(0 < 0)) __PYX_ERR(0, 111, __pyx_L1_error)
     #else
-    __pyx_t_1 = PySequence_ITEM(__pyx_t_9, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 124, __pyx_L1_error)
+    __pyx_t_1 = PySequence_ITEM(__pyx_t_3, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 111, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     #endif
     __Pyx_XDECREF_SET(__pyx_v_r, __pyx_t_1);
     __pyx_t_1 = 0;
 
-    /* "Solving_Methods/Isomorph.pyx":128
+    /* "Solving_Methods/Isomorph.pyx":115
  *         # boucle dans la matrice d'adjacence pour trouver tous les sommets sur
  *         # lequel i pointe
  *         list_connex = []             # <<<<<<<<<<<<<<
  *         for j in range(len(matrice_adja)):
  * 
  */
-    __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 128, __pyx_L1_error)
+    __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 115, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_XDECREF_SET(__pyx_v_list_connex, ((PyObject*)__pyx_t_1));
     __pyx_t_1 = 0;
 
-    /* "Solving_Methods/Isomorph.pyx":129
+    /* "Solving_Methods/Isomorph.pyx":116
  *         # lequel i pointe
  *         list_connex = []
  *         for j in range(len(matrice_adja)):             # <<<<<<<<<<<<<<
  * 
  *             if matrice_adja[r][j] != 0 and combi[j] == 1:
  */
-    __pyx_t_5 = PyObject_Length(__pyx_v_matrice_adja); if (unlikely(__pyx_t_5 == ((Py_ssize_t)-1))) __PYX_ERR(0, 129, __pyx_L1_error)
-    __pyx_t_10 = __pyx_t_5;
-    for (__pyx_t_6 = 0; __pyx_t_6 < __pyx_t_10; __pyx_t_6+=1) {
+    __pyx_t_5 = PyObject_Length(__pyx_v_matrice_adja); if (unlikely(__pyx_t_5 == ((Py_ssize_t)-1))) __PYX_ERR(0, 116, __pyx_L1_error)
+    __pyx_t_9 = __pyx_t_5;
+    for (__pyx_t_6 = 0; __pyx_t_6 < __pyx_t_9; __pyx_t_6+=1) {
       __pyx_v_j = __pyx_t_6;
 
-      /* "Solving_Methods/Isomorph.pyx":131
+      /* "Solving_Methods/Isomorph.pyx":118
  *         for j in range(len(matrice_adja)):
  * 
  *             if matrice_adja[r][j] != 0 and combi[j] == 1:             # <<<<<<<<<<<<<<
  *                     list_connex.append(ref.index(j))
  * 
  */
-      __pyx_t_1 = __Pyx_PyObject_GetItem(__pyx_v_matrice_adja, __pyx_v_r); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 131, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyObject_GetItem(__pyx_v_matrice_adja, __pyx_v_r); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 118, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
-      __pyx_t_2 = __Pyx_GetItemInt(__pyx_t_1, __pyx_v_j, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 131, __pyx_L1_error)
+      __pyx_t_2 = __Pyx_GetItemInt(__pyx_t_1, __pyx_v_j, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 118, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-      __pyx_t_1 = __Pyx_PyInt_NeObjC(__pyx_t_2, __pyx_int_0, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 131, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyInt_NeObjC(__pyx_t_2, __pyx_int_0, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 118, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-      __pyx_t_11 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_11 < 0)) __PYX_ERR(0, 131, __pyx_L1_error)
+      __pyx_t_10 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_10 < 0)) __PYX_ERR(0, 118, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-      if (__pyx_t_11) {
+      if (__pyx_t_10) {
       } else {
-        __pyx_t_7 = __pyx_t_11;
+        __pyx_t_7 = __pyx_t_10;
         goto __pyx_L13_bool_binop_done;
       }
-      __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_combi, __pyx_v_j, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 131, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_combi, __pyx_v_j, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 118, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
-      __pyx_t_2 = __Pyx_PyInt_EqObjC(__pyx_t_1, __pyx_int_1, 1, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 131, __pyx_L1_error)
+      __pyx_t_2 = __Pyx_PyInt_EqObjC(__pyx_t_1, __pyx_int_1, 1, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 118, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-      __pyx_t_11 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely(__pyx_t_11 < 0)) __PYX_ERR(0, 131, __pyx_L1_error)
+      __pyx_t_10 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely(__pyx_t_10 < 0)) __PYX_ERR(0, 118, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-      __pyx_t_7 = __pyx_t_11;
+      __pyx_t_7 = __pyx_t_10;
       __pyx_L13_bool_binop_done:;
       if (__pyx_t_7) {
 
-        /* "Solving_Methods/Isomorph.pyx":132
+        /* "Solving_Methods/Isomorph.pyx":119
  * 
  *             if matrice_adja[r][j] != 0 and combi[j] == 1:
  *                     list_connex.append(ref.index(j))             # <<<<<<<<<<<<<<
  * 
  *         # cration des nouveaux sommets par couleurs
  */
-        __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_j); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 132, __pyx_L1_error)
+        __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_j); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 119, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
-        __pyx_t_1 = __Pyx_CallUnboundCMethod1(&__pyx_umethod_PyList_Type_index, __pyx_v_ref, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 132, __pyx_L1_error)
+        __pyx_t_1 = __Pyx_CallUnboundCMethod1(&__pyx_umethod_PyList_Type_index, __pyx_v_ref, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 119, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-        __pyx_t_8 = __Pyx_PyList_Append(__pyx_v_list_connex, __pyx_t_1); if (unlikely(__pyx_t_8 == ((int)-1))) __PYX_ERR(0, 132, __pyx_L1_error)
+        __pyx_t_8 = __Pyx_PyList_Append(__pyx_v_list_connex, __pyx_t_1); if (unlikely(__pyx_t_8 == ((int)-1))) __PYX_ERR(0, 119, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-        /* "Solving_Methods/Isomorph.pyx":131
+        /* "Solving_Methods/Isomorph.pyx":118
  *         for j in range(len(matrice_adja)):
  * 
  *             if matrice_adja[r][j] != 0 and combi[j] == 1:             # <<<<<<<<<<<<<<
@@ -3378,118 +2977,118 @@ static PyObject *__pyx_pf_15Solving_Methods_8Isomorph_6combi_to_certif(CYTHON_UN
       }
     }
 
-    /* "Solving_Methods/Isomorph.pyx":135
+    /* "Solving_Methods/Isomorph.pyx":122
  * 
  *         # cration des nouveaux sommets par couleurs
  *         temp_couleur = atom_caract[r].split()             # <<<<<<<<<<<<<<
- *         nb_couleur = dict_c.get(temp_couleur[0])+1 # +1 car on veut viter que la couleur 0 ne cre de confusion
+ *         nb_couleur = lst_col.index(temp_couleur[0])+1 # +1 car on veut viter que la couleur 0 ne cre de confusion
  *                                                     # (je ne suis pas sre si cela crucial mais a ne peut tre
  */
-    __pyx_t_2 = __Pyx_PyObject_GetItem(__pyx_v_atom_caract, __pyx_v_r); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 135, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_GetItem(__pyx_v_atom_caract, __pyx_v_r); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 122, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_split); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 135, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
+    __pyx_t_11 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_split); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 122, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_11);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __pyx_t_2 = NULL;
-    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_3))) {
-      __pyx_t_2 = PyMethod_GET_SELF(__pyx_t_3);
+    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_11))) {
+      __pyx_t_2 = PyMethod_GET_SELF(__pyx_t_11);
       if (likely(__pyx_t_2)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_11);
         __Pyx_INCREF(__pyx_t_2);
         __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_3, function);
+        __Pyx_DECREF_SET(__pyx_t_11, function);
       }
     }
-    __pyx_t_1 = (__pyx_t_2) ? __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_2) : __Pyx_PyObject_CallNoArg(__pyx_t_3);
+    __pyx_t_1 = (__pyx_t_2) ? __Pyx_PyObject_CallOneArg(__pyx_t_11, __pyx_t_2) : __Pyx_PyObject_CallNoArg(__pyx_t_11);
     __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 135, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 122, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+    __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
     __Pyx_XDECREF_SET(__pyx_v_temp_couleur, __pyx_t_1);
     __pyx_t_1 = 0;
 
-    /* "Solving_Methods/Isomorph.pyx":136
+    /* "Solving_Methods/Isomorph.pyx":123
  *         # cration des nouveaux sommets par couleurs
  *         temp_couleur = atom_caract[r].split()
- *         nb_couleur = dict_c.get(temp_couleur[0])+1 # +1 car on veut viter que la couleur 0 ne cre de confusion             # <<<<<<<<<<<<<<
+ *         nb_couleur = lst_col.index(temp_couleur[0])+1 # +1 car on veut viter que la couleur 0 ne cre de confusion             # <<<<<<<<<<<<<<
  *                                                     # (je ne suis pas sre si cela crucial mais a ne peut tre
  *                                                     #  un dtriment)
  */
-    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_dict_c, __pyx_n_s_get); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 136, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_temp_couleur, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 136, __pyx_L1_error)
+    __pyx_t_11 = __Pyx_PyObject_GetAttrStr(__pyx_v_lst_col, __pyx_n_s_index); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 123, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_11);
+    __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_temp_couleur, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 123, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __pyx_t_12 = NULL;
-    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_3))) {
-      __pyx_t_12 = PyMethod_GET_SELF(__pyx_t_3);
+    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_11))) {
+      __pyx_t_12 = PyMethod_GET_SELF(__pyx_t_11);
       if (likely(__pyx_t_12)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_11);
         __Pyx_INCREF(__pyx_t_12);
         __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_3, function);
+        __Pyx_DECREF_SET(__pyx_t_11, function);
       }
     }
-    __pyx_t_1 = (__pyx_t_12) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_12, __pyx_t_2) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_2);
+    __pyx_t_1 = (__pyx_t_12) ? __Pyx_PyObject_Call2Args(__pyx_t_11, __pyx_t_12, __pyx_t_2) : __Pyx_PyObject_CallOneArg(__pyx_t_11, __pyx_t_2);
     __Pyx_XDECREF(__pyx_t_12); __pyx_t_12 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 136, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 123, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_t_3 = __Pyx_PyInt_AddObjC(__pyx_t_1, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 136, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
+    __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
+    __pyx_t_11 = __Pyx_PyInt_AddObjC(__pyx_t_1, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 123, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_11);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __Pyx_XDECREF_SET(__pyx_v_nb_couleur, __pyx_t_3);
-    __pyx_t_3 = 0;
+    __Pyx_XDECREF_SET(__pyx_v_nb_couleur, __pyx_t_11);
+    __pyx_t_11 = 0;
 
-    /* "Solving_Methods/Isomorph.pyx":140
+    /* "Solving_Methods/Isomorph.pyx":127
  *                                                     #  un dtriment)
  * 
  *         for j in range(nb_couleur):             # <<<<<<<<<<<<<<
  *             list_connex.append(num_prochain_sommet)
  *             num_prochain_sommet += 1
  */
-    __pyx_t_13 = __Pyx_PyInt_As_long(__pyx_v_nb_couleur); if (unlikely((__pyx_t_13 == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 140, __pyx_L1_error)
+    __pyx_t_13 = __Pyx_PyInt_As_long(__pyx_v_nb_couleur); if (unlikely((__pyx_t_13 == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 127, __pyx_L1_error)
     __pyx_t_14 = __pyx_t_13;
     for (__pyx_t_6 = 0; __pyx_t_6 < __pyx_t_14; __pyx_t_6+=1) {
       __pyx_v_j = __pyx_t_6;
 
-      /* "Solving_Methods/Isomorph.pyx":141
+      /* "Solving_Methods/Isomorph.pyx":128
  * 
  *         for j in range(nb_couleur):
  *             list_connex.append(num_prochain_sommet)             # <<<<<<<<<<<<<<
  *             num_prochain_sommet += 1
  * 
  */
-      __pyx_t_8 = __Pyx_PyList_Append(__pyx_v_list_connex, __pyx_v_num_prochain_sommet); if (unlikely(__pyx_t_8 == ((int)-1))) __PYX_ERR(0, 141, __pyx_L1_error)
+      __pyx_t_8 = __Pyx_PyList_Append(__pyx_v_list_connex, __pyx_v_num_prochain_sommet); if (unlikely(__pyx_t_8 == ((int)-1))) __PYX_ERR(0, 128, __pyx_L1_error)
 
-      /* "Solving_Methods/Isomorph.pyx":142
+      /* "Solving_Methods/Isomorph.pyx":129
  *         for j in range(nb_couleur):
  *             list_connex.append(num_prochain_sommet)
  *             num_prochain_sommet += 1             # <<<<<<<<<<<<<<
  * 
  *         # ajout de la liste d'arcs dont ref(index) i est la queue dans le dictionnaire
  */
-      __pyx_t_3 = __Pyx_PyInt_AddObjC(__pyx_v_num_prochain_sommet, __pyx_int_1, 1, 1, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 142, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_3);
-      __Pyx_DECREF_SET(__pyx_v_num_prochain_sommet, __pyx_t_3);
-      __pyx_t_3 = 0;
+      __pyx_t_11 = __Pyx_PyInt_AddObjC(__pyx_v_num_prochain_sommet, __pyx_int_1, 1, 1, 0); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 129, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_11);
+      __Pyx_DECREF_SET(__pyx_v_num_prochain_sommet, __pyx_t_11);
+      __pyx_t_11 = 0;
     }
 
-    /* "Solving_Methods/Isomorph.pyx":145
+    /* "Solving_Methods/Isomorph.pyx":132
  * 
  *         # ajout de la liste d'arcs dont ref(index) i est la queue dans le dictionnaire
  *         dict_connex.setdefault(ref.index(r),list_connex)             # <<<<<<<<<<<<<<
  * 
  *     # gnration du graph
  */
-    __pyx_t_3 = __Pyx_CallUnboundCMethod1(&__pyx_umethod_PyList_Type_index, __pyx_v_ref, __pyx_v_r); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 145, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_1 = __Pyx_PyDict_SetDefault(__pyx_v_dict_connex, __pyx_t_3, __pyx_v_list_connex, -1L); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 145, __pyx_L1_error)
+    __pyx_t_11 = __Pyx_CallUnboundCMethod1(&__pyx_umethod_PyList_Type_index, __pyx_v_ref, __pyx_v_r); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 132, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_11);
+    __pyx_t_1 = __Pyx_PyDict_SetDefault(__pyx_v_dict_connex, __pyx_t_11, __pyx_v_list_connex, -1L); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 132, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+    __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "Solving_Methods/Isomorph.pyx":124
+    /* "Solving_Methods/Isomorph.pyx":111
  *     num_prochain_sommet = len(ref)
  *     cdef int j
  *     for r in ref:             # <<<<<<<<<<<<<<
@@ -3497,172 +3096,169 @@ static PyObject *__pyx_pf_15Solving_Methods_8Isomorph_6combi_to_certif(CYTHON_UN
  *         # boucle dans la matrice d'adjacence pour trouver tous les sommets sur
  */
   }
-  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "Solving_Methods/Isomorph.pyx":148
+  /* "Solving_Methods/Isomorph.pyx":135
  * 
  *     # gnration du graph
  *     g = Graph(num_prochain_sommet, directed=True, adjacency_dict=dict_connex)             # <<<<<<<<<<<<<<
  * 
  *     t_prep_c += time.time()-temp_prep_t
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_9, __pyx_n_s_Graph); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 148, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_9);
-  __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 148, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_Graph); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 135, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 135, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_INCREF(__pyx_v_num_prochain_sommet);
   __Pyx_GIVEREF(__pyx_v_num_prochain_sommet);
   PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_v_num_prochain_sommet);
-  __pyx_t_3 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 148, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_directed, Py_True) < 0) __PYX_ERR(0, 148, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_adjacency_dict, __pyx_v_dict_connex) < 0) __PYX_ERR(0, 148, __pyx_L1_error)
-  __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_9, __pyx_t_1, __pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 148, __pyx_L1_error)
+  __pyx_t_11 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 135, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_11);
+  if (PyDict_SetItem(__pyx_t_11, __pyx_n_s_directed, Py_True) < 0) __PYX_ERR(0, 135, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_11, __pyx_n_s_adjacency_dict, __pyx_v_dict_connex) < 0) __PYX_ERR(0, 135, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_1, __pyx_t_11); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 135, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __Pyx_DECREF_SET(__pyx_v_g, __pyx_t_2);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
+  __pyx_v_g = __pyx_t_2;
   __pyx_t_2 = 0;
 
-  /* "Solving_Methods/Isomorph.pyx":150
+  /* "Solving_Methods/Isomorph.pyx":137
  *     g = Graph(num_prochain_sommet, directed=True, adjacency_dict=dict_connex)
  * 
  *     t_prep_c += time.time()-temp_prep_t             # <<<<<<<<<<<<<<
  * 
  *     temp_t_cert = time.time()
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_time); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 150, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_time); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 150, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_11, __pyx_n_s_time); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 137, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_11);
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_11, __pyx_n_s_time); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 137, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = NULL;
+  __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
+  __pyx_t_11 = NULL;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_1))) {
-    __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_1);
-    if (likely(__pyx_t_3)) {
+    __pyx_t_11 = PyMethod_GET_SELF(__pyx_t_1);
+    if (likely(__pyx_t_11)) {
       PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_1);
-      __Pyx_INCREF(__pyx_t_3);
+      __Pyx_INCREF(__pyx_t_11);
       __Pyx_INCREF(function);
       __Pyx_DECREF_SET(__pyx_t_1, function);
     }
   }
-  __pyx_t_2 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_1, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 150, __pyx_L1_error)
+  __pyx_t_2 = (__pyx_t_11) ? __Pyx_PyObject_CallOneArg(__pyx_t_1, __pyx_t_11) : __Pyx_PyObject_CallNoArg(__pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_11); __pyx_t_11 = 0;
+  if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 137, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = PyNumber_Subtract(__pyx_t_2, __pyx_v_temp_prep_t); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 150, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Subtract(__pyx_t_2, __pyx_v_temp_prep_t); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 137, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = PyNumber_InPlaceAdd(__pyx_v_t_prep_c, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 150, __pyx_L1_error)
+  __pyx_t_2 = PyNumber_InPlaceAdd(__pyx_v_t_prep_c, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 137, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF_SET(__pyx_v_t_prep_c, __pyx_t_2);
   __pyx_t_2 = 0;
 
-  /* "Solving_Methods/Isomorph.pyx":152
+  /* "Solving_Methods/Isomorph.pyx":139
  *     t_prep_c += time.time()-temp_prep_t
  * 
  *     temp_t_cert = time.time()             # <<<<<<<<<<<<<<
  *     cf = certificate(g)
  *     t_cerif += time.time()-temp_t_cert
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_time); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 152, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_time); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 139, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_time); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 152, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_11 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_time); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 139, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_11);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_t_1 = NULL;
-  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_3))) {
-    __pyx_t_1 = PyMethod_GET_SELF(__pyx_t_3);
+  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_11))) {
+    __pyx_t_1 = PyMethod_GET_SELF(__pyx_t_11);
     if (likely(__pyx_t_1)) {
-      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_11);
       __Pyx_INCREF(__pyx_t_1);
       __Pyx_INCREF(function);
-      __Pyx_DECREF_SET(__pyx_t_3, function);
+      __Pyx_DECREF_SET(__pyx_t_11, function);
     }
   }
-  __pyx_t_2 = (__pyx_t_1) ? __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_1) : __Pyx_PyObject_CallNoArg(__pyx_t_3);
+  __pyx_t_2 = (__pyx_t_1) ? __Pyx_PyObject_CallOneArg(__pyx_t_11, __pyx_t_1) : __Pyx_PyObject_CallNoArg(__pyx_t_11);
   __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
-  if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 152, __pyx_L1_error)
+  if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 139, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
   __pyx_v_temp_t_cert = __pyx_t_2;
   __pyx_t_2 = 0;
 
-  /* "Solving_Methods/Isomorph.pyx":153
+  /* "Solving_Methods/Isomorph.pyx":140
  * 
  *     temp_t_cert = time.time()
  *     cf = certificate(g)             # <<<<<<<<<<<<<<
  *     t_cerif += time.time()-temp_t_cert
  *     return cf, t_cerif, t_prep_c ## ^ 2 last values are test
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_certificate); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 153, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
+  __Pyx_GetModuleGlobalName(__pyx_t_11, __pyx_n_s_certificate); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 140, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_11);
   __pyx_t_1 = NULL;
-  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_3))) {
-    __pyx_t_1 = PyMethod_GET_SELF(__pyx_t_3);
+  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_11))) {
+    __pyx_t_1 = PyMethod_GET_SELF(__pyx_t_11);
     if (likely(__pyx_t_1)) {
-      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_11);
       __Pyx_INCREF(__pyx_t_1);
       __Pyx_INCREF(function);
-      __Pyx_DECREF_SET(__pyx_t_3, function);
+      __Pyx_DECREF_SET(__pyx_t_11, function);
     }
   }
-  __pyx_t_2 = (__pyx_t_1) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_1, __pyx_v_g) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_v_g);
+  __pyx_t_2 = (__pyx_t_1) ? __Pyx_PyObject_Call2Args(__pyx_t_11, __pyx_t_1, __pyx_v_g) : __Pyx_PyObject_CallOneArg(__pyx_t_11, __pyx_v_g);
   __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
-  if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 153, __pyx_L1_error)
+  if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 140, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
   __pyx_v_cf = __pyx_t_2;
   __pyx_t_2 = 0;
 
-  /* "Solving_Methods/Isomorph.pyx":154
+  /* "Solving_Methods/Isomorph.pyx":141
  *     temp_t_cert = time.time()
  *     cf = certificate(g)
  *     t_cerif += time.time()-temp_t_cert             # <<<<<<<<<<<<<<
  *     return cf, t_cerif, t_prep_c ## ^ 2 last values are test
- * 
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_time); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 154, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_time); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 154, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_11, __pyx_n_s_time); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 141, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_11);
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_11, __pyx_n_s_time); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 141, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = NULL;
+  __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
+  __pyx_t_11 = NULL;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_1))) {
-    __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_1);
-    if (likely(__pyx_t_3)) {
+    __pyx_t_11 = PyMethod_GET_SELF(__pyx_t_1);
+    if (likely(__pyx_t_11)) {
       PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_1);
-      __Pyx_INCREF(__pyx_t_3);
+      __Pyx_INCREF(__pyx_t_11);
       __Pyx_INCREF(function);
       __Pyx_DECREF_SET(__pyx_t_1, function);
     }
   }
-  __pyx_t_2 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_1, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 154, __pyx_L1_error)
+  __pyx_t_2 = (__pyx_t_11) ? __Pyx_PyObject_CallOneArg(__pyx_t_1, __pyx_t_11) : __Pyx_PyObject_CallNoArg(__pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_11); __pyx_t_11 = 0;
+  if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 141, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = PyNumber_Subtract(__pyx_t_2, __pyx_v_temp_t_cert); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 154, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Subtract(__pyx_t_2, __pyx_v_temp_t_cert); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 141, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = PyNumber_InPlaceAdd(__pyx_v_t_cerif, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 154, __pyx_L1_error)
+  __pyx_t_2 = PyNumber_InPlaceAdd(__pyx_v_t_cerif, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 141, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF_SET(__pyx_v_t_cerif, __pyx_t_2);
   __pyx_t_2 = 0;
 
-  /* "Solving_Methods/Isomorph.pyx":155
+  /* "Solving_Methods/Isomorph.pyx":142
  *     cf = certificate(g)
  *     t_cerif += time.time()-temp_t_cert
  *     return cf, t_cerif, t_prep_c ## ^ 2 last values are test             # <<<<<<<<<<<<<<
- * 
- * # Fait et retourne un certificat de graphe  partir d'une
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_2 = PyTuple_New(3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 155, __pyx_L1_error)
+  __pyx_t_2 = PyTuple_New(3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 142, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_INCREF(__pyx_v_cf);
   __Pyx_GIVEREF(__pyx_v_cf);
@@ -3677,10 +3273,10 @@ static PyObject *__pyx_pf_15Solving_Methods_8Isomorph_6combi_to_certif(CYTHON_UN
   __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "Solving_Methods/Isomorph.pyx":90
+  /* "Solving_Methods/Isomorph.pyx":77
  * # La coloration se fera en ajoutant n arrtes  un sommet ayant la couleur
  * # numro n.
- * def combi_to_certif(combi, matrice_adja, atom_caract, dict_c, t_cerif, t_prep_c):## 2 last values are test             # <<<<<<<<<<<<<<
+ * def combi_to_certif(combi, matrice_adja, atom_caract, lst_col, t_cerif, t_prep_c):## 2 last values are test             # <<<<<<<<<<<<<<
  *     ###### Initialisations ######
  *     # cration d'une liste permettant de renommer les sommets
  */
@@ -3690,14 +3286,13 @@ static PyObject *__pyx_pf_15Solving_Methods_8Isomorph_6combi_to_certif(CYTHON_UN
   __Pyx_XDECREF(__pyx_t_1);
   __Pyx_XDECREF(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_XDECREF(__pyx_t_9);
+  __Pyx_XDECREF(__pyx_t_11);
   __Pyx_XDECREF(__pyx_t_12);
   __Pyx_AddTraceback("Solving_Methods.Isomorph.combi_to_certif", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_temp_prep_t);
   __Pyx_XDECREF(__pyx_v_ref);
-  __Pyx_XDECREF(__pyx_v_g);
   __Pyx_XDECREF(__pyx_v_listes_arcs);
   __Pyx_XDECREF(__pyx_v_dict_connex);
   __Pyx_XDECREF(__pyx_v_num_prochain_sommet);
@@ -3705,741 +3300,11 @@ static PyObject *__pyx_pf_15Solving_Methods_8Isomorph_6combi_to_certif(CYTHON_UN
   __Pyx_XDECREF(__pyx_v_list_connex);
   __Pyx_XDECREF(__pyx_v_temp_couleur);
   __Pyx_XDECREF(__pyx_v_nb_couleur);
+  __Pyx_XDECREF(__pyx_v_g);
   __Pyx_XDECREF(__pyx_v_temp_t_cert);
   __Pyx_XDECREF(__pyx_v_cf);
   __Pyx_XDECREF(__pyx_v_t_cerif);
   __Pyx_XDECREF(__pyx_v_t_prep_c);
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "Solving_Methods/Isomorph.pyx":160
- * # combinaison de sommets
- * # DEPRECATED
- * def combi_to_certif_broken(combi, matrice_adja, atom_caract, dict_c):             # <<<<<<<<<<<<<<
- *     ###### Initialisations ######
- *     print('')
- */
-
-/* Python wrapper */
-static PyObject *__pyx_pw_15Solving_Methods_8Isomorph_9combi_to_certif_broken(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_15Solving_Methods_8Isomorph_9combi_to_certif_broken = {"combi_to_certif_broken", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_15Solving_Methods_8Isomorph_9combi_to_certif_broken, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_15Solving_Methods_8Isomorph_9combi_to_certif_broken(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
-  PyObject *__pyx_v_combi = 0;
-  PyObject *__pyx_v_matrice_adja = 0;
-  PyObject *__pyx_v_atom_caract = 0;
-  PyObject *__pyx_v_dict_c = 0;
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("combi_to_certif_broken (wrapper)", 0);
-  {
-    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_combi,&__pyx_n_s_matrice_adja,&__pyx_n_s_atom_caract,&__pyx_n_s_dict_c,0};
-    PyObject* values[4] = {0,0,0,0};
-    if (unlikely(__pyx_kwds)) {
-      Py_ssize_t kw_args;
-      const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
-      switch (pos_args) {
-        case  4: values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
-        CYTHON_FALLTHROUGH;
-        case  3: values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
-        CYTHON_FALLTHROUGH;
-        case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
-        CYTHON_FALLTHROUGH;
-        case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
-        CYTHON_FALLTHROUGH;
-        case  0: break;
-        default: goto __pyx_L5_argtuple_error;
-      }
-      kw_args = PyDict_Size(__pyx_kwds);
-      switch (pos_args) {
-        case  0:
-        if (likely((values[0] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_combi)) != 0)) kw_args--;
-        else goto __pyx_L5_argtuple_error;
-        CYTHON_FALLTHROUGH;
-        case  1:
-        if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_matrice_adja)) != 0)) kw_args--;
-        else {
-          __Pyx_RaiseArgtupleInvalid("combi_to_certif_broken", 1, 4, 4, 1); __PYX_ERR(0, 160, __pyx_L3_error)
-        }
-        CYTHON_FALLTHROUGH;
-        case  2:
-        if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_atom_caract)) != 0)) kw_args--;
-        else {
-          __Pyx_RaiseArgtupleInvalid("combi_to_certif_broken", 1, 4, 4, 2); __PYX_ERR(0, 160, __pyx_L3_error)
-        }
-        CYTHON_FALLTHROUGH;
-        case  3:
-        if (likely((values[3] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_dict_c)) != 0)) kw_args--;
-        else {
-          __Pyx_RaiseArgtupleInvalid("combi_to_certif_broken", 1, 4, 4, 3); __PYX_ERR(0, 160, __pyx_L3_error)
-        }
-      }
-      if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "combi_to_certif_broken") < 0)) __PYX_ERR(0, 160, __pyx_L3_error)
-      }
-    } else if (PyTuple_GET_SIZE(__pyx_args) != 4) {
-      goto __pyx_L5_argtuple_error;
-    } else {
-      values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
-      values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
-      values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
-      values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
-    }
-    __pyx_v_combi = values[0];
-    __pyx_v_matrice_adja = values[1];
-    __pyx_v_atom_caract = values[2];
-    __pyx_v_dict_c = values[3];
-  }
-  goto __pyx_L4_argument_unpacking_done;
-  __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("combi_to_certif_broken", 1, 4, 4, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 160, __pyx_L3_error)
-  __pyx_L3_error:;
-  __Pyx_AddTraceback("Solving_Methods.Isomorph.combi_to_certif_broken", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __Pyx_RefNannyFinishContext();
-  return NULL;
-  __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_15Solving_Methods_8Isomorph_8combi_to_certif_broken(__pyx_self, __pyx_v_combi, __pyx_v_matrice_adja, __pyx_v_atom_caract, __pyx_v_dict_c);
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_15Solving_Methods_8Isomorph_8combi_to_certif_broken(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_combi, PyObject *__pyx_v_matrice_adja, PyObject *__pyx_v_atom_caract, PyObject *__pyx_v_dict_c) {
-  PyObject *__pyx_v_nv_nom = NULL;
-  PyObject *__pyx_v_enum = NULL;
-  Py_ssize_t __pyx_v_i;
-  PyObject *__pyx_v_list_by_colors = NULL;
-  PyObject *__pyx_v_g = NULL;
-  PyObject *__pyx_v_list_adja = NULL;
-  PyObject *__pyx_v_sommet_n = NULL;
-  PyObject *__pyx_v_listconnex = NULL;
-  Py_ssize_t __pyx_v_j;
-  PyObject *__pyx_v_temp = NULL;
-  PyObject *__pyx_v_list_sets = NULL;
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  PyObject *__pyx_t_2 = NULL;
-  Py_ssize_t __pyx_t_3;
-  Py_ssize_t __pyx_t_4;
-  Py_ssize_t __pyx_t_5;
-  int __pyx_t_6;
-  int __pyx_t_7;
-  PyObject *__pyx_t_8 = NULL;
-  PyObject *__pyx_t_9 = NULL;
-  Py_ssize_t __pyx_t_10;
-  Py_ssize_t __pyx_t_11;
-  Py_ssize_t __pyx_t_12;
-  int __pyx_t_13;
-  int __pyx_t_14;
-  PyObject *__pyx_t_15 = NULL;
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("combi_to_certif_broken", 0);
-
-  /* "Solving_Methods/Isomorph.pyx":162
- * def combi_to_certif_broken(combi, matrice_adja, atom_caract, dict_c):
- *     ###### Initialisations ######
- *     print('')             # <<<<<<<<<<<<<<
- *     print('combi: '+ str(combi))
- *     # cration d'une liste permettant de renommer les sommets
- */
-  if (__Pyx_PrintOne(0, __pyx_kp_s_) < 0) __PYX_ERR(0, 162, __pyx_L1_error)
-
-  /* "Solving_Methods/Isomorph.pyx":163
- *     ###### Initialisations ######
- *     print('')
- *     print('combi: '+ str(combi))             # <<<<<<<<<<<<<<
- *     # cration d'une liste permettant de renommer les sommets
- *     # en fonction des sommets non-concerns
- */
-  __pyx_t_1 = __Pyx_PyObject_CallOneArg(((PyObject *)(&PyString_Type)), __pyx_v_combi); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 163, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = PyNumber_Add(__pyx_kp_s_combi_2, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 163, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  if (__Pyx_PrintOne(0, __pyx_t_2) < 0) __PYX_ERR(0, 163, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-
-  /* "Solving_Methods/Isomorph.pyx":166
- *     # cration d'une liste permettant de renommer les sommets
- *     # en fonction des sommets non-concerns
- *     nv_nom = []             # <<<<<<<<<<<<<<
- *     enum = 0
- *     for i in range(len(combi)):
- */
-  __pyx_t_2 = PyList_New(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 166, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_v_nv_nom = ((PyObject*)__pyx_t_2);
-  __pyx_t_2 = 0;
-
-  /* "Solving_Methods/Isomorph.pyx":167
- *     # en fonction des sommets non-concerns
- *     nv_nom = []
- *     enum = 0             # <<<<<<<<<<<<<<
- *     for i in range(len(combi)):
- *         if combi[i] == 1:
- */
-  __Pyx_INCREF(__pyx_int_0);
-  __pyx_v_enum = __pyx_int_0;
-
-  /* "Solving_Methods/Isomorph.pyx":168
- *     nv_nom = []
- *     enum = 0
- *     for i in range(len(combi)):             # <<<<<<<<<<<<<<
- *         if combi[i] == 1:
- *             nv_nom.append(enum)
- */
-  __pyx_t_3 = PyObject_Length(__pyx_v_combi); if (unlikely(__pyx_t_3 == ((Py_ssize_t)-1))) __PYX_ERR(0, 168, __pyx_L1_error)
-  __pyx_t_4 = __pyx_t_3;
-  for (__pyx_t_5 = 0; __pyx_t_5 < __pyx_t_4; __pyx_t_5+=1) {
-    __pyx_v_i = __pyx_t_5;
-
-    /* "Solving_Methods/Isomorph.pyx":169
- *     enum = 0
- *     for i in range(len(combi)):
- *         if combi[i] == 1:             # <<<<<<<<<<<<<<
- *             nv_nom.append(enum)
- *             enum += 1
- */
-    __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_combi, __pyx_v_i, Py_ssize_t, 1, PyInt_FromSsize_t, 0, 1, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 169, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_1 = __Pyx_PyInt_EqObjC(__pyx_t_2, __pyx_int_1, 1, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 169, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_6 < 0)) __PYX_ERR(0, 169, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    if (__pyx_t_6) {
-
-      /* "Solving_Methods/Isomorph.pyx":170
- *     for i in range(len(combi)):
- *         if combi[i] == 1:
- *             nv_nom.append(enum)             # <<<<<<<<<<<<<<
- *             enum += 1
- *         else:
- */
-      __pyx_t_7 = __Pyx_PyList_Append(__pyx_v_nv_nom, __pyx_v_enum); if (unlikely(__pyx_t_7 == ((int)-1))) __PYX_ERR(0, 170, __pyx_L1_error)
-
-      /* "Solving_Methods/Isomorph.pyx":171
- *         if combi[i] == 1:
- *             nv_nom.append(enum)
- *             enum += 1             # <<<<<<<<<<<<<<
- *         else:
- *             nv_nom.append('')
- */
-      __pyx_t_1 = __Pyx_PyInt_AddObjC(__pyx_v_enum, __pyx_int_1, 1, 1, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 171, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_1);
-      __Pyx_DECREF_SET(__pyx_v_enum, __pyx_t_1);
-      __pyx_t_1 = 0;
-
-      /* "Solving_Methods/Isomorph.pyx":169
- *     enum = 0
- *     for i in range(len(combi)):
- *         if combi[i] == 1:             # <<<<<<<<<<<<<<
- *             nv_nom.append(enum)
- *             enum += 1
- */
-      goto __pyx_L5;
-    }
-
-    /* "Solving_Methods/Isomorph.pyx":173
- *             enum += 1
- *         else:
- *             nv_nom.append('')             # <<<<<<<<<<<<<<
- * 
- *     # initialisation de la liste des sommets classs par couleur
- */
-    /*else*/ {
-      __pyx_t_7 = __Pyx_PyList_Append(__pyx_v_nv_nom, __pyx_kp_s_); if (unlikely(__pyx_t_7 == ((int)-1))) __PYX_ERR(0, 173, __pyx_L1_error)
-    }
-    __pyx_L5:;
-  }
-
-  /* "Solving_Methods/Isomorph.pyx":176
- * 
- *     # initialisation de la liste des sommets classs par couleur
- *     list_by_colors = []             # <<<<<<<<<<<<<<
- *     for i in range(len(dict_c)):
- *         list_by_colors.append([])
- */
-  __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 176, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_v_list_by_colors = ((PyObject*)__pyx_t_1);
-  __pyx_t_1 = 0;
-
-  /* "Solving_Methods/Isomorph.pyx":177
- *     # initialisation de la liste des sommets classs par couleur
- *     list_by_colors = []
- *     for i in range(len(dict_c)):             # <<<<<<<<<<<<<<
- *         list_by_colors.append([])
- * 
- */
-  __pyx_t_3 = PyObject_Length(__pyx_v_dict_c); if (unlikely(__pyx_t_3 == ((Py_ssize_t)-1))) __PYX_ERR(0, 177, __pyx_L1_error)
-  __pyx_t_4 = __pyx_t_3;
-  for (__pyx_t_5 = 0; __pyx_t_5 < __pyx_t_4; __pyx_t_5+=1) {
-    __pyx_v_i = __pyx_t_5;
-
-    /* "Solving_Methods/Isomorph.pyx":178
- *     list_by_colors = []
- *     for i in range(len(dict_c)):
- *         list_by_colors.append([])             # <<<<<<<<<<<<<<
- * 
- *     # initialisation du graph
- */
-    __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 178, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_7 = __Pyx_PyList_Append(__pyx_v_list_by_colors, __pyx_t_1); if (unlikely(__pyx_t_7 == ((int)-1))) __PYX_ERR(0, 178, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  }
-
-  /* "Solving_Methods/Isomorph.pyx":181
- * 
- *     # initialisation du graph
- *     g = Graph(enum, directed=True) ## PYNAUTY             # <<<<<<<<<<<<<<
- * 
- *     ###### Algo ######
- */
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_Graph); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 181, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 181, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_INCREF(__pyx_v_enum);
-  __Pyx_GIVEREF(__pyx_v_enum);
-  PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_v_enum);
-  __pyx_t_8 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 181, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_8);
-  if (PyDict_SetItem(__pyx_t_8, __pyx_n_s_directed, Py_True) < 0) __PYX_ERR(0, 181, __pyx_L1_error)
-  __pyx_t_9 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_2, __pyx_t_8); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 181, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_9);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-  __pyx_v_g = __pyx_t_9;
-  __pyx_t_9 = 0;
-
-  /* "Solving_Methods/Isomorph.pyx":185
- *     ###### Algo ######
- *     # remplissage des adjacences
- *     list_adja = []             # <<<<<<<<<<<<<<
- *     sommet_n = 0
- *     for i in range(len(combi)):
- */
-  __pyx_t_9 = PyList_New(0); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 185, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_9);
-  __pyx_v_list_adja = ((PyObject*)__pyx_t_9);
-  __pyx_t_9 = 0;
-
-  /* "Solving_Methods/Isomorph.pyx":186
- *     # remplissage des adjacences
- *     list_adja = []
- *     sommet_n = 0             # <<<<<<<<<<<<<<
- *     for i in range(len(combi)):
- *         listconnex = []
- */
-  __Pyx_INCREF(__pyx_int_0);
-  __pyx_v_sommet_n = __pyx_int_0;
-
-  /* "Solving_Methods/Isomorph.pyx":187
- *     list_adja = []
- *     sommet_n = 0
- *     for i in range(len(combi)):             # <<<<<<<<<<<<<<
- *         listconnex = []
- *         if combi[i] == 1:
- */
-  __pyx_t_3 = PyObject_Length(__pyx_v_combi); if (unlikely(__pyx_t_3 == ((Py_ssize_t)-1))) __PYX_ERR(0, 187, __pyx_L1_error)
-  __pyx_t_4 = __pyx_t_3;
-  for (__pyx_t_5 = 0; __pyx_t_5 < __pyx_t_4; __pyx_t_5+=1) {
-    __pyx_v_i = __pyx_t_5;
-
-    /* "Solving_Methods/Isomorph.pyx":188
- *     sommet_n = 0
- *     for i in range(len(combi)):
- *         listconnex = []             # <<<<<<<<<<<<<<
- *         if combi[i] == 1:
- *             for j in range(len(combi)):
- */
-    __pyx_t_9 = PyList_New(0); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 188, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_9);
-    __Pyx_XDECREF_SET(__pyx_v_listconnex, ((PyObject*)__pyx_t_9));
-    __pyx_t_9 = 0;
-
-    /* "Solving_Methods/Isomorph.pyx":189
- *     for i in range(len(combi)):
- *         listconnex = []
- *         if combi[i] == 1:             # <<<<<<<<<<<<<<
- *             for j in range(len(combi)):
- *                 if matrice_adja[i][j] != 0 and combi[j] == 1:
- */
-    __pyx_t_9 = __Pyx_GetItemInt(__pyx_v_combi, __pyx_v_i, Py_ssize_t, 1, PyInt_FromSsize_t, 0, 1, 1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 189, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_9);
-    __pyx_t_8 = __Pyx_PyInt_EqObjC(__pyx_t_9, __pyx_int_1, 1, 0); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 189, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_8);
-    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-    __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_8); if (unlikely(__pyx_t_6 < 0)) __PYX_ERR(0, 189, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-    if (__pyx_t_6) {
-
-      /* "Solving_Methods/Isomorph.pyx":190
- *         listconnex = []
- *         if combi[i] == 1:
- *             for j in range(len(combi)):             # <<<<<<<<<<<<<<
- *                 if matrice_adja[i][j] != 0 and combi[j] == 1:
- *                     #print(nv_nom[j])
- */
-      __pyx_t_10 = PyObject_Length(__pyx_v_combi); if (unlikely(__pyx_t_10 == ((Py_ssize_t)-1))) __PYX_ERR(0, 190, __pyx_L1_error)
-      __pyx_t_11 = __pyx_t_10;
-      for (__pyx_t_12 = 0; __pyx_t_12 < __pyx_t_11; __pyx_t_12+=1) {
-        __pyx_v_j = __pyx_t_12;
-
-        /* "Solving_Methods/Isomorph.pyx":191
- *         if combi[i] == 1:
- *             for j in range(len(combi)):
- *                 if matrice_adja[i][j] != 0 and combi[j] == 1:             # <<<<<<<<<<<<<<
- *                     #print(nv_nom[j])
- *                     listconnex.append(nv_nom[j])
- */
-        __pyx_t_8 = __Pyx_GetItemInt(__pyx_v_matrice_adja, __pyx_v_i, Py_ssize_t, 1, PyInt_FromSsize_t, 0, 1, 1); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 191, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_8);
-        __pyx_t_9 = __Pyx_GetItemInt(__pyx_t_8, __pyx_v_j, Py_ssize_t, 1, PyInt_FromSsize_t, 0, 1, 1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 191, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_9);
-        __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-        __pyx_t_8 = __Pyx_PyInt_NeObjC(__pyx_t_9, __pyx_int_0, 0, 0); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 191, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_8);
-        __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-        __pyx_t_13 = __Pyx_PyObject_IsTrue(__pyx_t_8); if (unlikely(__pyx_t_13 < 0)) __PYX_ERR(0, 191, __pyx_L1_error)
-        __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-        if (__pyx_t_13) {
-        } else {
-          __pyx_t_6 = __pyx_t_13;
-          goto __pyx_L14_bool_binop_done;
-        }
-        __pyx_t_8 = __Pyx_GetItemInt(__pyx_v_combi, __pyx_v_j, Py_ssize_t, 1, PyInt_FromSsize_t, 0, 1, 1); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 191, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_8);
-        __pyx_t_9 = __Pyx_PyInt_EqObjC(__pyx_t_8, __pyx_int_1, 1, 0); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 191, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_9);
-        __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-        __pyx_t_13 = __Pyx_PyObject_IsTrue(__pyx_t_9); if (unlikely(__pyx_t_13 < 0)) __PYX_ERR(0, 191, __pyx_L1_error)
-        __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-        __pyx_t_6 = __pyx_t_13;
-        __pyx_L14_bool_binop_done:;
-        if (__pyx_t_6) {
-
-          /* "Solving_Methods/Isomorph.pyx":193
- *                 if matrice_adja[i][j] != 0 and combi[j] == 1:
- *                     #print(nv_nom[j])
- *                     listconnex.append(nv_nom[j])             # <<<<<<<<<<<<<<
- *             #g.connect_vertex(sommet_n, listconnex)
- *             temp = atom_caract[i].split()
- */
-          __pyx_t_9 = __Pyx_GetItemInt_List(__pyx_v_nv_nom, __pyx_v_j, Py_ssize_t, 1, PyInt_FromSsize_t, 1, 1, 1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 193, __pyx_L1_error)
-          __Pyx_GOTREF(__pyx_t_9);
-          __pyx_t_7 = __Pyx_PyList_Append(__pyx_v_listconnex, __pyx_t_9); if (unlikely(__pyx_t_7 == ((int)-1))) __PYX_ERR(0, 193, __pyx_L1_error)
-          __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-
-          /* "Solving_Methods/Isomorph.pyx":191
- *         if combi[i] == 1:
- *             for j in range(len(combi)):
- *                 if matrice_adja[i][j] != 0 and combi[j] == 1:             # <<<<<<<<<<<<<<
- *                     #print(nv_nom[j])
- *                     listconnex.append(nv_nom[j])
- */
-        }
-      }
-
-      /* "Solving_Methods/Isomorph.pyx":195
- *                     listconnex.append(nv_nom[j])
- *             #g.connect_vertex(sommet_n, listconnex)
- *             temp = atom_caract[i].split()             # <<<<<<<<<<<<<<
- *             #dict_c.get(temp)
- *             list_by_colors[dict_c.get(temp[0])].append(nv_nom[i]) #to int needed maybe
- */
-      __pyx_t_8 = __Pyx_GetItemInt(__pyx_v_atom_caract, __pyx_v_i, Py_ssize_t, 1, PyInt_FromSsize_t, 0, 1, 1); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 195, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_8);
-      __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_8, __pyx_n_s_split); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 195, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_2);
-      __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-      __pyx_t_8 = NULL;
-      if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
-        __pyx_t_8 = PyMethod_GET_SELF(__pyx_t_2);
-        if (likely(__pyx_t_8)) {
-          PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
-          __Pyx_INCREF(__pyx_t_8);
-          __Pyx_INCREF(function);
-          __Pyx_DECREF_SET(__pyx_t_2, function);
-        }
-      }
-      __pyx_t_9 = (__pyx_t_8) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_8) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
-      __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
-      if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 195, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_9);
-      __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-      __Pyx_XDECREF_SET(__pyx_v_temp, __pyx_t_9);
-      __pyx_t_9 = 0;
-
-      /* "Solving_Methods/Isomorph.pyx":197
- *             temp = atom_caract[i].split()
- *             #dict_c.get(temp)
- *             list_by_colors[dict_c.get(temp[0])].append(nv_nom[i]) #to int needed maybe             # <<<<<<<<<<<<<<
- *             sommet_n += 1
- *             g.connect_vertex(nv_nom[i], listconnex)
- */
-      __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_dict_c, __pyx_n_s_get); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 197, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_2);
-      __pyx_t_8 = __Pyx_GetItemInt(__pyx_v_temp, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 197, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_8);
-      __pyx_t_1 = NULL;
-      if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
-        __pyx_t_1 = PyMethod_GET_SELF(__pyx_t_2);
-        if (likely(__pyx_t_1)) {
-          PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
-          __Pyx_INCREF(__pyx_t_1);
-          __Pyx_INCREF(function);
-          __Pyx_DECREF_SET(__pyx_t_2, function);
-        }
-      }
-      __pyx_t_9 = (__pyx_t_1) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_1, __pyx_t_8) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_8);
-      __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
-      __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-      if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 197, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_9);
-      __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-      __pyx_t_2 = __Pyx_PyObject_GetItem(__pyx_v_list_by_colors, __pyx_t_9); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 197, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_2);
-      __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-      __pyx_t_9 = __Pyx_GetItemInt_List(__pyx_v_nv_nom, __pyx_v_i, Py_ssize_t, 1, PyInt_FromSsize_t, 1, 1, 1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 197, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_9);
-      __pyx_t_7 = __Pyx_PyObject_Append(__pyx_t_2, __pyx_t_9); if (unlikely(__pyx_t_7 == ((int)-1))) __PYX_ERR(0, 197, __pyx_L1_error)
-      __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-      __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-
-      /* "Solving_Methods/Isomorph.pyx":198
- *             #dict_c.get(temp)
- *             list_by_colors[dict_c.get(temp[0])].append(nv_nom[i]) #to int needed maybe
- *             sommet_n += 1             # <<<<<<<<<<<<<<
- *             g.connect_vertex(nv_nom[i], listconnex)
- *             list_adja.append(listconnex)
- */
-      __pyx_t_9 = __Pyx_PyInt_AddObjC(__pyx_v_sommet_n, __pyx_int_1, 1, 1, 0); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 198, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_9);
-      __Pyx_DECREF_SET(__pyx_v_sommet_n, __pyx_t_9);
-      __pyx_t_9 = 0;
-
-      /* "Solving_Methods/Isomorph.pyx":199
- *             list_by_colors[dict_c.get(temp[0])].append(nv_nom[i]) #to int needed maybe
- *             sommet_n += 1
- *             g.connect_vertex(nv_nom[i], listconnex)             # <<<<<<<<<<<<<<
- *             list_adja.append(listconnex)
- * 
- */
-      __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_g, __pyx_n_s_connect_vertex); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 199, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_2);
-      __pyx_t_8 = __Pyx_GetItemInt_List(__pyx_v_nv_nom, __pyx_v_i, Py_ssize_t, 1, PyInt_FromSsize_t, 1, 1, 1); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 199, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_8);
-      __pyx_t_1 = NULL;
-      __pyx_t_14 = 0;
-      if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
-        __pyx_t_1 = PyMethod_GET_SELF(__pyx_t_2);
-        if (likely(__pyx_t_1)) {
-          PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
-          __Pyx_INCREF(__pyx_t_1);
-          __Pyx_INCREF(function);
-          __Pyx_DECREF_SET(__pyx_t_2, function);
-          __pyx_t_14 = 1;
-        }
-      }
-      #if CYTHON_FAST_PYCALL
-      if (PyFunction_Check(__pyx_t_2)) {
-        PyObject *__pyx_temp[3] = {__pyx_t_1, __pyx_t_8, __pyx_v_listconnex};
-        __pyx_t_9 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_14, 2+__pyx_t_14); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 199, __pyx_L1_error)
-        __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
-        __Pyx_GOTREF(__pyx_t_9);
-        __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-      } else
-      #endif
-      #if CYTHON_FAST_PYCCALL
-      if (__Pyx_PyFastCFunction_Check(__pyx_t_2)) {
-        PyObject *__pyx_temp[3] = {__pyx_t_1, __pyx_t_8, __pyx_v_listconnex};
-        __pyx_t_9 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_14, 2+__pyx_t_14); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 199, __pyx_L1_error)
-        __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
-        __Pyx_GOTREF(__pyx_t_9);
-        __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-      } else
-      #endif
-      {
-        __pyx_t_15 = PyTuple_New(2+__pyx_t_14); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 199, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_15);
-        if (__pyx_t_1) {
-          __Pyx_GIVEREF(__pyx_t_1); PyTuple_SET_ITEM(__pyx_t_15, 0, __pyx_t_1); __pyx_t_1 = NULL;
-        }
-        __Pyx_GIVEREF(__pyx_t_8);
-        PyTuple_SET_ITEM(__pyx_t_15, 0+__pyx_t_14, __pyx_t_8);
-        __Pyx_INCREF(__pyx_v_listconnex);
-        __Pyx_GIVEREF(__pyx_v_listconnex);
-        PyTuple_SET_ITEM(__pyx_t_15, 1+__pyx_t_14, __pyx_v_listconnex);
-        __pyx_t_8 = 0;
-        __pyx_t_9 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_15, NULL); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 199, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_9);
-        __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
-      }
-      __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-      __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-
-      /* "Solving_Methods/Isomorph.pyx":200
- *             sommet_n += 1
- *             g.connect_vertex(nv_nom[i], listconnex)
- *             list_adja.append(listconnex)             # <<<<<<<<<<<<<<
- * 
- *     # coloriage des sommets
- */
-      __pyx_t_7 = __Pyx_PyList_Append(__pyx_v_list_adja, __pyx_v_listconnex); if (unlikely(__pyx_t_7 == ((int)-1))) __PYX_ERR(0, 200, __pyx_L1_error)
-
-      /* "Solving_Methods/Isomorph.pyx":189
- *     for i in range(len(combi)):
- *         listconnex = []
- *         if combi[i] == 1:             # <<<<<<<<<<<<<<
- *             for j in range(len(combi)):
- *                 if matrice_adja[i][j] != 0 and combi[j] == 1:
- */
-    }
-  }
-
-  /* "Solving_Methods/Isomorph.pyx":203
- * 
- *     # coloriage des sommets
- *     list_sets = []             # <<<<<<<<<<<<<<
- *     for i in range(len(dict_c)):
- *         list_sets.append(set(list_by_colors[i]))
- */
-  __pyx_t_9 = PyList_New(0); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 203, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_9);
-  __pyx_v_list_sets = ((PyObject*)__pyx_t_9);
-  __pyx_t_9 = 0;
-
-  /* "Solving_Methods/Isomorph.pyx":204
- *     # coloriage des sommets
- *     list_sets = []
- *     for i in range(len(dict_c)):             # <<<<<<<<<<<<<<
- *         list_sets.append(set(list_by_colors[i]))
- * 
- */
-  __pyx_t_3 = PyObject_Length(__pyx_v_dict_c); if (unlikely(__pyx_t_3 == ((Py_ssize_t)-1))) __PYX_ERR(0, 204, __pyx_L1_error)
-  __pyx_t_4 = __pyx_t_3;
-  for (__pyx_t_5 = 0; __pyx_t_5 < __pyx_t_4; __pyx_t_5+=1) {
-    __pyx_v_i = __pyx_t_5;
-
-    /* "Solving_Methods/Isomorph.pyx":205
- *     list_sets = []
- *     for i in range(len(dict_c)):
- *         list_sets.append(set(list_by_colors[i]))             # <<<<<<<<<<<<<<
- * 
- *     g.set_vertex_coloring(list_sets)
- */
-    __pyx_t_9 = __Pyx_GetItemInt_List(__pyx_v_list_by_colors, __pyx_v_i, Py_ssize_t, 1, PyInt_FromSsize_t, 1, 1, 1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 205, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_9);
-    __pyx_t_2 = PySet_New(__pyx_t_9); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 205, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-    __pyx_t_7 = __Pyx_PyList_Append(__pyx_v_list_sets, __pyx_t_2); if (unlikely(__pyx_t_7 == ((int)-1))) __PYX_ERR(0, 205, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  }
-
-  /* "Solving_Methods/Isomorph.pyx":207
- *         list_sets.append(set(list_by_colors[i]))
- * 
- *     g.set_vertex_coloring(list_sets)             # <<<<<<<<<<<<<<
- * 
- *     print(g)
- */
-  __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_v_g, __pyx_n_s_set_vertex_coloring); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 207, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_9);
-  __pyx_t_15 = NULL;
-  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_9))) {
-    __pyx_t_15 = PyMethod_GET_SELF(__pyx_t_9);
-    if (likely(__pyx_t_15)) {
-      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_9);
-      __Pyx_INCREF(__pyx_t_15);
-      __Pyx_INCREF(function);
-      __Pyx_DECREF_SET(__pyx_t_9, function);
-    }
-  }
-  __pyx_t_2 = (__pyx_t_15) ? __Pyx_PyObject_Call2Args(__pyx_t_9, __pyx_t_15, __pyx_v_list_sets) : __Pyx_PyObject_CallOneArg(__pyx_t_9, __pyx_v_list_sets);
-  __Pyx_XDECREF(__pyx_t_15); __pyx_t_15 = 0;
-  if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 207, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-
-  /* "Solving_Methods/Isomorph.pyx":209
- *     g.set_vertex_coloring(list_sets)
- * 
- *     print(g)             # <<<<<<<<<<<<<<
- *     return certificate(g)
- * 
- */
-  if (__Pyx_PrintOne(0, __pyx_v_g) < 0) __PYX_ERR(0, 209, __pyx_L1_error)
-
-  /* "Solving_Methods/Isomorph.pyx":210
- * 
- *     print(g)
- *     return certificate(g)             # <<<<<<<<<<<<<<
- * 
- *     #print('')
- */
-  __Pyx_XDECREF(__pyx_r);
-  __Pyx_GetModuleGlobalName(__pyx_t_9, __pyx_n_s_certificate); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 210, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_9);
-  __pyx_t_15 = NULL;
-  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_9))) {
-    __pyx_t_15 = PyMethod_GET_SELF(__pyx_t_9);
-    if (likely(__pyx_t_15)) {
-      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_9);
-      __Pyx_INCREF(__pyx_t_15);
-      __Pyx_INCREF(function);
-      __Pyx_DECREF_SET(__pyx_t_9, function);
-    }
-  }
-  __pyx_t_2 = (__pyx_t_15) ? __Pyx_PyObject_Call2Args(__pyx_t_9, __pyx_t_15, __pyx_v_g) : __Pyx_PyObject_CallOneArg(__pyx_t_9, __pyx_v_g);
-  __Pyx_XDECREF(__pyx_t_15); __pyx_t_15 = 0;
-  if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 210, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-  __pyx_r = __pyx_t_2;
-  __pyx_t_2 = 0;
-  goto __pyx_L0;
-
-  /* "Solving_Methods/Isomorph.pyx":160
- * # combinaison de sommets
- * # DEPRECATED
- * def combi_to_certif_broken(combi, matrice_adja, atom_caract, dict_c):             # <<<<<<<<<<<<<<
- *     ###### Initialisations ######
- *     print('')
- */
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_8);
-  __Pyx_XDECREF(__pyx_t_9);
-  __Pyx_XDECREF(__pyx_t_15);
-  __Pyx_AddTraceback("Solving_Methods.Isomorph.combi_to_certif_broken", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
-  __pyx_L0:;
-  __Pyx_XDECREF(__pyx_v_nv_nom);
-  __Pyx_XDECREF(__pyx_v_enum);
-  __Pyx_XDECREF(__pyx_v_list_by_colors);
-  __Pyx_XDECREF(__pyx_v_g);
-  __Pyx_XDECREF(__pyx_v_list_adja);
-  __Pyx_XDECREF(__pyx_v_sommet_n);
-  __Pyx_XDECREF(__pyx_v_listconnex);
-  __Pyx_XDECREF(__pyx_v_temp);
-  __Pyx_XDECREF(__pyx_v_list_sets);
   __Pyx_XGIVEREF(__pyx_r);
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
@@ -4623,11 +3488,10 @@ static struct PyModuleDef __pyx_moduledef = {
 #endif
 
 static __Pyx_StringTabEntry __pyx_string_tab[] = {
-  {&__pyx_kp_s_, __pyx_k_, sizeof(__pyx_k_), 0, 0, 1, 0},
+  {&__pyx_n_s_, __pyx_k_, sizeof(__pyx_k_), 0, 0, 1, 1},
   {&__pyx_n_s_Graph, __pyx_k_Graph, sizeof(__pyx_k_Graph), 0, 0, 1, 1},
   {&__pyx_n_s_Solving_Methods_Isomorph, __pyx_k_Solving_Methods_Isomorph, sizeof(__pyx_k_Solving_Methods_Isomorph), 0, 0, 1, 1},
   {&__pyx_kp_s_Solving_Methods_Isomorph_pyx, __pyx_k_Solving_Methods_Isomorph_pyx, sizeof(__pyx_k_Solving_Methods_Isomorph_pyx), 0, 0, 1, 0},
-  {&__pyx_n_s__2, __pyx_k__2, sizeof(__pyx_k__2), 0, 0, 1, 1},
   {&__pyx_n_s_adjacency_dict, __pyx_k_adjacency_dict, sizeof(__pyx_k_adjacency_dict), 0, 0, 1, 1},
   {&__pyx_n_s_append, __pyx_k_append, sizeof(__pyx_k_append), 0, 0, 1, 1},
   {&__pyx_n_s_atom_caract, __pyx_k_atom_caract, sizeof(__pyx_k_atom_caract), 0, 0, 1, 1},
@@ -4638,41 +3502,28 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_cline_in_traceback, __pyx_k_cline_in_traceback, sizeof(__pyx_k_cline_in_traceback), 0, 0, 1, 1},
   {&__pyx_n_s_comb, __pyx_k_comb, sizeof(__pyx_k_comb), 0, 0, 1, 1},
   {&__pyx_n_s_combi, __pyx_k_combi, sizeof(__pyx_k_combi), 0, 0, 1, 1},
-  {&__pyx_kp_s_combi_2, __pyx_k_combi_2, sizeof(__pyx_k_combi_2), 0, 0, 1, 0},
   {&__pyx_n_s_combi_bool, __pyx_k_combi_bool, sizeof(__pyx_k_combi_bool), 0, 0, 1, 1},
   {&__pyx_n_s_combi_int, __pyx_k_combi_int, sizeof(__pyx_k_combi_int), 0, 0, 1, 1},
   {&__pyx_n_s_combi_iso, __pyx_k_combi_iso, sizeof(__pyx_k_combi_iso), 0, 0, 1, 1},
   {&__pyx_n_s_combi_to_certif, __pyx_k_combi_to_certif, sizeof(__pyx_k_combi_to_certif), 0, 0, 1, 1},
-  {&__pyx_n_s_combi_to_certif_broken, __pyx_k_combi_to_certif_broken, sizeof(__pyx_k_combi_to_certif_broken), 0, 0, 1, 1},
-  {&__pyx_n_s_connect_vertex, __pyx_k_connect_vertex, sizeof(__pyx_k_connect_vertex), 0, 0, 1, 1},
   {&__pyx_n_s_copy, __pyx_k_copy, sizeof(__pyx_k_copy), 0, 0, 1, 1},
-  {&__pyx_n_s_couleur_nb, __pyx_k_couleur_nb, sizeof(__pyx_k_couleur_nb), 0, 0, 1, 1},
-  {&__pyx_n_s_dict_c, __pyx_k_dict_c, sizeof(__pyx_k_dict_c), 0, 0, 1, 1},
   {&__pyx_n_s_dict_connex, __pyx_k_dict_connex, sizeof(__pyx_k_dict_connex), 0, 0, 1, 1},
-  {&__pyx_n_s_dict_couleur, __pyx_k_dict_couleur, sizeof(__pyx_k_dict_couleur), 0, 0, 1, 1},
   {&__pyx_n_s_dict_isomorph, __pyx_k_dict_isomorph, sizeof(__pyx_k_dict_isomorph), 0, 0, 1, 1},
   {&__pyx_n_s_dict_stat, __pyx_k_dict_stat, sizeof(__pyx_k_dict_stat), 0, 0, 1, 1},
   {&__pyx_n_s_directed, __pyx_k_directed, sizeof(__pyx_k_directed), 0, 0, 1, 1},
   {&__pyx_n_s_dtype, __pyx_k_dtype, sizeof(__pyx_k_dtype), 0, 0, 1, 1},
-  {&__pyx_n_s_end, __pyx_k_end, sizeof(__pyx_k_end), 0, 0, 1, 1},
-  {&__pyx_n_s_enum, __pyx_k_enum, sizeof(__pyx_k_enum), 0, 0, 1, 1},
-  {&__pyx_n_s_file, __pyx_k_file, sizeof(__pyx_k_file), 0, 0, 1, 1},
   {&__pyx_n_s_g, __pyx_k_g, sizeof(__pyx_k_g), 0, 0, 1, 1},
   {&__pyx_n_s_get, __pyx_k_get, sizeof(__pyx_k_get), 0, 0, 1, 1},
   {&__pyx_n_s_i, __pyx_k_i, sizeof(__pyx_k_i), 0, 0, 1, 1},
   {&__pyx_n_s_import, __pyx_k_import, sizeof(__pyx_k_import), 0, 0, 1, 1},
   {&__pyx_n_s_index, __pyx_k_index, sizeof(__pyx_k_index), 0, 0, 1, 1},
   {&__pyx_n_s_indice, __pyx_k_indice, sizeof(__pyx_k_indice), 0, 0, 1, 1},
-  {&__pyx_n_s_init_col, __pyx_k_init_col, sizeof(__pyx_k_init_col), 0, 0, 1, 1},
   {&__pyx_n_s_interize, __pyx_k_interize, sizeof(__pyx_k_interize), 0, 0, 1, 1},
   {&__pyx_n_s_j, __pyx_k_j, sizeof(__pyx_k_j), 0, 0, 1, 1},
-  {&__pyx_n_s_list_adja, __pyx_k_list_adja, sizeof(__pyx_k_list_adja), 0, 0, 1, 1},
-  {&__pyx_n_s_list_by_colors, __pyx_k_list_by_colors, sizeof(__pyx_k_list_by_colors), 0, 0, 1, 1},
   {&__pyx_n_s_list_connex, __pyx_k_list_connex, sizeof(__pyx_k_list_connex), 0, 0, 1, 1},
-  {&__pyx_n_s_list_sets, __pyx_k_list_sets, sizeof(__pyx_k_list_sets), 0, 0, 1, 1},
-  {&__pyx_n_s_listconnex, __pyx_k_listconnex, sizeof(__pyx_k_listconnex), 0, 0, 1, 1},
   {&__pyx_n_s_listes_arcs, __pyx_k_listes_arcs, sizeof(__pyx_k_listes_arcs), 0, 0, 1, 1},
   {&__pyx_n_s_lst_certif, __pyx_k_lst_certif, sizeof(__pyx_k_lst_certif), 0, 0, 1, 1},
+  {&__pyx_n_s_lst_col, __pyx_k_lst_col, sizeof(__pyx_k_lst_col), 0, 0, 1, 1},
   {&__pyx_n_s_lst_combi, __pyx_k_lst_combi, sizeof(__pyx_k_lst_combi), 0, 0, 1, 1},
   {&__pyx_n_s_lst_id, __pyx_k_lst_id, sizeof(__pyx_k_lst_id), 0, 0, 1, 1},
   {&__pyx_n_s_main, __pyx_k_main, sizeof(__pyx_k_main), 0, 0, 1, 1},
@@ -4684,24 +3535,18 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_np, __pyx_k_np, sizeof(__pyx_k_np), 0, 0, 1, 1},
   {&__pyx_n_s_num_prochain_sommet, __pyx_k_num_prochain_sommet, sizeof(__pyx_k_num_prochain_sommet), 0, 0, 1, 1},
   {&__pyx_n_s_numpy, __pyx_k_numpy, sizeof(__pyx_k_numpy), 0, 0, 1, 1},
-  {&__pyx_n_s_nv_nom, __pyx_k_nv_nom, sizeof(__pyx_k_nv_nom), 0, 0, 1, 1},
   {&__pyx_n_s_nx, __pyx_k_nx, sizeof(__pyx_k_nx), 0, 0, 1, 1},
   {&__pyx_n_s_ordre, __pyx_k_ordre, sizeof(__pyx_k_ordre), 0, 0, 1, 1},
-  {&__pyx_n_s_print, __pyx_k_print, sizeof(__pyx_k_print), 0, 0, 1, 1},
   {&__pyx_n_s_pynauty, __pyx_k_pynauty, sizeof(__pyx_k_pynauty), 0, 0, 1, 1},
   {&__pyx_n_s_r, __pyx_k_r, sizeof(__pyx_k_r), 0, 0, 1, 1},
   {&__pyx_n_s_range, __pyx_k_range, sizeof(__pyx_k_range), 0, 0, 1, 1},
   {&__pyx_n_s_ref, __pyx_k_ref, sizeof(__pyx_k_ref), 0, 0, 1, 1},
-  {&__pyx_n_s_set_vertex_coloring, __pyx_k_set_vertex_coloring, sizeof(__pyx_k_set_vertex_coloring), 0, 0, 1, 1},
   {&__pyx_n_s_setdefault, __pyx_k_setdefault, sizeof(__pyx_k_setdefault), 0, 0, 1, 1},
-  {&__pyx_n_s_sommet_n, __pyx_k_sommet_n, sizeof(__pyx_k_sommet_n), 0, 0, 1, 1},
   {&__pyx_n_s_split, __pyx_k_split, sizeof(__pyx_k_split), 0, 0, 1, 1},
-  {&__pyx_n_s_splitted, __pyx_k_splitted, sizeof(__pyx_k_splitted), 0, 0, 1, 1},
   {&__pyx_n_s_t_cerif, __pyx_k_t_cerif, sizeof(__pyx_k_t_cerif), 0, 0, 1, 1},
   {&__pyx_n_s_t_fill, __pyx_k_t_fill, sizeof(__pyx_k_t_fill), 0, 0, 1, 1},
   {&__pyx_n_s_t_prep_c, __pyx_k_t_prep_c, sizeof(__pyx_k_t_prep_c), 0, 0, 1, 1},
   {&__pyx_n_s_taille, __pyx_k_taille, sizeof(__pyx_k_taille), 0, 0, 1, 1},
-  {&__pyx_n_s_temp, __pyx_k_temp, sizeof(__pyx_k_temp), 0, 0, 1, 1},
   {&__pyx_n_s_temp_couleur, __pyx_k_temp_couleur, sizeof(__pyx_k_temp_couleur), 0, 0, 1, 1},
   {&__pyx_n_s_temp_prep_t, __pyx_k_temp_prep_t, sizeof(__pyx_k_temp_prep_t), 0, 0, 1, 1},
   {&__pyx_n_s_temp_t_cert, __pyx_k_temp_t_cert, sizeof(__pyx_k_temp_t_cert), 0, 0, 1, 1},
@@ -4730,58 +3575,34 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * 
  *     combi_int = np.zeros(len(combi_bool), dtype=int)
  */
-  __pyx_tuple__3 = PyTuple_Pack(3, __pyx_n_s_combi_bool, __pyx_n_s_combi_int, __pyx_n_s_i); if (unlikely(!__pyx_tuple__3)) __PYX_ERR(0, 10, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__3);
-  __Pyx_GIVEREF(__pyx_tuple__3);
-  __pyx_codeobj__4 = (PyObject*)__Pyx_PyCode_New(1, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__3, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Solving_Methods_Isomorph_pyx, __pyx_n_s_interize, 10, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__4)) __PYX_ERR(0, 10, __pyx_L1_error)
+  __pyx_tuple__2 = PyTuple_Pack(3, __pyx_n_s_combi_bool, __pyx_n_s_combi_int, __pyx_n_s_i); if (unlikely(!__pyx_tuple__2)) __PYX_ERR(0, 10, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__2);
+  __Pyx_GIVEREF(__pyx_tuple__2);
+  __pyx_codeobj__3 = (PyObject*)__Pyx_PyCode_New(1, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__2, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Solving_Methods_Isomorph_pyx, __pyx_n_s_interize, 10, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__3)) __PYX_ERR(0, 10, __pyx_L1_error)
 
   /* "Solving_Methods/Isomorph.pyx":26
  * ####
  * 
- * def combi_iso(matrice_adja, atom_caract, lst_combi, ordre, t_cerif, t_prep_c, t_fill):## 3 last values are test             # <<<<<<<<<<<<<<
+ * def combi_iso(matrice_adja, atom_caract, lst_col, lst_combi, ordre, t_cerif, t_prep_c, t_fill):## 3 last values are test             # <<<<<<<<<<<<<<
  *     ## Structures de stockage :
  *     # Listes:
  */
-  __pyx_tuple__5 = PyTuple_Pack(20, __pyx_n_s_matrice_adja, __pyx_n_s_atom_caract, __pyx_n_s_lst_combi, __pyx_n_s_ordre, __pyx_n_s_t_cerif, __pyx_n_s_t_prep_c, __pyx_n_s_t_fill, __pyx_n_s_lst_certif, __pyx_n_s_lst_id, __pyx_n_s_dict_isomorph, __pyx_n_s_dict_stat, __pyx_n_s_dict_couleur, __pyx_n_s_couleur_nb, __pyx_n_s_taille, __pyx_n_s_i, __pyx_n_s_combi, __pyx_n_s_certif, __pyx_n_s_time_begin, __pyx_n_s_indice, __pyx_n_s_tmp); if (unlikely(!__pyx_tuple__5)) __PYX_ERR(0, 26, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__5);
-  __Pyx_GIVEREF(__pyx_tuple__5);
-  __pyx_codeobj__6 = (PyObject*)__Pyx_PyCode_New(7, 0, 20, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__5, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Solving_Methods_Isomorph_pyx, __pyx_n_s_combi_iso, 26, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__6)) __PYX_ERR(0, 26, __pyx_L1_error)
+  __pyx_tuple__4 = PyTuple_Pack(19, __pyx_n_s_matrice_adja, __pyx_n_s_atom_caract, __pyx_n_s_lst_col, __pyx_n_s_lst_combi, __pyx_n_s_ordre, __pyx_n_s_t_cerif, __pyx_n_s_t_prep_c, __pyx_n_s_t_fill, __pyx_n_s_lst_certif, __pyx_n_s_lst_id, __pyx_n_s_dict_isomorph, __pyx_n_s_dict_stat, __pyx_n_s_taille, __pyx_n_s_i, __pyx_n_s_combi, __pyx_n_s_certif, __pyx_n_s_time_begin, __pyx_n_s_indice, __pyx_n_s_tmp); if (unlikely(!__pyx_tuple__4)) __PYX_ERR(0, 26, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__4);
+  __Pyx_GIVEREF(__pyx_tuple__4);
+  __pyx_codeobj__5 = (PyObject*)__Pyx_PyCode_New(8, 0, 19, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__4, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Solving_Methods_Isomorph_pyx, __pyx_n_s_combi_iso, 26, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__5)) __PYX_ERR(0, 26, __pyx_L1_error)
 
-  /* "Solving_Methods/Isomorph.pyx":76
- * 
- * # Initialisation des couleurs
- * def init_col(atom_caract):             # <<<<<<<<<<<<<<
- *     couleur_nb = 0
- *     dict_couleur = {}
- */
-  __pyx_tuple__7 = PyTuple_Pack(5, __pyx_n_s_atom_caract, __pyx_n_s_couleur_nb, __pyx_n_s_dict_couleur, __pyx_n_s_i, __pyx_n_s_splitted); if (unlikely(!__pyx_tuple__7)) __PYX_ERR(0, 76, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__7);
-  __Pyx_GIVEREF(__pyx_tuple__7);
-  __pyx_codeobj__8 = (PyObject*)__Pyx_PyCode_New(1, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__7, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Solving_Methods_Isomorph_pyx, __pyx_n_s_init_col, 76, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__8)) __PYX_ERR(0, 76, __pyx_L1_error)
-
-  /* "Solving_Methods/Isomorph.pyx":90
+  /* "Solving_Methods/Isomorph.pyx":77
  * # La coloration se fera en ajoutant n arrtes  un sommet ayant la couleur
  * # numro n.
- * def combi_to_certif(combi, matrice_adja, atom_caract, dict_c, t_cerif, t_prep_c):## 2 last values are test             # <<<<<<<<<<<<<<
+ * def combi_to_certif(combi, matrice_adja, atom_caract, lst_col, t_cerif, t_prep_c):## 2 last values are test             # <<<<<<<<<<<<<<
  *     ###### Initialisations ######
  *     # cration d'une liste permettant de renommer les sommets
  */
-  __pyx_tuple__9 = PyTuple_Pack(20, __pyx_n_s_combi, __pyx_n_s_matrice_adja, __pyx_n_s_atom_caract, __pyx_n_s_dict_c, __pyx_n_s_t_cerif, __pyx_n_s_t_prep_c, __pyx_n_s_temp_prep_t, __pyx_n_s_ref, __pyx_n_s_i, __pyx_n_s_g, __pyx_n_s_listes_arcs, __pyx_n_s_dict_connex, __pyx_n_s_num_prochain_sommet, __pyx_n_s_j, __pyx_n_s_r, __pyx_n_s_list_connex, __pyx_n_s_temp_couleur, __pyx_n_s_nb_couleur, __pyx_n_s_temp_t_cert, __pyx_n_s_cf); if (unlikely(!__pyx_tuple__9)) __PYX_ERR(0, 90, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__9);
-  __Pyx_GIVEREF(__pyx_tuple__9);
-  __pyx_codeobj__10 = (PyObject*)__Pyx_PyCode_New(6, 0, 20, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__9, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Solving_Methods_Isomorph_pyx, __pyx_n_s_combi_to_certif, 90, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__10)) __PYX_ERR(0, 90, __pyx_L1_error)
-
-  /* "Solving_Methods/Isomorph.pyx":160
- * # combinaison de sommets
- * # DEPRECATED
- * def combi_to_certif_broken(combi, matrice_adja, atom_caract, dict_c):             # <<<<<<<<<<<<<<
- *     ###### Initialisations ######
- *     print('')
- */
-  __pyx_tuple__11 = PyTuple_Pack(15, __pyx_n_s_combi, __pyx_n_s_matrice_adja, __pyx_n_s_atom_caract, __pyx_n_s_dict_c, __pyx_n_s_nv_nom, __pyx_n_s_enum, __pyx_n_s_i, __pyx_n_s_list_by_colors, __pyx_n_s_g, __pyx_n_s_list_adja, __pyx_n_s_sommet_n, __pyx_n_s_listconnex, __pyx_n_s_j, __pyx_n_s_temp, __pyx_n_s_list_sets); if (unlikely(!__pyx_tuple__11)) __PYX_ERR(0, 160, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__11);
-  __Pyx_GIVEREF(__pyx_tuple__11);
-  __pyx_codeobj__12 = (PyObject*)__Pyx_PyCode_New(4, 0, 15, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__11, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Solving_Methods_Isomorph_pyx, __pyx_n_s_combi_to_certif_broken, 160, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__12)) __PYX_ERR(0, 160, __pyx_L1_error)
+  __pyx_tuple__6 = PyTuple_Pack(20, __pyx_n_s_combi, __pyx_n_s_matrice_adja, __pyx_n_s_atom_caract, __pyx_n_s_lst_col, __pyx_n_s_t_cerif, __pyx_n_s_t_prep_c, __pyx_n_s_temp_prep_t, __pyx_n_s_ref, __pyx_n_s_i, __pyx_n_s_listes_arcs, __pyx_n_s_dict_connex, __pyx_n_s_num_prochain_sommet, __pyx_n_s_j, __pyx_n_s_r, __pyx_n_s_list_connex, __pyx_n_s_temp_couleur, __pyx_n_s_nb_couleur, __pyx_n_s_g, __pyx_n_s_temp_t_cert, __pyx_n_s_cf); if (unlikely(!__pyx_tuple__6)) __PYX_ERR(0, 77, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__6);
+  __Pyx_GIVEREF(__pyx_tuple__6);
+  __pyx_codeobj__7 = (PyObject*)__Pyx_PyCode_New(6, 0, 20, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__6, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Solving_Methods_Isomorph_pyx, __pyx_n_s_combi_to_certif, 77, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__7)) __PYX_ERR(0, 77, __pyx_L1_error)
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
@@ -5093,9 +3914,9 @@ if (!__Pyx_RefNanny) {
  */
   __pyx_t_2 = PyList_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 2, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_INCREF(__pyx_n_s__2);
-  __Pyx_GIVEREF(__pyx_n_s__2);
-  PyList_SET_ITEM(__pyx_t_2, 0, __pyx_n_s__2);
+  __Pyx_INCREF(__pyx_n_s_);
+  __Pyx_GIVEREF(__pyx_n_s_);
+  PyList_SET_ITEM(__pyx_t_2, 0, __pyx_n_s_);
   __pyx_t_1 = __Pyx_Import(__pyx_n_s_pynauty, __pyx_t_2, -1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 2, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -5177,7 +3998,7 @@ if (!__Pyx_RefNanny) {
   /* "Solving_Methods/Isomorph.pyx":26
  * ####
  * 
- * def combi_iso(matrice_adja, atom_caract, lst_combi, ordre, t_cerif, t_prep_c, t_fill):## 3 last values are test             # <<<<<<<<<<<<<<
+ * def combi_iso(matrice_adja, atom_caract, lst_col, lst_combi, ordre, t_cerif, t_prep_c, t_fill):## 3 last values are test             # <<<<<<<<<<<<<<
  *     ## Structures de stockage :
  *     # Listes:
  */
@@ -5186,40 +4007,16 @@ if (!__Pyx_RefNanny) {
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_combi_iso, __pyx_t_1) < 0) __PYX_ERR(0, 26, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "Solving_Methods/Isomorph.pyx":76
- * 
- * # Initialisation des couleurs
- * def init_col(atom_caract):             # <<<<<<<<<<<<<<
- *     couleur_nb = 0
- *     dict_couleur = {}
- */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_15Solving_Methods_8Isomorph_5init_col, NULL, __pyx_n_s_Solving_Methods_Isomorph); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 76, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_init_col, __pyx_t_1) < 0) __PYX_ERR(0, 76, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-
-  /* "Solving_Methods/Isomorph.pyx":90
+  /* "Solving_Methods/Isomorph.pyx":77
  * # La coloration se fera en ajoutant n arrtes  un sommet ayant la couleur
  * # numro n.
- * def combi_to_certif(combi, matrice_adja, atom_caract, dict_c, t_cerif, t_prep_c):## 2 last values are test             # <<<<<<<<<<<<<<
+ * def combi_to_certif(combi, matrice_adja, atom_caract, lst_col, t_cerif, t_prep_c):## 2 last values are test             # <<<<<<<<<<<<<<
  *     ###### Initialisations ######
  *     # cration d'une liste permettant de renommer les sommets
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_15Solving_Methods_8Isomorph_7combi_to_certif, NULL, __pyx_n_s_Solving_Methods_Isomorph); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 90, __pyx_L1_error)
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_15Solving_Methods_8Isomorph_5combi_to_certif, NULL, __pyx_n_s_Solving_Methods_Isomorph); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 77, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_combi_to_certif, __pyx_t_1) < 0) __PYX_ERR(0, 90, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-
-  /* "Solving_Methods/Isomorph.pyx":160
- * # combinaison de sommets
- * # DEPRECATED
- * def combi_to_certif_broken(combi, matrice_adja, atom_caract, dict_c):             # <<<<<<<<<<<<<<
- *     ###### Initialisations ######
- *     print('')
- */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_15Solving_Methods_8Isomorph_9combi_to_certif_broken, NULL, __pyx_n_s_Solving_Methods_Isomorph); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 160, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_combi_to_certif_broken, __pyx_t_1) < 0) __PYX_ERR(0, 160, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_combi_to_certif, __pyx_t_1) < 0) __PYX_ERR(0, 77, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
   /* "Solving_Methods/Isomorph.pyx":1
@@ -5786,29 +4583,6 @@ bad:
     return -1;
 }
 
-/* PyCFunctionFastCall */
-#if CYTHON_FAST_PYCCALL
-static CYTHON_INLINE PyObject * __Pyx_PyCFunction_FastCall(PyObject *func_obj, PyObject **args, Py_ssize_t nargs) {
-    PyCFunctionObject *func = (PyCFunctionObject*)func_obj;
-    PyCFunction meth = PyCFunction_GET_FUNCTION(func);
-    PyObject *self = PyCFunction_GET_SELF(func);
-    int flags = PyCFunction_GET_FLAGS(func);
-    assert(PyCFunction_Check(func));
-    assert(METH_FASTCALL == (flags & ~(METH_CLASS | METH_STATIC | METH_COEXIST | METH_KEYWORDS | METH_STACKLESS)));
-    assert(nargs >= 0);
-    assert(nargs == 0 || args != NULL);
-    /* _PyCFunction_FastCallDict() must not be called with an exception set,
-       because it may clear it (directly or indirectly) and so the
-       caller loses its exception */
-    assert(!PyErr_Occurred());
-    if ((PY_VERSION_HEX < 0x030700A0) || unlikely(flags & METH_KEYWORDS)) {
-        return (*((__Pyx_PyCFunctionFastWithKeywords)(void*)meth)) (self, args, nargs, NULL);
-    } else {
-        return (*((__Pyx_PyCFunctionFast)(void*)meth)) (self, args, nargs);
-    }
-}
-#endif
-
 /* PyFunctionFastCall */
 #if CYTHON_FAST_PYCALL
 static PyObject* __Pyx_PyFunction_FastCallNoKw(PyCodeObject *co, PyObject **args, Py_ssize_t na,
@@ -5928,92 +4702,26 @@ done:
 #endif
 #endif
 
-/* PyObjectCall2Args */
-static CYTHON_UNUSED PyObject* __Pyx_PyObject_Call2Args(PyObject* function, PyObject* arg1, PyObject* arg2) {
-    PyObject *args, *result = NULL;
-    #if CYTHON_FAST_PYCALL
-    if (PyFunction_Check(function)) {
-        PyObject *args[2] = {arg1, arg2};
-        return __Pyx_PyFunction_FastCall(function, args, 2);
-    }
-    #endif
-    #if CYTHON_FAST_PYCCALL
-    if (__Pyx_PyFastCFunction_Check(function)) {
-        PyObject *args[2] = {arg1, arg2};
-        return __Pyx_PyCFunction_FastCall(function, args, 2);
-    }
-    #endif
-    args = PyTuple_New(2);
-    if (unlikely(!args)) goto done;
-    Py_INCREF(arg1);
-    PyTuple_SET_ITEM(args, 0, arg1);
-    Py_INCREF(arg2);
-    PyTuple_SET_ITEM(args, 1, arg2);
-    Py_INCREF(function);
-    result = __Pyx_PyObject_Call(function, args, NULL);
-    Py_DECREF(args);
-    Py_DECREF(function);
-done:
-    return result;
-}
-
-/* PyObjectCallMethO */
-#if CYTHON_COMPILING_IN_CPYTHON
-static CYTHON_INLINE PyObject* __Pyx_PyObject_CallMethO(PyObject *func, PyObject *arg) {
-    PyObject *self, *result;
-    PyCFunction cfunc;
-    cfunc = PyCFunction_GET_FUNCTION(func);
-    self = PyCFunction_GET_SELF(func);
-    if (unlikely(Py_EnterRecursiveCall((char*)" while calling a Python object")))
-        return NULL;
-    result = cfunc(self, arg);
-    Py_LeaveRecursiveCall();
-    if (unlikely(!result) && unlikely(!PyErr_Occurred())) {
-        PyErr_SetString(
-            PyExc_SystemError,
-            "NULL result without error in PyObject_Call");
-    }
-    return result;
-}
-#endif
-
-/* PyObjectCallOneArg */
-#if CYTHON_COMPILING_IN_CPYTHON
-static PyObject* __Pyx__PyObject_CallOneArg(PyObject *func, PyObject *arg) {
-    PyObject *result;
-    PyObject *args = PyTuple_New(1);
-    if (unlikely(!args)) return NULL;
-    Py_INCREF(arg);
-    PyTuple_SET_ITEM(args, 0, arg);
-    result = __Pyx_PyObject_Call(func, args, NULL);
-    Py_DECREF(args);
-    return result;
-}
-static CYTHON_INLINE PyObject* __Pyx_PyObject_CallOneArg(PyObject *func, PyObject *arg) {
-#if CYTHON_FAST_PYCALL
-    if (PyFunction_Check(func)) {
-        return __Pyx_PyFunction_FastCall(func, &arg, 1);
-    }
-#endif
-    if (likely(PyCFunction_Check(func))) {
-        if (likely(PyCFunction_GET_FLAGS(func) & METH_O)) {
-            return __Pyx_PyObject_CallMethO(func, arg);
+/* PyCFunctionFastCall */
 #if CYTHON_FAST_PYCCALL
-        } else if (__Pyx_PyFastCFunction_Check(func)) {
-            return __Pyx_PyCFunction_FastCall(func, &arg, 1);
-#endif
-        }
+static CYTHON_INLINE PyObject * __Pyx_PyCFunction_FastCall(PyObject *func_obj, PyObject **args, Py_ssize_t nargs) {
+    PyCFunctionObject *func = (PyCFunctionObject*)func_obj;
+    PyCFunction meth = PyCFunction_GET_FUNCTION(func);
+    PyObject *self = PyCFunction_GET_SELF(func);
+    int flags = PyCFunction_GET_FLAGS(func);
+    assert(PyCFunction_Check(func));
+    assert(METH_FASTCALL == (flags & ~(METH_CLASS | METH_STATIC | METH_COEXIST | METH_KEYWORDS | METH_STACKLESS)));
+    assert(nargs >= 0);
+    assert(nargs == 0 || args != NULL);
+    /* _PyCFunction_FastCallDict() must not be called with an exception set,
+       because it may clear it (directly or indirectly) and so the
+       caller loses its exception */
+    assert(!PyErr_Occurred());
+    if ((PY_VERSION_HEX < 0x030700A0) || unlikely(flags & METH_KEYWORDS)) {
+        return (*((__Pyx_PyCFunctionFastWithKeywords)(void*)meth)) (self, args, nargs, NULL);
+    } else {
+        return (*((__Pyx_PyCFunctionFast)(void*)meth)) (self, args, nargs);
     }
-    return __Pyx__PyObject_CallOneArg(func, arg);
-}
-#else
-static CYTHON_INLINE PyObject* __Pyx_PyObject_CallOneArg(PyObject *func, PyObject *arg) {
-    PyObject *result;
-    PyObject *args = PyTuple_Pack(1, arg);
-    if (unlikely(!args)) return NULL;
-    result = __Pyx_PyObject_Call(func, args, NULL);
-    Py_DECREF(args);
-    return result;
 }
 #endif
 
@@ -6077,6 +4785,26 @@ static int __Pyx_IternextUnpackEndCheck(PyObject *retval, Py_ssize_t expected) {
     return 0;
 }
 
+/* PyObjectCallMethO */
+#if CYTHON_COMPILING_IN_CPYTHON
+static CYTHON_INLINE PyObject* __Pyx_PyObject_CallMethO(PyObject *func, PyObject *arg) {
+    PyObject *self, *result;
+    PyCFunction cfunc;
+    cfunc = PyCFunction_GET_FUNCTION(func);
+    self = PyCFunction_GET_SELF(func);
+    if (unlikely(Py_EnterRecursiveCall((char*)" while calling a Python object")))
+        return NULL;
+    result = cfunc(self, arg);
+    Py_LeaveRecursiveCall();
+    if (unlikely(!result) && unlikely(!PyErr_Occurred())) {
+        PyErr_SetString(
+            PyExc_SystemError,
+            "NULL result without error in PyObject_Call");
+    }
+    return result;
+}
+#endif
+
 /* PyObjectCallNoArg */
 #if CYTHON_COMPILING_IN_CPYTHON
 static CYTHON_INLINE PyObject* __Pyx_PyObject_CallNoArg(PyObject *func) {
@@ -6096,6 +4824,46 @@ static CYTHON_INLINE PyObject* __Pyx_PyObject_CallNoArg(PyObject *func) {
         }
     }
     return __Pyx_PyObject_Call(func, __pyx_empty_tuple, NULL);
+}
+#endif
+
+/* PyObjectCallOneArg */
+#if CYTHON_COMPILING_IN_CPYTHON
+static PyObject* __Pyx__PyObject_CallOneArg(PyObject *func, PyObject *arg) {
+    PyObject *result;
+    PyObject *args = PyTuple_New(1);
+    if (unlikely(!args)) return NULL;
+    Py_INCREF(arg);
+    PyTuple_SET_ITEM(args, 0, arg);
+    result = __Pyx_PyObject_Call(func, args, NULL);
+    Py_DECREF(args);
+    return result;
+}
+static CYTHON_INLINE PyObject* __Pyx_PyObject_CallOneArg(PyObject *func, PyObject *arg) {
+#if CYTHON_FAST_PYCALL
+    if (PyFunction_Check(func)) {
+        return __Pyx_PyFunction_FastCall(func, &arg, 1);
+    }
+#endif
+    if (likely(PyCFunction_Check(func))) {
+        if (likely(PyCFunction_GET_FLAGS(func) & METH_O)) {
+            return __Pyx_PyObject_CallMethO(func, arg);
+#if CYTHON_FAST_PYCCALL
+        } else if (__Pyx_PyFastCFunction_Check(func)) {
+            return __Pyx_PyCFunction_FastCall(func, &arg, 1);
+#endif
+        }
+    }
+    return __Pyx__PyObject_CallOneArg(func, arg);
+}
+#else
+static CYTHON_INLINE PyObject* __Pyx_PyObject_CallOneArg(PyObject *func, PyObject *arg) {
+    PyObject *result;
+    PyObject *args = PyTuple_Pack(1, arg);
+    if (unlikely(!args)) return NULL;
+    result = __Pyx_PyObject_Call(func, args, NULL);
+    Py_DECREF(args);
+    return result;
 }
 #endif
 
@@ -6168,6 +4936,35 @@ static PyObject* __Pyx__CallUnboundCMethod1(__Pyx_CachedCFunction* cfunc, PyObje
 #endif
 bad:
     Py_XDECREF(args);
+    return result;
+}
+
+/* PyObjectCall2Args */
+static CYTHON_UNUSED PyObject* __Pyx_PyObject_Call2Args(PyObject* function, PyObject* arg1, PyObject* arg2) {
+    PyObject *args, *result = NULL;
+    #if CYTHON_FAST_PYCALL
+    if (PyFunction_Check(function)) {
+        PyObject *args[2] = {arg1, arg2};
+        return __Pyx_PyFunction_FastCall(function, args, 2);
+    }
+    #endif
+    #if CYTHON_FAST_PYCCALL
+    if (__Pyx_PyFastCFunction_Check(function)) {
+        PyObject *args[2] = {arg1, arg2};
+        return __Pyx_PyCFunction_FastCall(function, args, 2);
+    }
+    #endif
+    args = PyTuple_New(2);
+    if (unlikely(!args)) goto done;
+    Py_INCREF(arg1);
+    PyTuple_SET_ITEM(args, 0, arg1);
+    Py_INCREF(arg2);
+    PyTuple_SET_ITEM(args, 1, arg2);
+    Py_INCREF(function);
+    result = __Pyx_PyObject_Call(function, args, NULL);
+    Py_DECREF(args);
+    Py_DECREF(function);
+done:
     return result;
 }
 
@@ -6964,112 +5761,6 @@ bad:
         return (target_type) value;\
     }
 
-/* Print */
-    #if !CYTHON_COMPILING_IN_PYPY && PY_MAJOR_VERSION < 3
-static PyObject *__Pyx_GetStdout(void) {
-    PyObject *f = PySys_GetObject((char *)"stdout");
-    if (!f) {
-        PyErr_SetString(PyExc_RuntimeError, "lost sys.stdout");
-    }
-    return f;
-}
-static int __Pyx_Print(PyObject* f, PyObject *arg_tuple, int newline) {
-    int i;
-    if (!f) {
-        if (!(f = __Pyx_GetStdout()))
-            return -1;
-    }
-    Py_INCREF(f);
-    for (i=0; i < PyTuple_GET_SIZE(arg_tuple); i++) {
-        PyObject* v;
-        if (PyFile_SoftSpace(f, 1)) {
-            if (PyFile_WriteString(" ", f) < 0)
-                goto error;
-        }
-        v = PyTuple_GET_ITEM(arg_tuple, i);
-        if (PyFile_WriteObject(v, f, Py_PRINT_RAW) < 0)
-            goto error;
-        if (PyString_Check(v)) {
-            char *s = PyString_AsString(v);
-            Py_ssize_t len = PyString_Size(v);
-            if (len > 0) {
-                switch (s[len-1]) {
-                    case ' ': break;
-                    case '\f': case '\r': case '\n': case '\t': case '\v':
-                        PyFile_SoftSpace(f, 0);
-                        break;
-                    default:  break;
-                }
-            }
-        }
-    }
-    if (newline) {
-        if (PyFile_WriteString("\n", f) < 0)
-            goto error;
-        PyFile_SoftSpace(f, 0);
-    }
-    Py_DECREF(f);
-    return 0;
-error:
-    Py_DECREF(f);
-    return -1;
-}
-#else
-static int __Pyx_Print(PyObject* stream, PyObject *arg_tuple, int newline) {
-    PyObject* kwargs = 0;
-    PyObject* result = 0;
-    PyObject* end_string;
-    if (unlikely(!__pyx_print)) {
-        __pyx_print = PyObject_GetAttr(__pyx_b, __pyx_n_s_print);
-        if (!__pyx_print)
-            return -1;
-    }
-    if (stream) {
-        kwargs = PyDict_New();
-        if (unlikely(!kwargs))
-            return -1;
-        if (unlikely(PyDict_SetItem(kwargs, __pyx_n_s_file, stream) < 0))
-            goto bad;
-        if (!newline) {
-            end_string = PyUnicode_FromStringAndSize(" ", 1);
-            if (unlikely(!end_string))
-                goto bad;
-            if (PyDict_SetItem(kwargs, __pyx_n_s_end, end_string) < 0) {
-                Py_DECREF(end_string);
-                goto bad;
-            }
-            Py_DECREF(end_string);
-        }
-    } else if (!newline) {
-        if (unlikely(!__pyx_print_kwargs)) {
-            __pyx_print_kwargs = PyDict_New();
-            if (unlikely(!__pyx_print_kwargs))
-                return -1;
-            end_string = PyUnicode_FromStringAndSize(" ", 1);
-            if (unlikely(!end_string))
-                return -1;
-            if (PyDict_SetItem(__pyx_print_kwargs, __pyx_n_s_end, end_string) < 0) {
-                Py_DECREF(end_string);
-                return -1;
-            }
-            Py_DECREF(end_string);
-        }
-        kwargs = __pyx_print_kwargs;
-    }
-    result = PyObject_Call(__pyx_print, arg_tuple, kwargs);
-    if (unlikely(kwargs) && (kwargs != __pyx_print_kwargs))
-        Py_DECREF(kwargs);
-    if (!result)
-        return -1;
-    Py_DECREF(result);
-    return 0;
-bad:
-    if (kwargs != __pyx_print_kwargs)
-        Py_XDECREF(kwargs);
-    return -1;
-}
-#endif
-
 /* CIntFromPy */
     static CYTHON_INLINE int __Pyx_PyInt_As_int(PyObject *x) {
 #ifdef __Pyx_HAS_GCC_DIAGNOSTIC
@@ -7537,43 +6228,6 @@ raise_neg_overflow:
         "can't convert negative value to long");
     return (long) -1;
 }
-
-/* PrintOne */
-    #if !CYTHON_COMPILING_IN_PYPY && PY_MAJOR_VERSION < 3
-static int __Pyx_PrintOne(PyObject* f, PyObject *o) {
-    if (!f) {
-        if (!(f = __Pyx_GetStdout()))
-            return -1;
-    }
-    Py_INCREF(f);
-    if (PyFile_SoftSpace(f, 0)) {
-        if (PyFile_WriteString(" ", f) < 0)
-            goto error;
-    }
-    if (PyFile_WriteObject(o, f, Py_PRINT_RAW) < 0)
-        goto error;
-    if (PyFile_WriteString("\n", f) < 0)
-        goto error;
-    Py_DECREF(f);
-    return 0;
-error:
-    Py_DECREF(f);
-    return -1;
-    /* the line below is just to avoid C compiler
-     * warnings about unused functions */
-    return __Pyx_Print(f, NULL, 0);
-}
-#else
-static int __Pyx_PrintOne(PyObject* stream, PyObject *o) {
-    int res;
-    PyObject* arg_tuple = PyTuple_Pack(1, o);
-    if (unlikely(!arg_tuple))
-        return -1;
-    res = __Pyx_Print(stream, arg_tuple, 1);
-    Py_DECREF(arg_tuple);
-    return res;
-}
-#endif
 
 /* FastTypeChecks */
     #if CYTHON_COMPILING_IN_CPYTHON

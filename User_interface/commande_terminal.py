@@ -87,6 +87,10 @@ def terminal_ensemble_num(question):
                 if part == '*':
                     set_res.add(-1)
                     error = False
+                    break
+                if part.isnumeric():
+                    if int(part) >= 0.:
+                        set_res.add(int(part))
             if error:
                 break
         if error:
