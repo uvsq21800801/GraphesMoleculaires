@@ -12,6 +12,7 @@ from Solving_Methods import OrderedSubGen as OSG
 from Solving_Methods import Isomorph as Iso
 from Solving_Methods import Statistic as Stat
 from Solving_Methods import Similarity as Simil
+import bdd_insert
 
 import pymongo as pm
 from bson.objectid import ObjectId
@@ -220,11 +221,11 @@ def interface():
     print(conf_num)
     for i in conf_num:
         exec_for_one_conf(min_ordre, max_ordre, files_T[i], files_B[i], path_I, 
-                        dir_I, options, path_O, Multi_Taille, i)
+                        dir_I, options, path_O, Multi_Taille, i, bd_ids, motifs)
     return 1
 
 def exec_for_one_conf(min_ordre, max_ordre, filename_T, filename_B, path_I, 
-                        dir_I, options, path_O, Multi_Taille, nb_conf):  
+                        dir_I, options, path_O, Multi_Taille, nb_conf, bd_ids, motifs):  
     filename1, filename2, lst_index, atom_caract, matrice_adja = In.data_input(options[1], dir_I, filename_T, filename_B)
     
     #if not In.done_here(join(path_O, dir_I), dir_I, options):
@@ -247,9 +248,10 @@ def exec_for_one_conf(min_ordre, max_ordre, filename_T, filename_B, path_I,
         for i in range(max_ordre - min_ordre + 1):
             ordre = min_ordre+i
             #options[1] = ordre ######### a voir ce que cette délétion change
-            (dict_isomorph, dict_stat, lst_id, lst_certif, nb_unique) = programm_1(dir_I, dir_I, options, matrice_adja, atom_caract, lst_combi[i], nb_conf, ordre)
+            (dict_isomorph, dict_stat, lst_id, lst_certif, nb_unique) = programm_1(dir_I, dir_I, 
+                    options, matrice_adja, atom_caract, lst_combi[i], nb_conf, ordre, bd_ids, motifs)
             #programm_2(dir_O, name, detail, matrice_adja, atom_caract, lst_id, dict_isomorph)
-        
+
             print(dir_I+" taille "+str(ordre)+" fini "+str(datetime.now().time())+"\n")
         
         print(dir_I+" fini "+str(datetime.now().time())+"\n")
@@ -266,7 +268,8 @@ def exec_for_one_conf(min_ordre, max_ordre, filename_T, filename_B, path_I,
         print(dir_I+" combinaisons finis "+str(datetime.now().time()))
         
         #options[1] = max_ordre ######### a voir ce que cette délétion change
-        (dict_isomorph, dict_stat, lst_id, lst_certif, nb_unique) = programm_1(dir_I, dir_I, options, matrice_adja, atom_caract, lst_combi, nb_conf)
+        (dict_isomorph, dict_stat, lst_id, lst_certif, nb_unique) = programm_1(dir_I, dir_I,
+                     options, matrice_adja, atom_caract, lst_combi, nb_conf, bd_ids, motifs)
         
         #programm_2(dir_O, name, detail, matrice_adja, atom_caract, lst_id, dict_isomorph)
         
@@ -278,7 +281,7 @@ def exec_for_one_conf(min_ordre, max_ordre, filename_T, filename_B, path_I,
         exec_for_one_size()
     return 1
 
-def programm_1 (dir_O, name, detail, matrice_adja, atom_caract, lst_combi, nb_conf, ordre):
+def programm_1 (dir_O, name, detail, matrice_adja, atom_caract, lst_combi, nb_conf, ordre, bd_ids, motifs):
     t_cerif = 0 ## test
     t_prep_c = 0 ## test
     t_fill = 0 ## test
@@ -297,6 +300,10 @@ def programm_1 (dir_O, name, detail, matrice_adja, atom_caract, lst_combi, nb_co
     # tri de lst_id par nombre d'occurence et le nombre de motif unique
     lst_id = Stat.Tri_indice(lst_id, dict_stat)
     nb_unique = Stat.Nombre_unique(lst_id, dict_stat)
+
+    # insère les combinaisons dans la bdd
+    # def insert_motifs(bd_ids, lst_index, dict_isomorph, coloration, signature, nb_sommets, liaison_H, crible):
+    bdd_insert.insert_motifs(motifs, lst_id, dict_isomorph, bd_ids[1], "A faire", ordre, detail[0], "n'existe pas")    
     
     # imprime combinaisons
     Out.Output_combi(dir_O, name, detail, lst_id, dict_isomorph, nb_conf, ordre)
