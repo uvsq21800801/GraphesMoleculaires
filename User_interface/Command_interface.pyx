@@ -44,16 +44,16 @@ def interface():
     #      2 : Taille traitée
     #      3 : Update?
     options = [False, False, 0, False]
-    # les _id de la BDD (format str ou non?)
-    #      0 : interface
-    #      1 : coloration
-    #      2 : configs []
-    #      3 : motifs []
-    bd_ids = ["","",[],[]]
+    # les identifiants de la BDD (format str ou _id)
+    #      0 : interface (_id)
+    #      1 : coloration (_id)
+    #      2 : configs [] (_id)
+    bd_ids = ["","",[]]
     # la hierarchie de fichiers
     path_I = "Inputs_Outputs/Place_Folder_here/"
     path_O = "Inputs_Outputs/Place_Output_here/"
     interf_name = ""
+    color_name = ""
     conf_num = []
 
     ##### Connection à la BDD 
@@ -76,7 +76,6 @@ def interface():
         interf_name = input("Quel est le nom de l'interface traité? ")
         list_dir = listdir(path_I)
         for l in list_dir:
-
             if interf_name in l and isdir(join(path_I, l)): # folder ayant 'interf_name' dans son nom trouvé!
                 if namefolder_check == True and cdt_folder_name == False: # cas où 2 folders ont la même particule choisie par l'utilisateur
                                                 # dans ce cas, on force l'utilisateur à entrer le nom complet du dossier
@@ -94,22 +93,6 @@ def interface():
         if namefolder_check == False: 
             print('erreur, aucun dossier contenant \"'+str(interf_name)+"\" dans son n'a été"
                                                         +" trouvé dans le dossier des inputs")  
-    
-    ################################# FIXED
-
-    """ might delete later if the idea drowns
-    # retrouve le dossier lié
-    while not isdir(join(path_I, interf_name)) :
-        dir_I = input("Quel est le nom du dossier des fichiers d'entrés? ")
-    if isdir(join(path_I, interf_name)) :
-        dir_I = interf_name
-    else :
-        question = "Voulez vous changer "+str(interf_name)+" par "+str(dir_I)+"?"
-        res = ct.terminal_question_On(question, "", "Oui", True)
-        if res :
-            interf_name = dir_I
-    """
-
     # test sur la BDD si l'interface est connu ou non
     tmp_colors = []
     # tmp_configs = []
@@ -173,30 +156,27 @@ def interface():
         bd_ids[1] = result.inserted_id
         print(result)
     
+    ## ajouter la coloration sur l'interface
+    ########################## A Faire
+    
     ## choisi les configurations
     # recherche les fichiers liées
     files_T, files_B, conf_num = recherche_files_conf(path_I, dir_I)
     conf_num = list(conf_num)
-    #files_T = list(files_T) # Pourquoi en avoir initialement fait des sets?
-    #files_B = list(files_B)
     if len(conf_num)>1 :
         Multi_Conf = True
     else :
         Multi_Conf = False
 
     # voir dans la BDD pour les conf
-    ## pour le moment retrait des cas où homonyme
-    """ # en comm parce que ne prends pas en compte le choix ou non des hydro/ du crible
     for i in sorted(conf_num):
         if configs.count_documents({"interf":ObjectId(bd_ids[0]), "num": i}) > 0 :
-            conf_num.remove(i)
+            result = configs.find_one({"interf":ObjectId(bd_ids[0]), "num": i})
+            bd_ids[2].append(result["_id"])
         else :
             result = configs.insert_one({"interf":ObjectId(bd_ids[0]), "num": i})
             bd_ids[2].append(result.inserted_id)
-    if len(conf_num)==0:
-        print("Toutes les configurations sont déjà traitées")
-        return 0
-    """ 
+    
     # Taille des motifs étudiés
     question = "Quelles sont les bornes de taille des motifs à enregistrer?"
     min_ordre, max_ordre = ct.terminal_input_bornes_range(question, 2, 10)
@@ -220,11 +200,11 @@ def interface():
     print(conf_num)
     for i in conf_num:
         exec_for_one_conf(min_ordre, max_ordre, files_T[i], files_B[i], path_I, 
-                        dir_I, options, path_O, Multi_Taille, i, bd_ids, list_color, motifs)
+                        dir_I, options, path_O, Multi_Taille, i, bd_ids, list_color, motifs, occurs)
     return 1
 
 def exec_for_one_conf(min_ordre, max_ordre, filename_T, filename_B, path_I, 
-                        dir_I, options, path_O, Multi_Taille, nb_conf, bd_ids, lst_col, motifs):  
+                        dir_I, options, path_O, Multi_Taille, nb_conf, bd_ids, lst_col, motifs, occurs):  
     filename1, filename2, lst_index, atom_caract, matrice_adja = In.data_input(options[1], dir_I, filename_T, filename_B)
     
     #if not In.done_here(join(path_O, dir_I), dir_I, options):
@@ -248,7 +228,8 @@ def exec_for_one_conf(min_ordre, max_ordre, filename_T, filename_B, path_I,
             ordre = min_ordre+i
             #options[1] = ordre ######### a voir ce que cette délétion change
             (dict_isomorph, dict_stat, lst_id, lst_certif, nb_unique) = programm_1(dir_I, dir_I, 
-                    options, matrice_adja, atom_caract, lst_col, lst_combi[i], nb_conf, ordre, bd_ids, motifs)
+                    options, matrice_adja, atom_caract, lst_col, lst_combi[i], nb_conf, ordre, bd_ids, motifs, occurs)
+            ## DEPLACER ICI LES ECRITURES SUR BDD?
             #programm_2(dir_O, name, detail, matrice_adja, atom_caract, lst_id, dict_isomorph)
 
             print(dir_I+" taille "+str(ordre)+" fini "+str(datetime.now().time())+"\n")
@@ -268,7 +249,7 @@ def exec_for_one_conf(min_ordre, max_ordre, filename_T, filename_B, path_I,
         
         #options[1] = max_ordre ######### a voir ce que cette délétion change
         (dict_isomorph, dict_stat, lst_id, lst_certif, nb_unique) = programm_1(dir_I, dir_I,
-                     options, matrice_adja, atom_caract, lst_col, lst_combi, nb_conf, max_ordre, bd_ids, motifs)
+                     options, matrice_adja, atom_caract, lst_col, lst_combi, nb_conf, max_ordre, bd_ids, motifs, occurs)
         
         #programm_2(dir_O, name, detail, matrice_adja, atom_caract, lst_id, dict_isomorph)
         
@@ -280,7 +261,7 @@ def exec_for_one_conf(min_ordre, max_ordre, filename_T, filename_B, path_I,
         exec_for_one_size()
     return 1
 
-def programm_1 (dir_O, name, detail, matrice_adja, atom_caract, lst_col, lst_combi, nb_conf, ordre, bd_ids, motifs):
+def programm_1 (dir_O, name, detail, matrice_adja, atom_caract, lst_col, lst_combi, nb_conf, ordre, bd_ids, motifs, occurs):
     t_cerif = 0 ## test
     t_prep_c = 0 ## test
     t_fill = 0 ## test
@@ -300,10 +281,10 @@ def programm_1 (dir_O, name, detail, matrice_adja, atom_caract, lst_col, lst_com
     lst_id = Stat.Tri_indice(lst_id, dict_stat)
     nb_unique = Stat.Nombre_unique(lst_id, dict_stat)
 
-    # insère les combinaisons dans la bdd
-    # def insert_motifs(collection_motif, bd_ids, matrice_adja, atom_caract, lst_index, dict_isomorph, dict_stat, coloration, lst_certif, nb_sommets, liaison_H, crible):
-    bdd_insert.insert_motifs(motifs, bd_ids[1], matrice_adja, atom_caract, lst_id, dict_isomorph, dict_stat, lst_certif, ordre, detail[0], "n'existe pas")    
-    
+    # insère les motifs dans la bdd
+    # def insert_motifs(coll_motifs, coll_occurs, bd_ids, matrice_adja, atom_caract, lst_index, dict_isomorph, dict_stat, coloration, lst_certif, nb_sommets, liaison_H, crible):
+    bdd_insert.insert_motifs(motifs, occurs, bd_ids, nb_conf, matrice_adja, atom_caract, lst_id, dict_isomorph, dict_stat, lst_certif, ordre, detail[0], False)    
+
     # imprime combinaisons
     Out.Output_combi(dir_O, name, detail, lst_id, dict_isomorph, nb_conf, ordre)
     # imprime les diagrammes
@@ -333,109 +314,6 @@ Pour la suite : ATTENTION!!!
 - Bien entendu il faudra optimiser cette nouvelle interface (je pourrais aussi le faire Chloé)
 
 - Bon courage pour reprendre la suite du programme qui est pour le moment en commentaire
-"""
-
-"""
-    ###### Lancement de l'execution du programme
-    if not Multi_File :
-        filenames = [name]
-    for filename in filenames:
-        
-        # appel fonction
-        exec_for_one_file(filename, detail, Multi_Taille, Multi_File, ordre, min_ordre, max_ordre, input_num, dir_O, path_O, fpath+name, filename_B, filename_T, name)
-        
-    return 1
-"""
-
-"""# permet de dégraisser une boucle de l'interface, execute tout pour un fichier
-def exec_for_one_file(filename, detail, Multi_Taille, Multi_File, ordre, min_ordre, max_ordre, input_num, dir_O, path_O, cfpath, filename_B, filename_T, name):
-    ## Extraction des données
-    if Multi_File:
-        name = In.get_name(filename)
-    
-    
-    # nombre de sommets utile à l'initialisation des plus grosses structures
-    cdef int nb_sommet = In.Get_nb_vertex(detail[0], join(cfpath, filename_T))
-    atom_caract = np.empty((nb_sommet,), dtype='<U32')
-    cdef np.ndarray[np.int32_t, ndim=1] lst_index = np.empty(nb_sommet, dtype=np.int32)
-
-    filename_T = In.Input_trad(detail[0], cfpath, lst_index, atom_caract, filename_T)
-    matrice_adja = np.zeros((nb_sommet,nb_sommet),dtype=bool)
-
-    #matrice_adja[0][0] = True
-
-    filename_B = In.Input_bonds(detail[0], cfpath, lst_index, matrice_adja, filename_B)
-
-    #print('#################################################################')
-    #print(matrice_adja)
-    #print('#################################################################')
-    
-    # test: taille raisonnable ou non
-    if (len(atom_caract)<int(input_num)):
-        print('Erreur: Taille entrée trop grande')
-        print('Taille maximum:'+str(len(atom_caract)))
-        return 0
-
-    ### déjà exécuté?
-    if In.done_here(join(path_O, dir_O), name, detail):
-        print(name+" déjà fait")
-        test = input("Effacer les précédents résultats? :[y|n]: ")
-        while (test!='y' and test!='n') :
-            test = input("(Effacer resultats) Attend y ou n: ")
-        if test=='y' :
-            if detail[0] == 1 :
-                compl = "_H"
-            else :
-                compl = ""
-            remove(join(join(path_O, dir_O), name+compl+"_data.txt"))
-            remove(join(join(path_O, dir_O), name+compl+"_res.txt"))
-    return 1
-"""
-"""    
-    cdef int i 
-    if not In.done_here(join(path_O, dir_O), name, detail):
-        ### imprime les données de ce graphe
-        Out.Output_data(dir_O, name, detail, lst_index, atom_caract, matrice_adja)
-
-        #### Exécution sur le ou les ordre(s)
-        if Multi_Taille :
-            print(name+" commence "+str(datetime.now().time()))
-            '''
-            # sous_graphe connexe par methode bruteforce
-            lst_combi = Combi.gen_combi_brute_range(matrice_adja, min_ordre, max_ordre)
-            '''
-            # sous_graphes connexes par notre méthode de parcour d'un arbre de combi de la matrice d'adja
-            lst_combi = SSG.subgen(matrice_adja, min_ordre, max_ordre)
-            #lst_combi = OSG.subgen_deg_decroiss(matrice_adja, atom_caract, min_ordre, max_ordre, crible)
-            
-            print(name+" combinaisons finis "+str(datetime.now().time()))
-            
-            for i in range(max_ordre - min_ordre + 1):
-                ordre = min_ordre+i
-                detail[1] = ordre
-                (dict_isomorph, dict_stat, lst_id, lst_certif, nb_unique) = programm_1(dir_O, name, detail, matrice_adja, atom_caract, lst_combi[i])
-            
-                print(name+" taille "+str(ordre)+" fini "+str(datetime.now().time())+"\n")
-            
-            print(name+" fini "+str(datetime.now().time())+"\n")
-        else : 
-            print(name+" commence "+str(datetime.now().time()))
-            '''
-            # sous_graphe connexe par methode bruteforce
-            lst_combi = Combi.gen_combi_brute(matrice_adja, ordre)
-            '''
-            # sous_graphes connexes par notre méthode de parcour d'un arbre de combi de la matrice d'adja
-            lst_combi = SSG.subgen(matrice_adja, ordre, ordre)
-            #lst_combi = OSG.subgen_deg_decroiss(matrice_adja, atom_caract, ordre, ordre, crible)
-
-            print(name+" combinaisons finis "+str(datetime.now().time()))
-            
-            detail[1] = ordre
-            (dict_isomorph, dict_stat, lst_id, lst_certif, nb_unique) = programm_1(dir_O, name, detail, matrice_adja, atom_caract, lst_combi)
-                        
-            print(name+" fini "+str(datetime.now().time())+"\n")
-
-    return 1    
 """
 
 # Recherche des fichiers des configurations
