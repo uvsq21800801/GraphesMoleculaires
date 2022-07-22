@@ -22,20 +22,20 @@ Ce main permet de lancer la comparaison entre des sous-graphes à partir :
 def interface():
 
     ##### nom du dossier
-    fpath = "Inputs_Outputs/Place_Output_here/" 
+    dir_O = "Inputs_Outputs/Place_Output_here/" 
     
     ##### Construction du nom de fichier source
     s_dossier = input("Nom sous-dossier entré (ne rien entrer si il n'est pas dans un sous-dossier): ")
     if (s_dossier != ''):
-        fpath += s_dossier
-    print(fpath)
-    if not isdir(fpath):
-        print(fpath+" n'est pas un dossier existant.")
+        path = join(dir_O,s_dossier)
+    print(path)
+    if not isdir(path):
+        print(path+" n'est pas un dossier existant.")
         exit(1)
     
     ##### parametres
     # nom
-    name = input("Nom fichier entré : ")
+    conf = input("Numéro de conf : ")
     # l'ordre qui nous intéresse
     ordre = input("taille de sous-graphe : ")
 
@@ -48,13 +48,13 @@ def interface():
         s+='_H'
 
     ##### test sur l'existence du fichier source des combinaisons
-    filename = name+'_'+ordre+s+"_combi.txt"
-    if not isfile(fpath+"/"+filename):
+    filename = s_dossier+'_conf'+str(conf)+'_'+ordre+s+"_combi.txt"
+    if not isfile(path+"/"+filename):
         print("Le fichier "+filename+" n'existe pas.")
         exit(1)
     
     ##### Lecture du fichier source des combinaisons
-    f = open(fpath+"/"+filename, "r")
+    f = open(join(path,filename), "r")
     lines=f.readlines()
     f.close()
     
@@ -107,7 +107,9 @@ def interface():
             dict_combi[i] = splitted[1]
             #print(i, dict_combi[i])
     ##### Récupération des données du graphe général
-    filename1, filename2, lst_index, atom_caract, matrice_adja = Inputs.data_input(detail[0], name)
+    t_name = "trad-atom_conf"+str(conf)+".txt"
+    b_name = "bonds_conf"+str(conf)+".txt"
+    filename1, filename2, lst_index, atom_caract, matrice_adja = Inputs.data_input(detail, s_dossier, t_name, b_name)
 
     
     #####
@@ -152,7 +154,7 @@ def interface():
         tab_mcis = Sim.tab_mcis(tab_sg)
     
     ##### Rempli la matrice avec la(les) métrique(s) sélectionnée(s)
-    print(str(name)+" calcul commence "+str(datetime.now().time()))
+    print(str(s_dossier)+"_conf"+str(conf)+" calcul commence "+str(datetime.now().time()))
     if multi :
         Tab_sim = []
         for i in range(3):
@@ -163,7 +165,7 @@ def interface():
                 Tab_sim[i] = Sim.Similarity_avecMcis(tab_sg,tab_mcis,detail)
             else :
                 Tab_sim[i] = Sim.Similarity_sansMcis(tab_sg,detail)
-            print(name+" calcul "+str(detail[2])+" fini "+str(datetime.now().time()))
+            print(str(s_dossier)+"_conf"+str(conf)+" calcul "+str(detail[2])+" fini "+str(datetime.now().time()))
         detail[2] = 0
     else :
         # Similarité avec MCIS ou non
@@ -172,7 +174,7 @@ def interface():
         else :
             Tab_sim = Sim.Similarity_sansMcis(tab_sg,detail)
         # imprime les matrices de chaleur
-        print(name+" calcul "+str(detail[2])+" fini "+str(datetime.now().time()))
+        print(str(s_dossier)+"_conf"+str(conf)+" calcul "+str(detail[2])+" fini "+str(datetime.now().time()))
     
     
     #####
@@ -190,11 +192,11 @@ def interface():
     if multi :
         for i in range(3):
             detail[2] += 1
-            Output.Output_sim(s_dossier, name, detail, lst_id, Tab_sim[i])
+            Output.Output_sim(s_dossier, s_dossier, detail, lst_id, Tab_sim[i])
         detail[2] = 0
     else :
-        Output.Output_sim(s_dossier, name, detail, lst_id, Tab_sim)
-    print(name+" écriture "+str(detail[2])+" fini "+str(datetime.now().time()))
+        Output.Output_sim(s_dossier, s_dossier, detail, lst_id, Tab_sim)
+    print(str(s_dossier)+"_conf"+str(conf)+" écriture "+str(detail[2])+" fini "+str(datetime.now().time()))
     
     exit(0)
 

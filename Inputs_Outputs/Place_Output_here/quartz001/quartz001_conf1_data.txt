@@ -1,0 +1,47 @@
+Indice IndiceOld Caract_atome
+0 0 Si 1
+1 1 Si 2
+2 2 Si 3
+3 3 Si 4
+4 4 OW 1
+5 5 OW 2
+6 6 OW 3
+7 7 OW 4
+8 8 OW 5
+9 9 OW 6
+10 10 OW 7
+11 18 OW 8
+12 21 OW 9
+13 24 OW 10
+14 27 OW 11
+15 30 OW 12
+16 33 OW 13
+17 36 OW 14
+18 39 OW 15
+Matrice Adjacence
+False  False  False  False  True  False  False  False  False  False  True  False  False  False  False  False  False  False  False  
+False  False  False  False  False  False  True  False  False  False  False  False  False  False  False  False  False  False  False  
+False  False  False  False  False  True  False  False  True  False  False  False  False  False  False  False  False  False  False  
+False  False  False  False  False  False  False  True  False  True  False  False  False  False  False  False  False  False  False  
+True  False  False  False  False  False  False  False  True  False  False  False  False  False  False  False  False  False  False  
+False  False  True  False  False  False  False  False  False  False  True  False  False  False  False  False  False  False  False  
+False  True  False  False  False  False  False  False  False  True  False  False  False  False  False  False  False  False  False  
+False  False  False  True  False  False  False  False  False  False  False  False  False  False  False  False  True  False  False  
+False  False  True  False  False  False  False  False  False  False  False  False  False  False  False  False  False  True  False  
+False  False  False  True  False  True  False  False  False  False  False  False  False  False  False  False  False  False  False  
+True  False  False  False  False  False  False  False  False  False  False  False  True  False  False  False  False  False  False  
+False  False  False  False  False  False  True  False  False  False  False  False  False  True  False  False  False  False  False  
+False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  True  
+False  False  False  False  False  True  False  False  False  False  False  False  False  False  False  False  False  False  False  
+False  False  False  False  False  False  False  False  False  False  False  True  False  False  False  False  False  False  False  
+False  False  False  False  False  False  False  True  False  False  False  False  False  False  False  False  False  False  False  
+False  False  False  False  False  False  False  False  False  False  False  False  True  False  False  False  False  True  False  
+False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  
+False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  False  
+
+Ordre : 5
+Nombre de sous-graphes connexes : 131
+Nombre de certificats différents : 45
+Nombre de motifs uniques :15
+Indices triés :
+11 20 22 23 24 26 27 30 34 37 38 40 42 43 44 17 12 31 19 29 32 28 41 7 15 18 3 39 25 0 8 4 21 10 33 9 5 36 13 6 2 1 14 16 35 

@@ -49,15 +49,13 @@ def Output_data(dir_O, detail, lst_index, atom_caract, matrice_adja, nb_conf):
 
 def Output_diagramme(dir_O, name, detail, lst_id, dict_stat, nb_conf, ordre):
     # selon les paramètres
-    if detail[0] == 1:
-        compl = '_'+str(ordre)+"_H"
-    else:
-        compl = '_'+str(ordre)
+    compl = "conf"+str(nb_conf)+'_'+str(ordre)
 
+    if detail[0] == True:
+        compl+="_H"
+    
     if detail[3] == True:
         compl += "_Cr" 
-
-    compl += "_conf"+str(nb_conf)
 
     # création du fichier de sortie
     fpath = "Inputs_Outputs/Place_Output_here/"+dir_O+'/'
@@ -82,34 +80,37 @@ def Output_diagramme(dir_O, name, detail, lst_id, dict_stat, nb_conf, ordre):
         plot_occup.append(float(tmp[3]))
     f.close()
 
-
     plt.clf()
+    fig, ax1 = plt.subplots()
+    ax2 = ax1.twinx()
+
     occur = np.array(plot_occur)
     occur = occur.astype(float)
-    plt.scatter(plot_indice, occur,s=3)
-    #plt.title("")
-    plt.xlabel("Indices triés par occurrence croissance")
-    plt.ylabel("Nombre d'occurrence d'un motif")
-    #plt.show()  
-    plt.savefig(fpath+name+compl+"_occur.png")
-
-    plt.clf()
     recouv = np.array(plot_recouv)
     recouv = recouv.astype(float)
-    
-    plt.scatter(plot_indice, recouv,s=3)
+
+    # Histogrammes
+    ax1.hist(occur, plot_indice, c="red")
+    ax2.hist(recouv, plot_indice, c="blue")
+    '''# Nuage de points
+    ax1.scatter(plot_indice, occur,s=3,c="red")
+    ax2.scatter(plot_indice, recouv,s=3,c="blue")
+    '''
+
+    ax1.set_xlabel("Motifs triés par nombre d'occurrence croissante")
+    ax1.set_ylabel("Nombre d'occurrence d'un motif", c="red")
+    ax2.set_ylabel("Taux de recouvrement du motif", c="blue")
     
     #plt.title("")
-    plt.xlabel("Indices triés par occurrence croissance")
-    plt.ylabel("Taux de recouvrement d'un motif")
     #plt.show()  
-    plt.savefig(fpath+name+compl+"_recouv.png")
+    plt.savefig(fpath+name+compl+"_graph.png")
+
     plt.clf()
 
     occup = np.array(plot_occup)
     occup = occup.astype(float)
     plt.scatter(plot_indice, occup,s=3)
-    plt.xlabel("Indices triés par occurrence croissance")
+    plt.xlabel("Motifs triés par nombre d'occurrence croissante")
     plt.ylabel("Taux d'occupation d'un motif")
     plt.savefig(fpath+name+compl+"_occup.png")
     plt.clf()
@@ -119,15 +120,12 @@ def Output_diagramme(dir_O, name, detail, lst_id, dict_stat, nb_conf, ordre):
 
 def Output_stat(dir_O, name, detail, lst_combi, lst_certif, lst_id, nb_unique, nb_conf, ordre):
     # selon les paramètres
-    if detail[0] == 1:
-        compl = "_H"
-    else:
-        compl = ""
-
+    compl = "_conf"+str(nb_conf) 
+    if detail[0] == True:
+        compl += "_H"
+    
     if detail[3] == True:
         compl += "_Cr" 
-    
-    compl += "_conf"+str(nb_conf)
 
     # ouverture du fichier de sortie
     fpath = "Inputs_Outputs/Place_Output_here/"+dir_O+'/'
@@ -147,16 +145,12 @@ def Output_stat(dir_O, name, detail, lst_combi, lst_certif, lst_id, nb_unique, n
 # écrit le fichier [XXX]_res.txt
 def Output_result(dir_O, name, detail, lst_certif, lst_id, dict_stat, nb_conf, ordre):
     # selon les paramètres
+    compl = "_conf"+str(nb_conf) 
+    if detail[0] == True:
+        compl += "_H"
     
-    if detail[0] == 1:
-        compl = "_H"
-    else:
-        compl = ""
-
     if detail[3] == True:
         compl += "_Cr" 
-    
-    compl += "_conf"+str(nb_conf)
 
     # création du fichier de sortie
     fpath = "Inputs_Outputs/Place_Output_here/"+dir_O+'/'
@@ -185,15 +179,12 @@ def Output_result(dir_O, name, detail, lst_certif, lst_id, dict_stat, nb_conf, o
 
 def Output_combi(dir_O, name, detail, lst_id, dict_isomorph, nb_conf, ordre):
     # selon les paramètres
+    compl = "_conf"+str(nb_conf)+'_'+str(ordre)
     if detail[0] == 1:
-        compl = '_'+str(ordre)+"_H"
-    else:
-        compl = '_'+str(ordre)
+        compl += "_H"
     
     if detail[3] == True:
         compl += "_Cr" 
-    
-    compl += "_conf"+str(nb_conf)
 
     # création du fichier de sortie
     fpath = "Inputs_Outputs/Place_Output_here/"+dir_O+'/'
@@ -217,16 +208,12 @@ def Output_combi(dir_O, name, detail, lst_id, dict_isomorph, nb_conf, ordre):
 
 def Output_sim(dir_O, name, detail, lst_id, Tab_sim, nb_conf, ordre):
     # selon les paramètres
-    if detail[0] == 1:
-        compl = "_H_"+str(detail[2])
-    else:
-        compl = "_"+str(detail[2])
-    '''
+    compl = "_conf"+str(nb_conf)+'_'+str(detail[2])
+    if detail[0] == True:
+        compl += "_H"
+    
     if detail[3] == True:
-        compl += "_Cr"
-    '''
-
-    compl += "_conf"+str(nb_conf)
+        compl += "_Cr" 
 
     nb = 1
     # création du fichier de sortie
@@ -260,7 +247,7 @@ def Output_sim(dir_O, name, detail, lst_id, Tab_sim, nb_conf, ordre):
         
     im = ax.imshow(Tab_sim, cmap=cmap, interpolation='nearest')
     
-    cbarlabels = ["distance d'édition", "similarité Raymond", "similarité Asymétrique"]
+    cbarlabels = ["distance d'édition", "similarité Raymond", "similarité Raymond asymétrique"]
     cbarlabel = cbarlabels[detail[2]-1]
     
     cbar = ax.figure.colorbar(im, ax=ax, cmap=cmap)
@@ -276,8 +263,9 @@ def Output_sim(dir_O, name, detail, lst_id, Tab_sim, nb_conf, ordre):
     ax.tick_params(top=True, labeltop=True, bottom=False, labelbottom=False)
 
     ax.xaxis.set_label_position("top")
-    ax.set_xlabel("MCIS/maxG : Isomorphisme si 1", fontsize=16)
-    ax.set_ylabel("MCIS/minG : Inclusion si 1", fontsize=16)
+    if detail[2] == 3:
+        ax.set_xlabel("MCIS/maxG : Isomorphisme si 1", fontsize=16)
+        ax.set_ylabel("MCIS/minG : Inclusion si 1", fontsize=16)
     
     #plt.setp(ax.get_xticklabels(), rotation=45, ha="right", rotation_mode="anchor")
     
@@ -292,7 +280,7 @@ def Output_sim(dir_O, name, detail, lst_id, Tab_sim, nb_conf, ordre):
     titlecompl= str(nb)
     if detail[0] == 1:
         titlecompl = "H "+titlecompl
-    ax.set_title("Heatmap de motifs de "+name+" de taille "+str(ordre)+" "+titlecompl, fontsize=20)
+    ax.set_title("Similarité entre motifs de "+name+" de taille "+str(ordre)+" "+titlecompl, fontsize=20)
     fig.tight_layout()
     plt.savefig(fpath+name+compl+"_heatmap_ord_"+str(ordre)+'_'+str(nb)+".png")   
     plt.clf()  
